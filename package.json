@@ -1,0 +1,36 @@
+{
+  "name": "buddy19.umu.to",
+  "description": "Conferencing buddy serving real-time interactive applications over socket.io with Express.js",
+  "author": "Umut Karakulak",
+  "license": "MIT",
+  "version": "0.0.0",
+  "private": true,
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umutto/buddy19.umu.to.git"
+  },
+  "bugs": {
+    "url": "https://github.com/umutto/buddy19.umu.to/issues"
+  },
+  "homepage": "buddy19.umu.to",
+  "scripts": {
+    "wtemplate": "",
+    "start": "NODE_ENV=production node ./bin/www",
+    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "wstart": "set NODE_ENV=production&&node ./bin/www",
+    "wdev": "set NODE_ENV=development&&nodemon ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
