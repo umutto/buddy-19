@@ -1,2 +1,2 @@
 # buddy19.umu.to
-Covid-19 conference buddy
+Covid-19 online meeting buddy
