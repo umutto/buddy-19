@@ -1,8 +1,36 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.loading-overlay {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 10001;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
 }
 
-a {
-  color: #00B7FF;
+.loading-overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.loading-overlay .spinner-border {
+  width: 10em !important;
+  height: 10em !important;
+}
+
+.loading-overlay .spinner-text {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#toast-wrapper {
+  z-index: 1060;
+}
+
+.hidden {
+  display: none;
 }
