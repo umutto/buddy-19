@@ -55,6 +55,18 @@ function normalizePort(val) {
 }
 
 /**
+ * Socket io initialization and bindings
+ */
+
+var socketController = require("../configs/socket.io");
+var io = socketController.init(server);
+
+app.use(function (req, res, next) {
+  req.io = io;
+  next;
+});
+
+/**
  * Event listener for HTTP server "error" event.
  */
 

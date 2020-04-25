@@ -1,5 +1,9 @@
 extends layout
 
+block metas
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/socket.js')
+
 block content
   h1= title
   p Welcome to #{title}
