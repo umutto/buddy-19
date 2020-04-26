@@ -7,18 +7,19 @@ block content
   .container
     .text-danger.flash-error-message #{error_message}
     .text-info.flash-info-message #{info_message}
-    form(class="form-signin" method="POST" action="/index")
+    form(class="form-signin" method="POST" action="/")
       .text-center
         h1.font-weight-bold Create a Room
       .form-row
         .form-group.col-md-2
           label(for="roomType") Room Type
-            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create.<br><b>Quiz</b>: You take turns to ask each other questions.<br/><b>Sketch (NOT IMPLEMENTED YET)<b/>: Draw with your firends, like pictionary.")
+            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Quiz</b>: You take turns to ask each other questions.<br/><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br/><b>Youtube (NOT IMPLEMENTED)</b>: Watch youtube videos or listen to music in sync with your friends!")
               small
                 i.far.fa-question-circle.ml-1
           select#roomType.form-control(name="roomType")
             option(val='quiz' selected) Quiz
             option(val='sketch' disabled) Sketch
+            option(val='youtube' disabled) Youtube
         .form-group.col-md-5
           label(for="roomName") Room Name
             span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Name" data-content="Name of the room for your friends. (Not required)")
@@ -34,7 +35,10 @@ block content
       .form-row.pt-3
         .form-group.col-md-6
           .input-group.pb-1
-            label.col-md-6(for="roundAmount") Number of Rounds:
+            label.col-md-6(for="roundAmount") # of Rounds:
+              span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Number of Rounds" data-content="Length of the round is based on how many people there are in the room. For example, for quiz type room, 1 round ends when everyone in the room asks a question.")
+                small
+                  i.far.fa-question-circle.ml-1
             input#roundAmount.col-md-6.form-control(type="number" name="roundAmount" value=3 min=1)
             .input-group-append
               .input-group-text round(s)
@@ -70,12 +74,3 @@ block content
                 label.template-label.bg-pentagon(for="templatePentagon")
 
       button(class='btn btn-lg btn-primary btn-block mt-3' type="submit") Create
-
-
-
-
-      //- .bg-squiggly
-      //- .bg-polka
-      //- .bg-symphony
-      //- .bg-christmas
-      //- .bg-pentagon
