@@ -34,11 +34,11 @@ html
 
   body
     block content
-    .loading-overlay
+    #loading-overlay(style="display:block;")
       .loading-overlay-content
         .spinner-border.text-secondary(role='status')
           span.sr-only Processing...
-        h1.spinner-text.text-secondary
+        h1#loading-text.spinner-text.text-secondary
           | Processing...
 
     #toast-wrapper.col-md-6(aria-live='polite', aria-atomic='true', style="position:fixed; bottom:3rem; right:0;")

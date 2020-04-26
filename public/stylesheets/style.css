@@ -1,5 +1,4 @@
-.loading-overlay {
-  display: block;
+#loading-overlay {
   height: 100%;
   width: 100%;
   position: fixed;
@@ -17,12 +16,12 @@
   margin-top: 30px;
 }
 
-.loading-overlay .spinner-border {
+#loading-overlay .spinner-border {
   width: 10em !important;
   height: 10em !important;
 }
 
-.loading-overlay .spinner-text {
+#loading-overlay .spinner-text {
   margin-top: auto;
   margin-bottom: auto;
 }
@@ -34,3 +33,79 @@
 .hidden {
   display: none;
 }
+
+.template-label {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #555;
+  border-radius: 15px;
+}
+.template-label:hover {
+  cursor: pointer;
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label {
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label:before {
+  font-family: "Font Awesome\ 5 Free";
+  content: "\f00c";
+  font-weight: bold;
+  color: rgb(44, 139, 156);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+/* Background patterns */
+
+.bg-squiggly {
+  background: radial-gradient(
+      circle at 100% 50%,
+      transparent 20%,
+      #ba83c436 21%,
+      #ba83c436 34%,
+      transparent 35%,
+      transparent
+    ),
+    radial-gradient(
+        circle at 0% 50%,
+        transparent 20%,
+        #ba83c436 21%,
+        #ba83c436 34%,
+        transparent 35%,
+        transparent
+      )
+      0 -50px;
+  background-size: 75px 100px;
+  background-color: #ba83c436;
+}
+
+.bg-polka {
+  background: radial-gradient(#f6c 15%, rgba(0, 0, 0, 0) 16%),
+    radial-gradient(#ffc107 15%, rgba(0, 0, 0, 0) 16%), #0f4794;
+  background-position: 0 0, 30px 30px;
+  background-origin: padding-box;
+  background-clip: border-box;
+  background-size: 60px 60px;
+
+  color: white;
+}
+
+.bg-symphony {
+  background-image: url(/images/patterns/symphony.png);
+}
+
+.bg-christmas {
+  background-image: url(/images/patterns/christmas-colour.png);
+}
+
+.bg-pentagon {
+  background-image: url(/images/patterns/congruent_pentagon.png);
+}
+
+/* Background patterns end*/

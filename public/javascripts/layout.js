@@ -1,3 +1,18 @@
+window.addEventListener("DOMContentLoaded", function (evt) {
+  loading_overlay(false);
+  $('[data-toggle="popover"]').popover();
+});
+
+function loading_overlay(display, text = "Loading...") {
+  let overlay = document.getElementById("loading-overlay");
+  let overlay_text = document.getElementById("loading-text");
+
+  overlay_text.innerHTML = text;
+
+  if (overlay.style.display === "none" && display) overlay.style.display = "block";
+  else if (overlay.style.display === "block" && !display) overlay.style.display = "none";
+}
+
 function pad(str, max) {
   str = str.toString();
   return str.length < max ? pad("0" + str, max) : str;

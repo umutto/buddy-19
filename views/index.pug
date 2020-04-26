@@ -1,9 +1,81 @@
 extends layout
 
 block metas
-  script(src='/socket.io/socket.io.js')
-  script(src='/javascripts/socket.js')
+  script(src='/javascripts/index.js')
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .container
+    .text-danger.flash-error-message #{error_message}
+    .text-info.flash-info-message #{info_message}
+    form(class="form-signin" method="POST" action="/index")
+      .text-center
+        h1.font-weight-bold Create a Room
+      .form-row
+        .form-group.col-md-2
+          label(for="roomType") Room Type
+            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create.<br><b>Quiz</b>: You take turns to ask each other questions.<br/><b>Sketch (NOT IMPLEMENTED YET)<b/>: Draw with your firends, like pictionary.")
+              small
+                i.far.fa-question-circle.ml-1
+          select#roomType.form-control(name="roomType")
+            option(val='quiz' selected) Quiz
+            option(val='sketch' disabled) Sketch
+        .form-group.col-md-5
+          label(for="roomName") Room Name
+            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Name" data-content="Name of the room for your friends. (Not required)")
+              small
+                i.far.fa-question-circle.ml-1
+          input#roomName.form-control(type="text" name="roomName" placeholder="My amazing room!")
+        .form-group.col-md-5
+          label(for="roomPassword") Room Password
+            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
+              small
+                i.far.fa-question-circle.ml-1
+          input#roomPassword.form-control(type="text" name="roomPassword" placeholder="My amazing room!")
+      .form-row.pt-3
+        .form-group.col-md-6
+          .input-group.pb-1
+            label.col-md-6(for="roundAmount") Number of Rounds:
+            input#roundAmount.col-md-6.form-control(type="number" name="roundAmount" value=3 min=1)
+            .input-group-append
+              .input-group-text round(s)
+          .input-group
+            label.col-md-6(for="turnLimit") Turn Limit:
+            input#turnLimit.col-md-6.form-control(type="number" name="turnLimit" value=60 min=5)
+            .input-group-append
+              .input-group-text seconds
+          .form-group.ml-5.pt-3
+            .form-check
+              input#doubleRound.form-check-input(type="checkbox" checked)
+              label.form-check-label(for="doubleRound") Double points on last round
+        .form-group.col-md-6.pl-5
+          label.col-md-6(for="turnLimit") Theme:
+          .form-row
+            .col-lg-2.col-4
+                input#templateLight.d-none(type="radio" name="roomTemplate" value="bg-light" checked)
+                label.template-label.bg-light(for="templateLight")
+            .col-lg-2.col-4
+                input#templateSquigly.d-none(type="radio" name="roomTemplate" value="bg-squiggly")
+                label.template-label.bg-squiggly(for="templateSquigly")
+            .col-lg-2.col-4
+                input#templatePolka.d-none(type="radio" name="roomTemplate" value="bg-polka")
+                label.template-label.bg-polka(for="templatePolka")
+            .col-lg-2.col-4
+                input#templateSymphony.d-none(type="radio" name="roomTemplate" value="bg-symphony")
+                label.template-label.bg-symphony(for="templateSymphony")
+            .col-lg-2.col-4
+                input#templateChristmas.d-none(type="radio" name="roomTemplate" value="bg-christmas")
+                label.template-label.bg-christmas(for="templateChristmas")
+            .col-lg-2.col-4
+                input#templatePentagon.d-none(type="radio" name="roomTemplate" value="bg-pentagon")
+                label.template-label.bg-pentagon(for="templatePentagon")
+
+      button(class='btn btn-lg btn-primary btn-block mt-3' type="submit") Create
+
+
+
+
+      //- .bg-squiggly
+      //- .bg-polka
+      //- .bg-symphony
+      //- .bg-christmas
+      //- .bg-pentagon
