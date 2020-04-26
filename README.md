@@ -24,6 +24,7 @@ You can create a room from the index url. Once you've create the room, people ca
 
 ## TODO
 
+- Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
 - Sketch room.
 - Youtube room.
 - User & room histories.
