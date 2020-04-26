@@ -39,4 +39,5 @@ You can create a room from the index url. Once you've create the room, people ca
 
 ## Attributions
 
-- For user icons: [https://pngtree.com/so/animal](animal png from pngtree.com)
+- Some background patterns for the themes are downloaded from [https://www.toptal.com/designers/subtlepatterns/](Toptal Subtle Patterns)
+- Animal user icons are downloaded from [https://pngtree.com/so/animal](animal png from pngtree.com)

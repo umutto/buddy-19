@@ -96,6 +96,7 @@ input[type="radio"]:checked + label:before {
   color: white;
 }
 
+/* Background patterns below are downloaded from https://www.toptal.com/designers/subtlepatterns/  */
 .bg-symphony {
   background-image: url(/images/patterns/symphony.png);
 }
