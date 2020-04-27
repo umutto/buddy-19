@@ -32,6 +32,7 @@ This just a fun project that I've started doing to practice my node backend and 
 
 ### TODO
 
+- Check and create if db file does not exists (using buddy19.db.sql)
 - Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
 - Sketch room.
 - Youtube room.

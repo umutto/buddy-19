@@ -1,6 +1,8 @@
 var sqlite3 = require("sqlite3").verbose();
 var nodeCleanup = require("node-cleanup");
 
+// TODO: check and create if db file does not exists (using buddy19.db.sql)
+
 const database = new sqlite3.Database(
   "./configs/db/buddy19.db",
   sqlite3.OPEN_READWRITE,

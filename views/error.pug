@@ -1,7 +1,16 @@
 extends layout
 
 block content
-  .container
-    h1= message
-    h2= error.status
-    pre #{error.stack}
+  .container.d-flex.flex-column(style="height:100vh;")
+    .flex-grow-1
+    .row.justify-content-center.align-items-center
+      h1.mr-3.pr-3.border-right.font-weight-bold #{status}
+      h2.font-weight-normal.lead #{message}
+    .row.justify-content-center
+      pre.w-100 #{error.stack}
+    .row.justify-content-center
+      a.btn.btn-primary.btn-lg.btn-block(href="/") Return to main page
+    .flex-grow-1
+    .flex-grow-1
+
+

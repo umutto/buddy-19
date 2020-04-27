@@ -30,6 +30,7 @@
     "morgan": "~1.9.1",
     "node-cleanup": "^2.1.2",
     "pug": "^2.0.4",
+    "shortid": "^2.2.15",
     "socket.io": "^2.3.0",
     "sqlite3": "^4.1.1",
     "uuid": "^7.0.3"
