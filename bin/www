@@ -67,24 +67,6 @@ app.use(function (req, res, next) {
 });
 
 /**
- * Database initialization and bindings
- */
-
-var dbController = require("../configs/sqlite3");
-var nodeCleanup = require("node-cleanup");
-
-var db = dbController.init("./configs/db/buddy19.db");
-
-app.use(function (req, res, next) {
-  req.db = db;
-  next();
-});
-
-nodeCleanup(function (exitCode, signal) {
-  dbController.close();
-});
-
-/**
  * Event listener for HTTP server "error" event.
  */
 

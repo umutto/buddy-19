@@ -31,7 +31,7 @@ block content
             span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
               small
                 i.far.fa-question-circle.ml-1
-          input#roomPassword.form-control(type="text" name="roomPassword" placeholder="My amazing room!")
+          input#roomPassword.form-control(type="text" name="roomPassword" placeholder="my super secret password")
       .form-row.pt-3
         .form-group.col-md-6
           .input-group.pb-1
@@ -49,8 +49,8 @@ block content
               .input-group-text seconds
           .form-group.ml-5.pt-3
             .form-check
-              input#doubleRound.form-check-input(type="checkbox" checked)
-              label.form-check-label(for="doubleRound") Double points on last round
+              input#doublePoints.form-check-input(type="checkbox" name="doublePoints" checked)
+              label.form-check-label(for="doublePoints") Double points on last round
         .form-group.col-md-6.pl-5
           label.col-md-6(for="turnLimit") Theme:
           .form-row

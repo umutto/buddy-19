@@ -1,0 +1,21 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "user" (
+	"UUID"	TEXT NOT NULL UNIQUE,
+	"CreationDate"	TEXT DEFAULT 'SELECT datetime("now")',
+	"LastSeenDate"	TEXT,
+	"Name"	TEXT,
+	"Avatar"	TEXT,
+	PRIMARY KEY("UUID")
+);
+CREATE TABLE IF NOT EXISTS "room" (
+	"Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"PublicUrl"	TEXT NOT NULL,
+	"Name"	TEXT NOT NULL,
+	"Password"	TEXT,
+	"Settings"	TEXT,
+	"Host"	TEXT NOT NULL,
+	"CreationDate"	TEXT NOT NULL DEFAULT 'SELECT datetime("now")',
+	"History"	TEXT,
+	FOREIGN KEY("Host") REFERENCES "user"("Id") ON UPDATE CASCADE
+);
+COMMIT;
