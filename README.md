@@ -29,6 +29,7 @@ You can create a room from the index url. Once you've create the room, people ca
 - Youtube room.
 - User & room histories.
 - Public servers and room listings.
+- Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
 
 ### Future updates
 
@@ -37,6 +38,10 @@ You can create a room from the index url. Once you've create the room, people ca
 - Guess the song game (playing youtube music in the background and trying to guess the song title or the artist)
 
 ---
+
+## About usage data
+
+- This app uses google analytics with anonymized user ID's to measure usage data. Nothing you enter (be it usernames, quizzes, messages, answers etc.. ) is sent and used by us or a third party.
 
 ## Attributions
 

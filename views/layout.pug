@@ -2,6 +2,17 @@ doctype html
 html
   head
     title= title
+
+    // Global site tag (gtag.js) - Google Analytics
+    script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-98513512-3')
+    script.
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-98513512-3');
+      if(document.cookie.contains("user_alias="))
+        gtag('set', {'user_id': ("; " + document.cookie).split("; " + "user_alias" + "=").pop().split(";").shift() || "unk"});
+
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0')
     link(rel='shortcut icon', type='image/x-icon', href='/images/favicon.ico')
@@ -19,7 +30,6 @@ html
     meta(name='apple-mobile-web-app-capable' content='yes')
     meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
 
-    //- link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous")
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
 
