@@ -1,3 +1,7 @@
+<p align="center">
+  <img style="max-width:700px; height:auto;" src="public/images/logo_cover.png">
+</p>
+
 # buddy-19
 
 Your COVID-19 meeting buddy!
