@@ -1,3 +1,40 @@
+.hidden {
+  display: none;
+}
+
+.transparent-bg {
+  background-color: #ffffffaa;
+  box-shadow: 0 0 5px 5px #d8d8d830;
+}
+
+.theme-label {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #555;
+  border-radius: 15px;
+  border-radius: 5px;
+}
+.theme-label:hover {
+  cursor: pointer;
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label {
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label:before {
+  font-family: "Font Awesome\ 5 Free";
+  content: "\f00c";
+  font-weight: bold;
+  color: rgb(44, 139, 156);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
 #loading-overlay {
   height: 100%;
   width: 100%;
@@ -30,37 +67,6 @@
   z-index: 1060;
 }
 
-.hidden {
-  display: none;
-}
-
-.template-label {
-  width: 64px;
-  height: 64px;
-  border: 2px solid #555;
-  border-radius: 15px;
-}
-.template-label:hover {
-  cursor: pointer;
-  border-color: #17a2b8;
-  border-radius: 35px;
-}
-
-input[type="radio"]:checked + label {
-  border-color: #17a2b8;
-  border-radius: 35px;
-}
-
-input[type="radio"]:checked + label:before {
-  font-family: "Font Awesome\ 5 Free";
-  content: "\f00c";
-  font-weight: bold;
-  color: rgb(44, 139, 156);
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-
 /* Background patterns */
 
 .bg-squiggly {
@@ -87,13 +93,11 @@ input[type="radio"]:checked + label:before {
 
 .bg-polka {
   background: radial-gradient(#f6c 15%, rgba(0, 0, 0, 0) 16%),
-    radial-gradient(#ffc107 15%, rgba(0, 0, 0, 0) 16%), #0f4794;
+    radial-gradient(#3f90ff 15%, rgba(0, 0, 0, 0) 16%), #ffe79e;
   background-position: 0 0, 30px 30px;
   background-origin: padding-box;
   background-clip: border-box;
   background-size: 60px 60px;
-
-  color: white;
 }
 
 /* Background patterns below are downloaded from https://www.toptal.com/designers/subtlepatterns/  */

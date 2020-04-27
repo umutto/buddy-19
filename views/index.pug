@@ -4,7 +4,7 @@ block metas
   script(src='/javascripts/index.js')
 
 block content
-  .container
+  .container.py-3.mt-sm-3.transparent-bg
     .text-danger.flash-error-message #{error_message}
     .text-info.flash-info-message #{info_message}
     form(class="form-signin" method="POST" action="/")
@@ -55,22 +55,22 @@ block content
           label.col-md-6(for="turnLimit") Theme:
           .form-row
             .col-lg-2.col-4
-                input#templatePentagon.d-none(type="radio" name="roomTheme" value="bg-pentagon" checked=(selected_theme === 'bg-pentagon' ? true : false))
-                label.template-label.bg-pentagon(for="templatePentagon")
+                input#themePentagon.d-none(type="radio" name="roomTheme" value="bg-pentagon" checked=(selected_theme === 'bg-pentagon' ? true : false))
+                label.theme-label.bg-pentagon(for="themePentagon")
             .col-lg-2.col-4
-                input#templateSquigly.d-none(type="radio" name="roomTheme" value="bg-squiggly" checked=(selected_theme === 'bg-squiggly' ? true : false))
-                label.template-label.bg-squiggly(for="templateSquigly")
+                input#themeSquigly.d-none(type="radio" name="roomTheme" value="bg-squiggly" checked=(selected_theme === 'bg-squiggly' ? true : false))
+                label.theme-label.bg-squiggly(for="themeSquigly")
             .col-lg-2.col-4
-                input#templatePolka.d-none(type="radio" name="roomTheme" value="bg-polka" checked=(selected_theme === 'bg-polka' ? true : false))
-                label.template-label.bg-polka(for="templatePolka")
+                input#themePolka.d-none(type="radio" name="roomTheme" value="bg-polka" checked=(selected_theme === 'bg-polka' ? true : false))
+                label.theme-label.bg-polka(for="themePolka")
             .col-lg-2.col-4
-                input#templateSymphony.d-none(type="radio" name="roomTheme" value="bg-symphony" checked=(selected_theme === 'bg-symphony' ? true : false))
-                label.template-label.bg-symphony(for="templateSymphony")
+                input#themeSymphony.d-none(type="radio" name="roomTheme" value="bg-symphony" checked=(selected_theme === 'bg-symphony' ? true : false))
+                label.theme-label.bg-symphony(for="themeSymphony")
             .col-lg-2.col-4
-                input#templateSakura.d-none(type="radio" name="roomTheme" value="bg-sakura" checked=(selected_theme === 'bg-sakura' ? true : false))
-                label.template-label.bg-sakura(for="templateSakura")
+                input#themeSakura.d-none(type="radio" name="roomTheme" value="bg-sakura" checked=(selected_theme === 'bg-sakura' ? true : false))
+                label.theme-label.bg-sakura(for="themeSakura")
             .col-lg-2.col-4
-                input#templateChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
-                label.template-label.bg-christmas(for="templateChristmas")
+                input#themeChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
+                label.theme-label.bg-christmas(for="themeChristmas")
 
-      button(class='btn btn-lg btn-primary btn-block mt-3' type="submit") Create
+      button(class='btn btn-lg btn-primary btn-block my-3' type="submit") Create
