@@ -30,7 +30,7 @@ const create_new_room = async (
   roundAmount,
   turnLimit,
   doublePoints,
-  roomTemplate,
+  roomTheme,
   hostUUID
 ) => {
   let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, RoomType, Settings, Host)
@@ -39,7 +39,7 @@ const create_new_room = async (
     roundAmount,
     turnLimit,
     doublePoints,
-    roomTemplate,
+    roomTheme,
   });
   let params = [roomUrl, 1, roomName, roomPassword, roomType, roomSettings, hostUUID];
   return new Promise(function (resolve, reject) {

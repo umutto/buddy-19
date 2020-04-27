@@ -44,7 +44,9 @@ html
     script(src='/javascripts/layout.js')
     block metas
 
-  body
+  - var themes = ["bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas"]
+  - var selected_theme = roomTheme || themes[Math.floor(Math.random() * themes.length)]
+  body(class=selected_theme)
     block content
     #loading-overlay(style="display:block;")
       .loading-overlay-content

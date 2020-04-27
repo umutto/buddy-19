@@ -17,7 +17,7 @@ router.post("/", async function (req, res, next) {
   let roundAmount = req.body.roundAmount || 3;
   let turnLimit = req.body.turnLimit || 60;
   let doublePoints = "doublePoints" in req.body && req.body.doublePoints === "on";
-  let roomTemplate = req.body.roomTemplate || "bg-light";
+  let roomTheme = req.body.roomTheme || null;
 
   let roomUrl = shortid.generate();
   let hostUUID = res.locals.UserAliasCookie;
@@ -31,7 +31,7 @@ router.post("/", async function (req, res, next) {
       roundAmount,
       turnLimit,
       doublePoints,
-      roomTemplate,
+      roomTheme,
       hostUUID
     );
     res.redirect(`/room/${roomUrl}`);

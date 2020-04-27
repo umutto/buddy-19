@@ -97,6 +97,11 @@ input[type="radio"]:checked + label:before {
 }
 
 /* Background patterns below are downloaded from https://www.toptal.com/designers/subtlepatterns/  */
+
+.bg-sakura {
+  background-image: url(/images/patterns/sakura.png);
+}
+
 .bg-symphony {
   background-image: url(/images/patterns/symphony.png);
 }
@@ -107,6 +112,10 @@ input[type="radio"]:checked + label:before {
 
 .bg-pentagon {
   background-image: url(/images/patterns/congruent_pentagon.png);
+}
+
+.bg-hypnotize {
+  background-image: url(/images/patterns/hypnotize.png);
 }
 
 /* Background patterns end*/

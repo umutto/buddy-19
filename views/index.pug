@@ -55,22 +55,22 @@ block content
           label.col-md-6(for="turnLimit") Theme:
           .form-row
             .col-lg-2.col-4
-                input#templateLight.d-none(type="radio" name="roomTemplate" value="bg-light" checked)
-                label.template-label.bg-light(for="templateLight")
+                input#templatePentagon.d-none(type="radio" name="roomTheme" value="bg-pentagon" checked=(selected_theme === 'bg-pentagon' ? true : false))
+                label.template-label.bg-pentagon(for="templatePentagon")
             .col-lg-2.col-4
-                input#templateSquigly.d-none(type="radio" name="roomTemplate" value="bg-squiggly")
+                input#templateSquigly.d-none(type="radio" name="roomTheme" value="bg-squiggly" checked=(selected_theme === 'bg-squiggly' ? true : false))
                 label.template-label.bg-squiggly(for="templateSquigly")
             .col-lg-2.col-4
-                input#templatePolka.d-none(type="radio" name="roomTemplate" value="bg-polka")
+                input#templatePolka.d-none(type="radio" name="roomTheme" value="bg-polka" checked=(selected_theme === 'bg-polka' ? true : false))
                 label.template-label.bg-polka(for="templatePolka")
             .col-lg-2.col-4
-                input#templateSymphony.d-none(type="radio" name="roomTemplate" value="bg-symphony")
+                input#templateSymphony.d-none(type="radio" name="roomTheme" value="bg-symphony" checked=(selected_theme === 'bg-symphony' ? true : false))
                 label.template-label.bg-symphony(for="templateSymphony")
             .col-lg-2.col-4
-                input#templateChristmas.d-none(type="radio" name="roomTemplate" value="bg-christmas")
-                label.template-label.bg-christmas(for="templateChristmas")
+                input#templateSakura.d-none(type="radio" name="roomTheme" value="bg-sakura" checked=(selected_theme === 'bg-sakura' ? true : false))
+                label.template-label.bg-sakura(for="templateSakura")
             .col-lg-2.col-4
-                input#templatePentagon.d-none(type="radio" name="roomTemplate" value="bg-pentagon")
-                label.template-label.bg-pentagon(for="templatePentagon")
+                input#templateChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
+                label.template-label.bg-christmas(for="templateChristmas")
 
       button(class='btn btn-lg btn-primary btn-block mt-3' type="submit") Create
