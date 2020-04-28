@@ -5,7 +5,8 @@ block content
     .container.d-flex.flex-column(style="height:100vh;")
       .flex-grow-1
       .row.justify-content-center.align-items-center(style="font-size:100px;")
-        h1.display-1.mr-3.pr-3.border-right.border-dark.font-weight-bold #{status}
+        h1.display-1.pr-3.font-weight-bold #{status}
+        .d-none.d-sm-block.border-right.border-dark.mr-3(style="height:80%;")
         h2.display-4.lead #{message}
       .row.justify-content-center
         pre.w-100 #{error.stack}

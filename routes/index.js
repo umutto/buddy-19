@@ -45,7 +45,7 @@ router.get("/room/:id", function (req, res, next) {
 
   // TODO: get the room details from the controller, send a 404 expressjs if the id is not active or exists
 
-  res.render("room.pug", { title: `Buddy-19 Room ${room_id}` });
+  res.render("room.pug", { title: `Buddy-19 Room ${room_id}`, RoomId: room_id });
 });
 
 router.post("/room/:id", async function (req, res, next) {

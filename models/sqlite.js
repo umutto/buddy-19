@@ -15,7 +15,7 @@ const create_user = (uuid) => {
                ON CONFLICT(UUID) DO UPDATE SET LastSeenDate=CURRENT_TIMESTAMP`;
   let params = [uuid];
   return new Promise(function (resolve, reject) {
-    db.run(query, params, function (error, rows) {
+    db.run(query, params, function (error) {
       if (error) reject(error);
       else resolve({ lastID: this.lastID, changes: this.changes });
     });
@@ -44,7 +44,7 @@ const create_new_room = async (
   let params = [roomUrl, 1, roomName, roomPassword, roomType, roomSettings, hostUUID];
   return new Promise(function (resolve, reject) {
     db.serialize(() => {
-      db.run(query, params, function (error, rows) {
+      db.run(query, params, function (error) {
         if (error) reject(error);
         else resolve({ lastID: this.lastID, changes: this.changes });
       });
@@ -52,4 +52,26 @@ const create_new_room = async (
   });
 };
 
-module.exports = { create_user, create_new_room };
+const get_room_details = async (room_url) => {
+  let query = `SELECT * FROM room WHERE PublicUrl = ? AND IsActive = 1`;
+  let params = [room_url];
+  return new Promise(function (resolve, reject) {
+    db.get(query, params, function (error, row) {
+      if (error) reject(error);
+      else resolve(row);
+    });
+  });
+};
+
+const set_room_active = async (room_url, state) => {
+  let query = `UPDATE room SET IsActive = ? WHERE PublicUrl = ? AND IsActive = ?`;
+  let params = [+state, room_url, +!state];
+  return new Promise(function (resolve, reject) {
+    db.run(query, params, function (error) {
+      if (error) reject(error);
+      else resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+};
+
+module.exports = { create_user, create_new_room, get_room_details, set_room_active };

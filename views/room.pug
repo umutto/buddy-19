@@ -3,7 +3,8 @@ extends layout
 block metas
   script(src='/socket.io/socket.io.js')
   script(src='/javascripts/socket.js')
+  script(src='/javascripts/room.js')
 
 block content
-  h1= title
-  p Welcome to #{title}
+  #main-wrapper.container(data-room=RoomId)
+    h1.font-weight-bold.float-right Room #{RoomId}
