@@ -7,10 +7,13 @@ var sqliteController = require("../models/sqlite");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
-  res.render("index", { title: "Buddy-19 Create a Room" });
+  res.render("index", { title: "Buddy-19: Your COVID-19 meeting buddy!" });
+});
+router.get("/create", async function (req, res, next) {
+  res.render("create", { title: "Buddy-19 Create a Room" });
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/create", async function (req, res, next) {
   let roomType = req.body.roomType || 1;
   let roomName = req.body.roomName || `A Buddy-19 ${roomType} Room`;
   let roomPassword = req.body.roomPassword || null;
@@ -40,12 +43,21 @@ router.post("/", async function (req, res, next) {
   }
 });
 
-router.get("/room/:id", function (req, res, next) {
+router.get("/room/:id", async function (req, res, next) {
   let room_id = req.params.id;
-
-  // TODO: get the room details from the controller, send a 404 expressjs if the id is not active or exists
-
-  res.render("room.pug", { title: `Buddy-19 Room ${room_id}`, RoomId: room_id });
+  try {
+    let room_details = await sqliteController.get_room_details(room_id);
+    room_details.Settings = JSON.parse(room_details.Settings);
+    if (!room_details) next({ status: 404, code: "Room Not Found" });
+    else
+      res.render("room.pug", {
+        title: `Buddy-19 Room ${room_id}`,
+        RoomId: room_id,
+        RoomTheme: room_details.Settings.roomTheme,
+      });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/room/:id", async function (req, res, next) {

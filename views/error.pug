@@ -1,18 +1,19 @@
 extends layout
 
 block content
-  .container-fluid.bg-hypnotize
-    .container.d-flex.flex-column(style="height:100vh;")
-      .flex-grow-1
-      .row.justify-content-center.align-items-center(style="font-size:100px;")
-        h1.display-1.pr-3.font-weight-bold #{status}
-        .d-none.d-sm-block.border-right.border-dark.mr-3(style="height:80%;")
-        h2.display-4.lead #{message}
-      .row.justify-content-center
-        pre.w-100 #{error.stack}
-      .row.justify-content-center
-        a.btn.btn-primary.btn-lg.btn-block(href="/") Return to main page
-      .flex-grow-1
-      .flex-grow-1
+  .container.d-flex.flex-column(style="min-height:100vh; height:100%;")
+    .flex-grow-1
+    .row.justify-content-center.align-items-center(style="font-size:100px;")
+      h1.display-1.font-weight-bold #{status}
+      .d-none.d-lg-block.border-right.border-dark.mr-3.display-3 &nbsp
+      .d-block.d-lg-none.w-100
+      h2.display-4.lead(style='overflow-wrap: anywhere;') #{code}
+    .row.justify-content-center
+      pre.w-100
+        | #{error.stack}
+    .row.justify-content-center
+      a.btn.btn-primary.btn-lg.btn-block(href="/") Return to main page
+    .flex-grow-1
+    .flex-grow-1
 
 

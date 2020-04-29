@@ -1,0 +1,13 @@
+.chat-message.d-flex.pb-1(data-userid=MessageUserId)
+    if (MessageUserAvatar && MessageUserName)
+        .pr-1.d-flex.align-items-end(style="max-width: 48px;")
+            img.img-fluid.mb-1(src=MessageUserAvatar, alt=MessageUserName)
+    .flex-grow-1.px-1(class=(MessageUserAvatar && MessageUserName ? "speech-bubble": "bg-light border"))
+        .chat-header(class=(MessageUserAvatar && MessageUserName ? "border-bottom" : ""))
+            if (MessageUserName)
+                span.h5 #{MessageUserName}
+            .chat-time.small.d-flex.align-items-center(class=(MessageUserAvatar && MessageUserName ? "position-absolute" : "float-right"))
+                span.material-icons.md-16.mx-1 access_time
+                span #{MessageTime}
+        .chat-text.px-1
+            p.p-line.mb-0 #{MessageText}

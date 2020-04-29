@@ -41,9 +41,10 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error", {
+    RoomTheme: "bg-hypnotize",
     title: "Error :'(",
     status: err.status || 500,
-    message: err.message,
+    code: err.code || err.message,
     error: req.app.get("env") === "development" ? err : {},
   });
 });

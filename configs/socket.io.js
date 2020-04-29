@@ -1,98 +1,104 @@
 var socket_io = require("socket.io");
-var messageType = require("../helpers/message");
-
 var sqliteController = require("../models/sqlite");
 
-module.exports = {
-  io: null,
-  init: (server) => {
-    if (!this.io)
-      this.io = socket_io(server, {
-        pingTimeout: 60000,
-        transports: ["websocket", "polling"],
-      });
-    const _this = this;
+const messageType = {
+  userConnected: 0,
+  userDisconnected: 1,
+  userChatMessage: 2,
+  userChatReaction: 3,
+};
 
-    this.io.on("connection", function (socket) {
-      let conn_client = socket.request._query;
-      let room_details = null;
+const init = (server) => {
+  const io = socket_io(server, {
+    pingTimeout: 60000,
+    transports: ["websocket", "polling"],
+  });
 
-      console.log(
-        `(${conn_client.uuid}) has established a connection using socket (${socket.id}).`
-      );
+  io.on("connection", function (socket) {
+    let conn_client = socket.request._query;
+    let user_details = {
+      UserId: conn_client.UserId,
+      UserName: conn_client.UserName || "Guest-" + Math.floor(Math.random() * 10000),
+      UserAvatar: conn_client.UserAvatar || "",
+    };
+    let room_details = null;
 
-      socket.on("join", async function (room, ack) {
-        console.log(`(${conn_client.uuid}) is attempting to join room (${room})`);
+    console.log(
+      `(${user_details.UserId}) has established a connection using socket (${socket.id}).`
+    );
+
+    socket.on("join", async function (room, ack = () => {}) {
+      console.log(`(${user_details.UserId}) is attempting to join room (${room})`);
+
+      try {
         room_details = await sqliteController.get_room_details(room);
-
-        try {
-          if (!room_details) {
-            ack({
-              Code: 404,
-              Message: `Room (${room}) is not found or not available anymore.`,
-            });
-          } else if (conn_client.uuid === room_details.Host) {
-            // Host has joined/created the room, doesn't need password.
-            socket.join(room);
-            ack({ Code: 200, Message: room });
-            socket.to(room).emit(messageType.userConnected, {
-              usr_id: conn_client.uuid,
-              usr_name: conn_client.name,
-              usr_avatar: conn_client.avatar,
-            });
-          } else if (!Object.keys(socket.rooms).includes(room)) {
-            ack({ Code: 403, Message: `Room (${room}) is waiting for the host.` });
-          } else if (room_details.password !== conn_client.password) {
-            ack({ Code: 401, Message: "Wrong password." });
-          } else {
-            socket.join(room);
-            ack({ Code: 200, Message: room });
-            socket.to(room).emit(messageType.userConnected, {
-              usr_id: conn_client.uuid,
-              usr_name: conn_client.name,
-              usr_avatar: conn_client.avatar,
-            });
-          }
-        } catch (error) {
+        room_details.Settings = JSON.parse(room_details.Settings);
+        if (!room_details) {
           ack({
-            Code: 500,
-            Message: "Something went wrong, try again later.",
-            Details: error,
+            status: 404,
+            message: `Room (${room}) is not found or not available anymore.`,
           });
-        }
-      });
-
-      socket.on("disconnecting", function (reason) {
-        let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
-        rooms.forEach(function (room) {
-          _this.io.sockets.in(room).clients((error, clients) => {
-            if (error) throw error;
-            if (clients.length === 0) {
-              socketController.set_room_active(room, false);
-              console.log(
-                `All users have disconnected from room (${room}), deactivating.`
-              );
-            }
+        } else if (user_details.UserId === room_details.Host) {
+          // Host has joined/created the room, doesn't need password.
+          socket.join(room);
+          ack({ status: 200, message: room });
+          socket.to(room).emit("message_echo", messageType.userConnected, {
+            ...user_details,
+            ChatMessage: `${user_details.UserName} has joined the room!`,
+            TimeReceived: new Date().toJSON(),
           });
-          socket.to(room).emit(messageType.userDisconnected, {
-            usr_id: conn_client.uuid,
-          });
-        });
-
-        console.log(
-          `(${conn_client.uuid}) is closing the connection on socket (${socket.id}) with reason "${reason}".`
-        );
-      });
-
-      socket.on("message", function (messageType, context, ack) {
-        if (socket.room) {
-          // echo message after processing
-          // socket.to(room).emit(messageType, context);
-          ack({ Code: 200, Message: message });
+        } else if (room_details.password !== conn_client.password) {
+          ack({ status: 401, message: "Wrong password." });
         } else {
-          ack({ Code: 404, Message: "User is not a member of any rooms." });
+          socket.join(room);
+          ack({ status: 200, message: room });
+          socket.to(room).emit("message_echo", messageType.userConnected, {
+            ...user_details,
+            ChatMessage: `${user_details.UserName} has joined the room!`,
+            TimeReceived: new Date().toJSON(),
+          });
         }
+      } catch (error) {
+        ack({
+          status: 500,
+          message: "Something went wrong, try again later.",
+          Details: error,
+        });
+      }
+
+      socket.on("message", function (message_type, context, ack = () => {}) {
+        let context_echo = {
+          ...user_details,
+          ...context,
+          TimeReceived: new Date().toJSON(),
+        };
+        socket.to(room).emit("message_echo", message_type, context_echo);
+        ack({ status: 200, message: context });
       });
     });
-  },
+
+    socket.on("disconnecting", function (reason) {
+      let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
+      rooms.forEach(function (room) {
+        io.sockets.in(room).clients((error, clients) => {
+          if (error) throw error;
+          if (clients.length === 0) {
+            socketController.set_room_active(room, false);
+            console.log(`All users have disconnected from room (${room}), deactivating.`);
+          }
+        });
+        socket.to(room).emit("message_echo", messageType.userDisconnected, {
+          ...user_details,
+          ChatMessage: `${user_details.UserName} has left the room.`,
+          TimeReceived: new Date().toJSON(),
+        });
+      });
+
+      console.log(
+        `(${user_details.UserId}) is closing the connection on socket (${socket.id}) with reason "${reason}".`
+      );
+    });
+  });
 };
+
+module.exports = { messageType, init };

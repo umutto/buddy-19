@@ -28,7 +28,7 @@ You can create a room from the index url. Once you've create the room, people ca
 
 - **Youtube room**: You can watch youtube videos in sync with your friends, this could be a new trailer where you all want to react together, a funny cat video or the background music in your online meetings. Depending on your settings, this could be a playlist you're DJ'ing to your friends or a complete free list where everyone can play their most funny videos.
 
-In all rooms, hosts can set a background theme, users can chat and interact with reactions and more. Moreover you can create and join as many rooms as you want (you want a background music while playing in a quiz room? sure!). And there is no time or participant limit on rooms! (Limit is the sky! or more like the processing power of my cheap server in the cloud.)
+In all rooms, hosts can set a background theme, users can chat and interact with reactions and more. Moreover you can create and join as many rooms as you want (you want a background music while playing in a quiz room? sure!). And there is no time or participant limit on rooms! (Limit is the sky! or more like the processing power of my cheap server in the cloud. As well as the ui elements, it would most probably break with more that 10 people.)
 
 ### Background
 
@@ -37,6 +37,7 @@ This just a fun project that I've started doing to practice my node backend and 
 ### TODO
 
 - Check and create if db file does not exists (using buddy19.db.sql)
+  - Encrypt/decrypt room passwords (bcrypt)
 - Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
 - Sketch room.
 - Youtube room.
@@ -44,6 +45,7 @@ This just a fun project that I've started doing to practice my node backend and 
 - Public servers and room listings.
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
 - Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms.)
+- Add an emoji picker on chat.
 
 #### Future updates
 
@@ -59,5 +61,7 @@ This just a fun project that I've started doing to practice my node backend and 
 
 ## Attributions
 
+- Uses Express.js, Bootstrap and Material design icons.
 - Some background patterns for the themes are downloaded from [https://www.toptal.com/designers/subtlepatterns/](Toptal Subtle Patterns)
 - Animal user icons are downloaded from [https://pngtree.com/so/animal](animal png from pngtree.com)
+- Logo and favicon are created using [Hatchful](https://hatchful.shopify.com/) and [favicon.ico](favicon.ico)

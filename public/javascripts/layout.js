@@ -27,13 +27,12 @@ function serialize_params(obj) {
 }
 
 function create_toast(head, body, color = "orange", delay = 1000) {
-  let toast = document.getElementById("toast-template").cloneNode(true);
-  toast.id = `toast-${new Date().getTime()}`;
-  toast.querySelector(".toast-header").textContent = head;
-  toast.querySelector(".toast-body").innerHtml = body;
-  toast.querySelector(".toast-header").style.backgroundColor = color;
-  toast.classList.remove("d-none");
-  document.getElementById("toast-wrapper").appendChild(toast);
+  let toast = $("#toast-template").clone().attr("id", `toast-${new Date().getTime()}`);
+  toast.find(".toast-title").text(head);
+  toast.find(".toast-body").html(body);
+  toast.find(".toast-header").css("background-color", color);
+  toast.removeClass("d-none");
+  toast.appendTo("#toast-wrapper");
   toast.toast({ delay: delay });
   return toast;
 }

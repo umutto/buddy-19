@@ -1,0 +1,48 @@
+#chat-wrapper {
+  /* background-color: #fff9; */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#btn-chat-send {
+  position: absolute;
+  top: 0px;
+  right: 2px;
+  background: #fff06cb5;
+  font-weight: 700;
+}
+
+#chat-input {
+  padding-right: 4rem;
+}
+
+.chat-icon {
+  max-width: 36px;
+  max-height: 36px;
+  contain: content;
+}
+
+.chat-time {
+  top: 0px;
+  right: 0.25rem;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  border-radius: 0.4em;
+}
+
+.speech-bubble:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-right-color: #fff;
+  border-left: 0;
+  margin-top: -10px;
+  margin-left: -10px;
+}

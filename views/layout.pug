@@ -2,6 +2,7 @@ doctype html
 html
   head
     title= title
+    meta(charset='utf-8')
 
     // Global site tag (gtag.js) - Google Analytics
     script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-98513512-3')
@@ -15,7 +16,6 @@ html
       if(c_user_alias)
         gtag('set', {'user_id': c_user_alias});
 
-    meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0')
     link(rel='shortcut icon', type='image/x-icon', href='/images/favicon.ico')
 
@@ -39,13 +39,13 @@ html
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
     script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
 
-    link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.7.2/css/all.css', integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr', crossorigin='anonymous')
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
 
     script(src='/javascripts/layout.js')
     block metas
 
   - var themes = ["bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas"]
-  - var selected_theme = roomTheme || themes[Math.floor(Math.random() * themes.length)]
+  - var selected_theme = RoomTheme || themes[Math.floor(Math.random() * themes.length)]
   body(class=selected_theme)
     block content
     #loading-overlay(style="display:block;")
@@ -57,11 +57,10 @@ html
 
     #toast-wrapper.col-md-6(aria-live='polite', aria-atomic='true', style="position:fixed; bottom:3rem; right:0;")
     #toast-template.d-none.toast.col-md-6.px-0(role='alert', aria-live='assertive', aria-atomic='true')
-        .toast-header.text-white
-            strong.toast-header.mr-auto
-            small
-                i.far.fa-clock.mx-1
-                | now
-            button.ml-2.mb-1.close(type='button', data-dismiss='toast', aria-label='Close')
-                span(aria-hidden='true') ×
-        .toast-body.toast-body
+      .toast-header.text-white
+        strong.mr-auto.toast-title
+        span.material-icons.md-16.mx-1 access_time
+        | now
+        button.ml-2.mb-1.close(type='button', data-dismiss='toast', aria-label='Close')
+          span(aria-hidden='true') ×
+      .toast-body

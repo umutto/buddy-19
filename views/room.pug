@@ -1,10 +1,24 @@
 extends layout
 
 block metas
+  link(rel='stylesheet', href='/stylesheets/room.css')
+
   script(src='/socket.io/socket.io.js')
-  script(src='/javascripts/socket.js')
   script(src='/javascripts/room.js')
+  script(src='/templates/chat_message.js')
+
 
 block content
   #main-wrapper.container(data-room=RoomId)
-    h1.font-weight-bold.float-right Room #{RoomId}
+    .row.d-block.text-right
+      h1.font-weight-bold Room #{RoomId}
+    #chat-wrapper.wobbly-border
+      #chat-history
+        #chat-display.container-fluid.pl-1.pt-1
+        .position-relative
+          input#chat-input.form-control.border-0.mb-1(type='text', placeholder='Type a message')
+          button#btn-chat-send.btn.btn-light(type='button') Send
+
+
+
+
