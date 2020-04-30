@@ -7,7 +7,10 @@ var sqliteController = require("../models/sqlite");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
-  res.render("index", { title: "Buddy-19: Your COVID-19 meeting buddy!" });
+  res.render("index", {
+    title: "Buddy-19: Your COVID-19 meeting buddy!",
+    // RoomTheme: "bg-webb",
+  });
 });
 router.get("/create", async function (req, res, next) {
   res.render("create", { title: "Buddy-19 Create a Room" });

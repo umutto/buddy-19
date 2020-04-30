@@ -119,6 +119,35 @@ input[type="radio"]:checked + label:before {
   background-size: 80px 80px;
 }
 
+.bg-zigzag {
+  background: linear-gradient(135deg, rgb(254, 255, 237) 25%, transparent 25%) -25px 0,
+    linear-gradient(225deg, rgb(254, 255, 237) 25%, transparent 25%) -25px 0,
+    linear-gradient(315deg, rgb(254, 255, 237) 25%, transparent 25%),
+    linear-gradient(45deg, rgb(254, 255, 237) 25%, transparent 25%);
+  background-size: 50px 50px;
+  background-color: rgb(128, 249, 253);
+}
+
+.bg-wifi {
+  background-image: radial-gradient(
+    ellipse farthest-corner at 2em 2em,
+    #ff9e9d,
+    #ff9e9d 50%,
+    #ff3d7f 50%
+  );
+  background-size: 2em 2em;
+}
+
+.bg-circular {
+  background-image: radial-gradient(
+    ellipse 3em 3em,
+    rgb(205, 233, 83),
+    rgb(205, 233, 83) 25%,
+    rgb(18, 204, 157) 25%
+  );
+  background-size: 2em 2em;
+}
+
 /* Background patterns below are downloaded from https://www.toptal.com/designers/subtlepatterns/  */
 
 .bg-sakura {
@@ -139,6 +168,18 @@ input[type="radio"]:checked + label:before {
 
 .bg-hypnotize {
   background-image: url(/images/patterns/hypnotize.png);
+}
+
+.bg-webb {
+  background-image: url(/images/patterns/webb.png);
+}
+
+.bg-yellow {
+  background-image: url(/images/patterns/halftone-yellow.png);
+}
+
+.bg-gplay {
+  background-image: url(/images/patterns/gplaypattern.png);
 }
 
 /* Background patterns end*/

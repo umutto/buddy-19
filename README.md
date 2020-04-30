@@ -18,7 +18,8 @@ You can create a room from the index url. Once you've create the room, people ca
 
 - **Quiz room**: People in the room take turns asking questions.
 
-  - These questions can be an image, video, text, freely set by the quiz master for that turn. Question answers can be multiple selections, free text (levenshtein distance is used to ignore typos) input, or you can set a buzzer button to make it more like a game show.
+  - These questions can be an image, video, text, freely set by the quiz master for that turn.
+  - Question answers can be multiple selections, free text (levenshtein distance is used to ignore typos) input, numeric input (closest guesses get more points), or you can set a buzzer button to make it more like a game show.
   - Answers can be submitted once the quiz master for that round clicks submit, there is a countdown before the question is revealed and a delay compensation when a user submits their answer so it's pretty much fair. But bear in mind, that this is an app to have fun together with friends.
   - Users can have limited time to answer, set by the original room host.
   - Points for the people answer correctly goes as 100 \* # of people in the room for the fastest answer and decreases by 100 for rest of the people.
