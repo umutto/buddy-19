@@ -5,8 +5,45 @@ block metas
 
 
 block content
-  .container
-    h1.font-weight-bold #{title}
+  .container.pt-3.pt-md-5
+    .jumbotron.bg-jumbotron
+      .row.d-block.text-center.pb-md-3
+        h1.display-md-1.font-weight-bold #{title}
+        h3.h3.my-md-4.font-weight-bold Your COVID-19 meeting buddy!
+      .row.d-flex.justify-content-center
+        .col-md-4
+          img.img-fluid(src="/images/logo_transparent.png")
+        .col-md-8.pt-3
+          p.p-line.t-ind-2
+            | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam.
+          p.p-line.t-ind-2
+            | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam.
+          hr.m-4.border-dark.py-md-3
+          .row
+            .col-12.col-md.offset-md-1.d-flex.justify-content-center.pb-3.pb-md-0
+              a.btn.btn-outline-primary.d-flex.align-items-center(href="/create")
+                span.mx-1.material-icons add_circle_outline
+                | Create a room
+            .col-12.col-md.d-flex.justify-content-center
+              button.btn.btn-outline-primary.d-flex.align-items-center(type='button', data-toggle='modal', data-target='#room-modal')
+                span.mx-1.material-icons meeting_room
+                | Join a room
+            .col-md-1
+
+  #room-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='room-modal-label', aria-hidden='true')
+    .modal-dialog.modal-dialog-centered(role='document')
+      .modal-content
+        .modal-header
+          h5#room-modal-label.modal-title.font-weight-bold Enter the room code
+          button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+        .modal-body
+          form#form-room(action="#")
+            .input-group
+              input.form-control(type="text" placeholder="Enter the code" required autofocus)
+              .input-group-append
+                button.btn.btn-primary(type='submit')
+                  | Go!
 
 
 

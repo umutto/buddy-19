@@ -8,12 +8,12 @@ var sqliteController = require("../models/sqlite");
 /* GET home page. */
 router.get("/", async function (req, res, next) {
   res.render("index", {
-    title: "Buddy-19: Your COVID-19 meeting buddy!",
-    // RoomTheme: "bg-webb",
+    title: "Buddy-19!",
+    RoomTheme: "bg-webb",
   });
 });
 router.get("/create", async function (req, res, next) {
-  res.render("create", { title: "Buddy-19 Create a Room" });
+  res.render("create", { title: "Buddy-19 Create a Room", RoomTheme: "bg-webb" });
 });
 
 router.post("/create", async function (req, res, next) {
@@ -50,14 +50,14 @@ router.get("/room/:id", async function (req, res, next) {
   let room_id = req.params.id;
   try {
     let room_details = await sqliteController.get_room_details(room_id);
+    if (!room_details) return next({ status: 404, code: "Room Not Found" });
+
     room_details.Settings = JSON.parse(room_details.Settings);
-    if (!room_details) next({ status: 404, code: "Room Not Found" });
-    else
-      res.render("room.pug", {
-        title: `Buddy-19 Room ${room_id}`,
-        RoomId: room_id,
-        RoomTheme: room_details.Settings.roomTheme,
-      });
+    res.render("room.pug", {
+      title: `Buddy-19 Room ${room_id}`,
+      RoomId: room_id,
+      RoomTheme: room_details.Settings.roomTheme,
+    });
   } catch (error) {
     next(error);
   }

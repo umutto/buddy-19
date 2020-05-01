@@ -39,12 +39,12 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
   chat_input_btn.addEventListener("click", function () {
     send_chat_message(socket, chat_input.value);
-    document.getElementById("chat-input").value = "";
+    chat_input.value = "";
   });
   chat_input.addEventListener("keyup", function () {
     if (event.keyCode === 13) {
       send_chat_message(socket, chat_input.value);
-      document.getElementById("chat-input").value = "";
+      chat_input.value = "";
     }
   });
 });
