@@ -12,7 +12,7 @@ block content
         h3.h3.my-md-4.font-weight-bold Your COVID-19 meeting buddy!
       .row.d-flex.justify-content-center
         .col-md-4
-          img.img-fluid(src="/images/logo_transparent.png")
+          img.img-fluid(src="/images/logo_transparent.png" alt="Buddy-19!")
         .col-md-8.pt-3
           p.p-line.t-ind-2
             | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam.
@@ -21,11 +21,11 @@ block content
           hr.m-4.border-dark.py-md-3
           .row
             .col-12.col-md.offset-md-1.d-flex.justify-content-center.pb-3.pb-md-0
-              a.btn.btn-outline-primary.d-flex.align-items-center(href="/create")
+              a.btn.btn-outline-primary.d-flex.align-items-center(href="/create", title="Create a room")
                 span.mx-1.material-icons add_circle_outline
                 | Create a room
             .col-12.col-md.d-flex.justify-content-center
-              button.btn.btn-outline-primary.d-flex.align-items-center(type='button', data-toggle='modal', data-target='#room-modal')
+              button.btn.btn-outline-primary.d-flex.align-items-center(type='button', data-toggle='modal', data-target='#room-modal', title="Create a room")
                 span.mx-1.material-icons meeting_room
                 | Join a room
             .col-md-1

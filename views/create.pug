@@ -4,11 +4,15 @@ block metas
   script(src='/javascripts/create_room.js')
 
 block content
+    nav.navbar.mb-3.border-0
+        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+            img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
+            | Buddy-19
     .container-fluid
         .container.py-3.transparent-bg.wobbly-border
             .text-danger.flash-error-message #{error_message}
             .text-info.flash-info-message #{info_message}
-            form(class="form-signin" method="POST" action="/create")
+            form(method="POST" action="/create")
                 .text-center
                     h1.font-weight-bold Create a Room
                 .form-row
@@ -70,4 +74,4 @@ block content
                                 input#themeChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
                                 label.theme-label.bg-christmas(for="themeChristmas")
 
-            button(class='btn btn-lg btn-primary btn-block my-3' type="submit") Create
+                button(class='btn btn-lg btn-primary btn-block my-3' type="submit") Create

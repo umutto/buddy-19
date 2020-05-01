@@ -9,9 +9,16 @@ block metas
 
 
 block content
+  nav.navbar.mb-3.border-0
+      a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+        img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
+        | Buddy-19
+      - let room_url = "https://chart.googleapis.com/chart?cht=qr&chs=512x512&chl=" + DOMAIN_NAME + "/room/" + RoomId + "chld=H"
+      a.text-decoration-none.align-self-start(href=room_url title="View QR code" target="_blank" rel="noopener")
+        h4.h4.font-weight-bold.d-flex.align-items-center.m-0
+          span.material-icons.mx-1 filter_center_focus
+          | Room #{RoomId}
   #main-wrapper.container(data-room=RoomId)
-    .row.d-block.text-right
-      h1.font-weight-bold Room #{RoomId}
     #chat-wrapper.wobbly-border
       #chat-history
         #chat-display.container-fluid.pl-1.pt-1

@@ -6,6 +6,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+var locals = require("./middlewares/locals");
 var usercookie = require("./middlewares/usercookie");
 
 var indexRouter = require("./routes/index");
@@ -23,7 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// custom consistent alias cookie middleware
+// custom local vars and consistent alias cookie middleware
+app.use(locals);
 app.use(usercookie);
 
 app.use("/", indexRouter);

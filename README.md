@@ -47,6 +47,10 @@ This just a fun project that I've started doing to practice my node backend and 
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
 - Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms.)
 - Add an emoji picker on chat.
+- Get a good Chrome Lighthouse score.
+  - Seems like bootstrap.min.css is the worst culprit. It's MIT license, so prune the unused, and add font-swap etc...
+- Make a twitch bot.
+- Add localization (very low priority).
 
 #### Future updates
 

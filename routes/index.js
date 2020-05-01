@@ -1,11 +1,10 @@
 var express = require("express");
 var router = express.Router();
 
-const shortid = require("shortid");
+const nanoid = require("nanoid");
 
 var sqliteController = require("../models/sqlite");
 
-/* GET home page. */
 router.get("/", async function (req, res, next) {
   res.render("index", {
     title: "Buddy-19!",
@@ -25,7 +24,7 @@ router.post("/create", async function (req, res, next) {
   let doublePoints = "doublePoints" in req.body && req.body.doublePoints === "on";
   let roomTheme = req.body.roomTheme || null;
 
-  let roomUrl = shortid.generate();
+  let roomUrl = nanoid.nanoid(6);
   let hostUUID = res.locals.UserAliasCookie;
 
   try {

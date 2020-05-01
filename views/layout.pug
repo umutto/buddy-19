@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang="en")
   head
     title= title
     meta(charset='utf-8')
@@ -16,7 +16,8 @@ html
       if(c_user_alias)
         gtag('set', {'user_id': c_user_alias});
 
-    meta(name='viewport', content='width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='Description', content="Buddy-19 is a real time application that lets multiple users to interact, play games, watch videos together and more!")
     link(rel='shortcut icon', type='image/x-icon', href='/images/favicon.ico')
 
     link(rel='apple-touch-icon', sizes='180x180', href='/images/apple-touch-icon.png')
@@ -44,7 +45,7 @@ html
     script(src='/javascripts/layout.js')
     block metas
 
-  - var themes = ["bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular",  "bg-webb", "bg-yellow", "bg-gplay"]
+  - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay"]
   - var selected_theme = RoomTheme || themes[Math.floor(Math.random() * themes.length)]
   body.d-flex.flex-column.min-vh-100(class=selected_theme)
     .wrapper.flex-grow-1
@@ -55,15 +56,15 @@ html
         span.d-flex.flex-grow-1.text-center.align-items-center.justify-content-center.m-3.my-md-0(style="line-height: 0.9rem;")
           small
             | Buddy-19 is just a fun side project, nothing serious. But for more info on terms and license check the
-            a(href="https://github.com/umutto/buddy-19" target="_blank")
+            a(href="https://github.com/umutto/buddy-19" target="_blank" rel="noopener")
               u.mx-1 source on github.
         .d-flex.mr-2
           .row
-            a.col-md-6.d-flex.align-items-center(href="https://github.com/umutto" target="_blank")
-              img.px-1(src="images/GitHub-Mark-32px.png" style="height:18px;")
+            a.col-md-6.d-flex.align-items-center(href="https://github.com/umutto" target="_blank" rel="noopener", title="Github Profile")
+              img.px-1(src="/images/GitHub-Mark-32px.png" style="height:22px;" alt="Github Profile")
               | umutto
-            a.col-md-6.d-flex.align-items-center(href="mailto:buddy19@umu.to")
-              span.material-icons.md-18.mx-1 mail_outline
+            a.col-md-6.d-flex.align-items-center(href="mailto:buddy19@umu.to", title="Contact")
+              span.material-icons.mx-1 mail_outline
               | Contact
 
 
