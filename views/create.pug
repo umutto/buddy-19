@@ -4,11 +4,14 @@ block metas
   script(src='/javascripts/create_room.js')
 
 block content
-    nav.navbar.mb-3.border-0
+    nav.navbar
         a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
-    .container-fluid
+        a.navbar-item.ml-auto.d-flex.aling-items-center.align-self-start(href="#" title="Tutorial")
+              span.material-icons.md-32 help_outline
+
+    #main-wrapper.container-fluid.my-3
         .container.py-3.transparent-bg.wobbly-border.border-md-0
             .text-danger.flash-error-message #{error_message}
             .text-info.flash-info-message #{info_message}

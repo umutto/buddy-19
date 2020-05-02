@@ -9,7 +9,7 @@ block metas
 
 
 block content
-  nav.navbar.navbar-expand-md.mb-3
+  nav.navbar.navbar-expand-md
     a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
       img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
       | Buddy-19
@@ -33,7 +33,7 @@ block content
               span.material-icons.mr-1 filter_center_focus
               | Room Code
 
-  #main-wrapper.container(data-room=RoomId)
+  #main-wrapper.container.my-3(data-room=RoomId)
     #chat-wrapper.wobbly-border.border-md-0
       #chat-history
         #chat-display.container-fluid.pl-1.pt-1

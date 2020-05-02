@@ -8,8 +8,11 @@ body {
   border-top: 1px solid #dddf;
   background-color: #fffc;
 }
-.footer a {
-  text-decoration: none;
+
+.navbar a,
+.footer a,
+.material-icons {
+  text-decoration: none !important;
 }
 .footer a:hover {
   text-decoration: underline;
@@ -37,11 +40,11 @@ nav.navbar {
   }
 }
 
-.material-icons {
-  text-decoration: none !important;
-}
 .material-icons.md-16 {
   font-size: 16px;
+}
+.material-icons.md-32 {
+  font-size: 32px;
 }
 .material-icons.md-48 {
   font-size: 48px;
