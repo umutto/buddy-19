@@ -118,6 +118,27 @@ input[type="radio"]:checked + label:before {
   display: none;
 }
 
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 20px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+/* Scrollbar */
+
 /* Background patterns */
 
 .bg-jumbotron {

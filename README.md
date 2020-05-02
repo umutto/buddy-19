@@ -6,8 +6,6 @@
 
 Your COVID-19 meeting buddy!
 
----
-
 ## About
 
 Buddy-19 is aimed to be a web app that goes along with your online meetings. With Buddy-19 visitors can create public/private rooms to enjoy playing games with their friends.
@@ -45,7 +43,8 @@ This just a fun project that I've started doing to practice my node backend and 
 - User & room histories.
 - Public servers and room listings.
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
-- Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms.)
+- Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms. Could be simply attaching c_user_alias to socket and db)
+- Add user reactions on chat (something like these https://youtu.be/ffnqLIrM3n8 but obviously royalty free)
 - Add an emoji picker on chat.
 - Get a good Chrome Lighthouse score.
   - Seems like bootstrap.min.css is the worst culprit. It's MIT license, so prune the unused, and add font-swap etc...
@@ -57,8 +56,6 @@ This just a fun project that I've started doing to practice my node backend and 
 - Add a voting option, for selecting the best answers (this functionality can open up for games like that are in JackBox)
 - Games like Dixit, Cards against humanity etc... (as long as there are no copyright issues, and a simple implementation is possible)
 - Guess the song game (playing youtube music in the background and trying to guess the song title or the artist)
-
----
 
 ## About usage data
 
