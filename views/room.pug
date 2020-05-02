@@ -9,23 +9,72 @@ block metas
 
 
 block content
-  nav.navbar.mb-3.border-0
-      a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
-        img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
-        | Buddy-19
-      - let room_url = "https://chart.googleapis.com/chart?cht=qr&chs=512x512&chl=" + DOMAIN_NAME + "/room/" + RoomId + "chld=H"
-      a.text-decoration-none.align-self-start(href=room_url title="View QR code" target="_blank" rel="noopener")
-        h4.h4.font-weight-bold.d-flex.align-items-center.m-0
-          span.material-icons.mx-1 filter_center_focus
-          | Room #{RoomId}
+  nav.navbar.navbar-expand-md.mb-3
+    a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+      img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
+      | Buddy-19
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar-content', aria-controls='navbar-content', aria-expanded='false', aria-label='Toggle navigation')
+      span.material-icons.md-48 menu
+    #navbar-content.collapse.navbar-collapse
+      ul.navbar-nav.ml-auto
+        li.nav-item.dropdown
+          a#navbar-dropdown-link.nav-link.d-none.d-md-block(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+            span.material-icons.md-48 menu
+          .dropdown-menu.dropdown-menu-right(aria-labelledby='navbar-dropdown-link')
+            //-  data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content"
+            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile")
+              span.material-icons.mr-1 person
+              | User Profile
+            if Room.Host === UserAliasCookie
+              a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile")
+                span.material-icons.mr-1 settings
+                | Room Settings
+            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile")
+              span.material-icons.mr-1 filter_center_focus
+              | Room Code
+
   #main-wrapper.container(data-room=RoomId)
-    #chat-wrapper.wobbly-border
+    #chat-wrapper.wobbly-border.border-md-0
       #chat-history
         #chat-display.container-fluid.pl-1.pt-1
         .position-relative
           input#chat-input.form-control.border-0.mb-1(type='text', placeholder='Type a message')
           button#btn-chat-send.btn.btn-light(type='button') Send
 
+  #profile-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='profile-modal-label', aria-hidden='true')
+    .modal-dialog.modal-dialog-centered(role='document')
+      .modal-content
+        .modal-header
+          h5#profile-modal-label.modal-title.font-weight-bold Profile Settings
+          button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+        .modal-body
+          form#form-profile(action="#")
+            .input-group
+              input.form-control(type="text" placeholder="Enter a nickname" autofocus)
+              .input-group-append
+                button.btn.btn-primary(type='submit')
+                  | Go!
 
+  if Room.Host === UserAliasCookie
+    #settings-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='settings-modal-label', aria-hidden='true')
+      .modal-dialog.modal-dialog-centered(role='document')
+        .modal-content
+          .modal-header
+            h5#settings-modal-label.modal-title.font-weight-bold Room Settings
+            button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body
+
+  #qr-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='qr-modal-label', aria-hidden='true')
+    .modal-dialog.modal-dialog-centered(role='document')
+      .modal-content
+        .modal-header
+          h5#qr-modal-label.modal-title.font-weight-bold Room Code
+          button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+        .modal-body
+          | Invite your friends using the code below
+          | Display the qr code
 
 

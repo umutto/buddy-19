@@ -4,8 +4,4 @@ window.addEventListener("DOMContentLoaded", function (evt) {
     window.location.href =
       "/room/" + document.querySelector("#form-room input").value.trim();
   });
-
-  $(".modal").on("shown.bs.modal", function (e) {
-    $("[autofocus]", e.target).focus();
-  });
 });

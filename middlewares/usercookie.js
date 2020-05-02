@@ -1,10 +1,10 @@
-const { v4: uuidv4 } = require("uuid");
+const nanoid = require("nanoid");
 var sqliteController = require("../models/sqlite");
 
 module.exports = function (req, res, next) {
   var user_alias = req.cookies.user_alias;
   if (user_alias === undefined) {
-    var user_alias = uuidv4();
+    var user_alias = nanoid.nanoid();
     var cookie_opts = {
       maxAge: 365 * 24 * 60 * 60,
       httpOnly: true,

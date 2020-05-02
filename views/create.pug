@@ -9,7 +9,7 @@ block content
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
     .container-fluid
-        .container.py-3.transparent-bg.wobbly-border
+        .container.py-3.transparent-bg.wobbly-border.border-md-0
             .text-danger.flash-error-message #{error_message}
             .text-info.flash-info-message #{info_message}
             form(method="POST" action="/create")
@@ -52,7 +52,7 @@ block content
                             .form-check
                                 input#doublePoints.form-check-input(type="checkbox" name="doublePoints" checked)
                                 label.form-check-label(for="doublePoints") Double points on last round
-                    .form-group.col-md-6.pl-5
+                    .form-group.col-md-6.pl-md-5
                         label.col-md-6(for="turnLimit") Theme:
                         .form-row
                             .col-lg-2.col-4

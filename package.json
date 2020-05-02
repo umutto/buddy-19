@@ -32,8 +32,7 @@
     "node-cleanup": "^2.1.2",
     "pug": "^2.0.4",
     "socket.io": "^2.3.0",
-    "sqlite3": "^4.1.1",
-    "uuid": "^7.0.3"
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.3",

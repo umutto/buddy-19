@@ -46,7 +46,7 @@ html(lang="en")
     block metas
 
   - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay"]
-  - var selected_theme = RoomTheme || themes[Math.floor(Math.random() * themes.length)]
+  - var selected_theme = RoomTheme in themes ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
   body.d-flex.flex-column.min-vh-100(class=selected_theme)
     .wrapper.flex-grow-1
       block content
@@ -61,7 +61,7 @@ html(lang="en")
         .d-flex.mr-md-2
           .row.mx-0
             a.col-md-6.d-flex.align-items-center(href="https://github.com/umutto" target="_blank" rel="noopener", title="Github Profile")
-              img.px-1(src="/images/GitHub-Mark-32px.png" style="height:22px;" alt="Github Profile")
+              img(src="/images/GitHub-Mark-32px.png" style="height:22px; padding: 0 0.4rem;" alt="Github Profile")
               | umutto
             a.col-md-6.d-flex.align-items-center(href="mailto:buddy19@umu.to", title="Contact")
               span.material-icons.mx-1 mail_outline

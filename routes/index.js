@@ -56,6 +56,7 @@ router.get("/room/:id", async function (req, res, next) {
       title: `Buddy-19 Room ${room_id}`,
       RoomId: room_id,
       RoomTheme: room_details.Settings.roomTheme,
+      Room: room_details,
     });
   } catch (error) {
     next(error);

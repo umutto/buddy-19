@@ -1,6 +1,10 @@
 window.addEventListener("DOMContentLoaded", function (evt) {
   loading_overlay(false);
   $('[data-toggle="popover"]').popover();
+
+  $(".modal").on("shown.bs.modal", function (e) {
+    $("[autofocus]", e.target).focus();
+  });
 });
 
 function loading_overlay(display, text = "Loading...") {

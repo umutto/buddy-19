@@ -15,6 +15,20 @@ body {
   text-decoration: underline;
 }
 
+nav.navbar {
+  border-radius: unset !important;
+  background-color: #fffc;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #dddf;
+}
+@media (max-width: 576px) {
+  .dropdown-menu {
+    display: block;
+    position: relative;
+  }
+}
 @media only screen and (min-width: 576px) {
   .display-md-1 {
     font-size: 6rem;
@@ -28,6 +42,9 @@ body {
 }
 .material-icons.md-16 {
   font-size: 16px;
+}
+.material-icons.md-48 {
+  font-size: 48px;
 }
 
 .hidden {
@@ -46,10 +63,15 @@ body {
   background-color: #ffffffaa;
   box-shadow: 0 0 5px 5px #d8d8d830;
 }
-@media only screen and (min-width: 576px) {
-  .wobbly-border {
-    border: 4px solid #000000;
-    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+
+.wobbly-border {
+  border: 4px solid #000000;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+@media only screen and (max-width: 576px) {
+  .border-md-0 {
+    border: 0 !important;
   }
 }
 
