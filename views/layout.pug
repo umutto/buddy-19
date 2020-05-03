@@ -1,87 +1,87 @@
 doctype html
 html(lang="en")
-  head
-    title= title
-    meta(charset='utf-8')
+    head
+        title= title
+        meta(charset='utf-8')
 
-    // Global site tag (gtag.js) - Google Analytics
-    script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-98513512-3')
-    script.
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-98513512-3');
+        // Global site tag (gtag.js) - Google Analytics
+        script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-98513512-3')
+        script.
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-98513512-3');
 
-      const c_user_alias = !{typeof UserAliasCookie !== 'undefined' ? JSON.stringify(UserAliasCookie).replace(/<\//g, '<\\/') : `null`};
-      if(c_user_alias)
-        gtag('set', {'user_id': c_user_alias});
+            const c_user_alias = !{typeof UserAliasCookie !== 'undefined' ? JSON.stringify(UserAliasCookie).replace(/<\//g, '<\\/') : `null`};
+            if(c_user_alias)
+                gtag('set', {'user_id': c_user_alias});
 
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    meta(name='Description', content="Buddy-19 is a real time application that lets multiple users to interact, play games, watch videos together and more!")
-    link(rel='shortcut icon', type='image/x-icon', href='/images/favicon.ico')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        meta(name='Description', content="Buddy-19 is a real time application that lets multiple users to interact, play games, watch videos together and more!")
+        link(rel='shortcut icon', type='image/x-icon', href='/images/favicon.ico')
 
-    link(rel='apple-touch-icon', sizes='180x180', href='/images/apple-touch-icon.png')
-    link(rel='icon', type='image/png', sizes='32x32', href='/images/favicon-32x32.png')
-    link(rel='icon', type='image/png', sizes='16x16', href='/images/favicon-16x16.png')
-    link(rel='manifest', href='/site.webmanifest')
+        link(rel='apple-touch-icon', sizes='180x180', href='/images/apple-touch-icon.png')
+        link(rel='icon', type='image/png', sizes='32x32', href='/images/favicon-32x32.png')
+        link(rel='icon', type='image/png', sizes='16x16', href='/images/favicon-16x16.png')
+        link(rel='manifest', href='/site.webmanifest')
 
-    //- <!-- Chrome, Firefox OS and Opera -->
-    meta(name='theme-color' content='#e31757')
-    meta(name='mobile-web-app-capable' content='yes')
+        //- <!-- Chrome, Firefox OS and Opera -->
+        meta(name='theme-color' content='#e31757')
+        meta(name='mobile-web-app-capable' content='yes')
 
-    //- <!-- iOS Safari -->
-    meta(name='apple-mobile-web-app-capable' content='yes')
-    meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+        //- <!-- iOS Safari -->
+        meta(name='apple-mobile-web-app-capable' content='yes')
+        meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
 
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
 
-    script(src='https://code.jquery.com/jquery-3.4.1.min.js', integrity='sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=', crossorigin='anonymous')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
-    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
+        script(src='https://code.jquery.com/jquery-3.4.1.min.js', integrity='sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=', crossorigin='anonymous')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
+        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
 
-    link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
 
-    script(src='/javascripts/layout.js')
-    block metas
+        script(src='/javascripts/layout.js')
+        block metas
 
-  - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay"]
-  - var selected_theme = RoomTheme in themes ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
-  body.d-flex.flex-column.min-vh-100(class=selected_theme)
-    .wrapper.flex-grow-1
-      block content
+    - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay"]
+    - var selected_theme = RoomTheme in themes ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
+    body.d-flex.flex-column.min-vh-100(class=selected_theme)
+        .wrapper.flex-grow-1
+            block content
 
-    footer.footer
-      .d-flex.mx-1.mx-md-3.my-1
-        span.d-flex.flex-grow-1.text-center.align-items-center.justify-content-center.m-3.my-md-0(style="line-height: 0.9rem;")
-          small(style="font-family:monospace;")
-            | Buddy-19 is just a fun side project, nothing serious. For more information on terms and license check the
-            a(href="https://github.com/umutto/buddy-19" target="_blank" rel="noopener", title="Source on Github")
-              u.mx-1 source on github.
-        .d-flex.mr-md-2
-          .row.mx-0
-            a.col-md-6.d-flex.align-items-center(href="https://github.com/umutto" target="_blank" rel="noopener", title="Github Profile")
-              img(src="/images/GitHub-Mark-32px.png" style="height:22px; padding: 0 0.4rem;" alt="Github Profile")
-              | umutto
-            a.col-md-6.d-flex.align-items-center(href="mailto:buddy19@umu.to", title="Contact")
-              span.material-icons.mx-1 mail_outline
-              | Contact
+        footer.footer
+            .d-flex.mx-1.mx-md-3.my-1
+                span.d-flex.flex-grow-1.text-center.align-items-center.justify-content-center.m-3.my-md-0(style="line-height: 0.9rem;")
+                    small(style="font-family:monospace;")
+                        | Buddy-19 is just a fun side project, nothing serious. For more information on terms and license check the
+                        a(href="https://github.com/umutto/buddy-19" target="_blank" rel="noopener", title="Source on Github")
+                            u.mx-1 source on github.
+                .d-flex.mr-md-2
+                    .row.mx-0
+                        a.col-md-6.d-flex.align-items-center(href="https://github.com/umutto" target="_blank" rel="noopener", title="Github Profile")
+                            img(src="/images/GitHub-Mark-32px.png" style="height:22px; padding: 0 0.4rem;" alt="Github Profile")
+                            | umutto
+                        a.col-md-6.d-flex.align-items-center(href="mailto:buddy19@umu.to", title="Contact")
+                            span.material-icons.mx-1 mail_outline
+                            | Contact
 
 
-    #loading-overlay(style="display:block;")
-      .loading-overlay-content
-        .spinner-border.text-secondary(role='status')
-          span.sr-only Processing...
-        h1#loading-text.spinner-text.text-secondary
-          | Processing...
+        #loading-overlay(style="display:block;")
+            .loading-overlay-content
+                .spinner-border.text-secondary(role='status')
+                    span.sr-only Processing...
+                h1#loading-text.spinner-text.text-secondary
+                    | Processing...
 
-    #toast-wrapper.col-md-6(aria-live='polite', aria-atomic='true', style="position:fixed; bottom:3rem; right:0;")
-    #toast-template.d-none.toast.col-md-6.px-0(role='alert', aria-live='assertive', aria-atomic='true')
-      .toast-header.text-white
-        strong.mr-auto.toast-title
-        span.material-icons.ms-16.mx-1 access_time
-        | now
-        button.ml-2.mb-1.close(type='button', data-dismiss='toast', aria-label='Close')
-          span(aria-hidden='true') ×
-      .toast-body
+        #toast-wrapper.col-md-6(aria-live='polite', aria-atomic='true', style="position:fixed; bottom:3rem; right:0;")
+        #toast-template.d-none.toast.col-md-6.px-0(role='alert', aria-live='assertive', aria-atomic='true')
+            .toast-header.text-white
+                strong.mr-auto.toast-title
+                span.material-icons.ms-16.mx-1 access_time
+                | now
+                button.ml-2.mb-1.close(type='button', data-dismiss='toast', aria-label='Close')
+                    span(aria-hidden='true') ×
+            .toast-body
 

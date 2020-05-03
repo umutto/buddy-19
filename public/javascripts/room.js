@@ -68,7 +68,7 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 });
 
 function send_chat_message(socket, text) {
-  if (text.trim() !== "") {
+  if (text !== "") {
     socket.emit("message", messageType.userChatMessage, { ChatMessage: text });
     // TODO: append this to chat (coming from right)
   }

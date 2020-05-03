@@ -57,6 +57,9 @@ nav.navbar {
 .p-line {
   white-space: pre-line;
 }
+.p-wrap {
+  white-space: pre-wrap;
+}
 .p-nowrap {
   white-space: nowrap;
 }
