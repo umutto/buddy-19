@@ -1,8 +1,9 @@
-.chat-message.d-flex.pb-1(data-userid=MessageUserId)
+- var is_self = UserAlias === MessageUserId
+.chat-message.d-flex.pb-1(data-userid=MessageUserId data-type=MessageType)
     if (MessageUserAvatar && MessageUserName)
-        .pr-1.d-flex.align-items-end(style="max-width: 48px;")
+        .pr-1.d-flex.align-items-end(class=(is_self ? "order-2" : "order-1") style="max-width: 48px;")
             img.img-fluid.mb-1(src=MessageUserAvatar, alt=MessageUserName)
-    .flex-grow-1.px-1(class=(MessageUserAvatar && MessageUserName ? "speech-bubble": "bg-light border"))
+    .flex-grow-1.px-1(class=(MessageUserAvatar && MessageUserName ? is_self ? "speech-bubble sb-right order-1" : "speech-bubble sb-left order-2": "bg-light border"))
         .chat-header(class=(MessageUserAvatar && MessageUserName ? "border-bottom" : ""))
             if (MessageUserName)
                 span.h5 #{MessageUserName}

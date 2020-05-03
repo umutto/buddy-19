@@ -62,7 +62,7 @@ const init = (server) => {
         ack({
           status: 500,
           message: "Something went wrong, try again later.",
-          Details: error,
+          details: error,
         });
       }
 
@@ -73,7 +73,7 @@ const init = (server) => {
           TimeReceived: new Date().toJSON(),
         };
         socket.to(room).emit("message_echo", message_type, context_echo);
-        ack({ status: 200, message: context });
+        ack({ status: 200, message: context_echo });
       });
     });
 

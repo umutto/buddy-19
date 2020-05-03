@@ -69,12 +69,19 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
 function send_chat_message(socket, text) {
   if (text !== "") {
-    socket.emit("message", messageType.userChatMessage, { ChatMessage: text });
-    // TODO: append this to chat (coming from right)
+    socket.emit("message", messageType.userChatMessage, { ChatMessage: text }, function (
+      response
+    ) {
+      if (response.status === 200) {
+        append_to_chat(messageType.userChatMessage, response.message);
+      } else {
+        create_toast(response.status, `${response.message}</br>${response.details}`);
+      }
+    });
   }
 }
 
-function append_to_chat(message_type, context) {
+function append_to_chat(message_type, context, scroll_to_bottom = "false") {
   let chat_display = document.getElementById("chat-display");
   let message_time = new Date(context.TimeReceived).toTimeString().substr(0, 5);
 
@@ -83,23 +90,30 @@ function append_to_chat(message_type, context) {
     message_type === messageType.userDisconnected
   ) {
     let chat_msg = chatMessageTemplate({
+      UserAlias: c_user_alias,
+      MessageUserId: context.UserId,
       MessageTime: message_time,
       MessageText: context.ChatMessage,
+      MessageType: message_type,
     });
 
     chat_display.insertAdjacentHTML("beforeend", chat_msg);
   } else if (message_type === messageType.userChatMessage) {
     let chat_msg = chatMessageTemplate({
+      UserAlias: c_user_alias,
       MessageUserId: context.UserId,
       MessageUserAvatar: context.UserAvatar,
       MessageUserName: context.UserName,
       MessageTime: message_time,
       MessageText: context.ChatMessage,
+      MessageType: message_type,
     });
 
     if (
       chat_display.lastChild &&
+      chat_display.lastChild.dataset.type == messageType.userChatMessage &&
       chat_display.lastChild.dataset.userid === context.UserId &&
+      chat_display.lastChild.getElementsByClassName("chat-text").length < 10 &&
       chat_display.lastChild.getElementsByClassName("chat-time")[0].lastChild
         .textContent === message_time
     ) {
@@ -114,4 +128,6 @@ function append_to_chat(message_type, context) {
       chat_display.insertAdjacentHTML("beforeend", chat_msg);
     }
   }
+  if (scroll_to_bottom)
+    document.getElementById("chat-input").scrollIntoView({ behavior: "smooth" });
 }

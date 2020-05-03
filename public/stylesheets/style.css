@@ -2,6 +2,8 @@ html,
 body {
   min-height: 100vh;
   height: 100%;
+
+  scroll-behavior: smooth;
 }
 
 .footer {
@@ -154,48 +156,45 @@ nav.navbar {
 /* Background patterns */
 
 .bg-jumbotron {
-  animation: colorchange 30s infinite;
-  -webkit-animation: colorchange 30s infinite;
-  background-color: #fffe928f;
+  background: linear-gradient(140deg, #e3e81daa, #43f6ffaa);
 }
-@keyframes colorchange {
+
+.bg-rainbow-anim {
+  background: linear-gradient(
+    0deg,
+    #ff2400aa,
+    #e81d1daa,
+    #e8b71daa,
+    #e3e81daa,
+    #1de840aa,
+    #1ddde8aa,
+    #dd00f3aa,
+    #dd00f3aa
+  );
+  background-size: 1200% 1200%;
+  -webkit-animation: rainbow 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  animation: rainbow 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+@-webkit-keyframes rainbow {
   0% {
-    background-color: #fffe928f;
+    background-position: 0% 50%;
   }
-  20% {
-    background: #f3c2458f;
-  }
-  40% {
-    background: #ffc1d18f;
-  }
-  60% {
-    background: #80d4f98f;
-  }
-  80% {
-    background: #abf3458f;
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    background-color: #fffe928f;
+    background-position: 0% 50%;
   }
 }
-@-webkit-keyframes colorchange {
+@keyframes rainbow {
   0% {
-    background-color: #fffe928f;
+    background-position: 0% 50%;
   }
-  20% {
-    background: #f3c2458f;
-  }
-  40% {
-    background: #f9809f8f;
-  }
-  60% {
-    background: #80d4f98f;
-  }
-  80% {
-    background: #abf3458f;
+  50% {
+    background-position: 100% 50%;
   }
   100% {
-    background-color: #fffe928f;
+    background-position: 0% 50%;
   }
 }
 
@@ -291,6 +290,10 @@ nav.navbar {
 
 .bg-gplay {
   background-image: url(/images/patterns/gplaypattern.png);
+}
+
+.bg-canadian {
+  background-image: url(/images/patterns/canadian-dollar.png);
 }
 
 /* Background patterns end*/
