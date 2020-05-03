@@ -11,7 +11,7 @@ block content
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
         a.navbar-item.ml-auto.d-flex.aling-items-center.align-self-start(href="#" title="Tutorial" data-toggle="modal" data-target="#help-modal")
-              span.material-icons.md-32 help_outline
+              span.material-icons.ms-32 help_outline
 
     #main-wrapper.container-fluid.my-3(data-type="1")
         .container.py-3.transparent-bg.wobbly-border.border-md-0
@@ -24,7 +24,7 @@ block content
                     .form-group.col-md-2
                         label(for="roomType") Room Type
                             span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br/><b>Quiz</b>: You take turns to ask each other questions.<br/><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br/><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
-                                span.material-icons.md-16.ml-1 help_outline
+                                span.material-icons.ms-16.ml-1 help_outline
                         select#roomType.form-control(name="roomType")
                             option(value=1 selected) Youtube
                             option(value=2) Quiz
@@ -33,12 +33,12 @@ block content
                     .form-group.col-md-5
                         label(for="roomName") Room Name
                             span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Name" data-content="Name of the room for your friends. (Not required)")
-                                span.material-icons.md-16.ml-1 help_outline
+                                span.material-icons.ms-16.ml-1 help_outline
                         input#roomName.form-control(type="text" name="roomName" placeholder="My amazing room!")
                     .form-group.col-md-5
                         label(for="roomPassword") Room Password
                             span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
-                                span.material-icons.md-16.ml-1 help_outline
+                                span.material-icons.ms-16.ml-1 help_outline
                         input#roomPassword.form-control(type="text" name="roomPassword" placeholder="my super secret password")
 
                 .form-row.pt-3
@@ -46,7 +46,7 @@ block content
                         .input-group.pb-1
                             label.col-md-4.p-nowrap(for="syncMode") Sync Mode:
                                 span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>:Participants are only synced when they first join.<br/><b>Normal</b>:Participants are synced when they join and when a new video starts playing.<br/><b>Strict</b>:Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
-                                    span.material-icons.md-16.ml-1 help_outline
+                                    span.material-icons.ms-16.ml-1 help_outline
                             .btn-group.btn-group-toggle.col-md-8(data-toggle='buttons')
                                 label.btn.btn-primary.active
                                     input(type='radio', name='syncMode', autocomplete='off', value=1)
@@ -62,12 +62,12 @@ block content
                                 input#readOnly.form-check-input(type="checkbox" name="readOnly")
                                 label.form-check-label.cursor-pointer(for="readOnly") Read Only
                                     span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Read Only" data-content="If selected, participants can't directly interact with the videos.")
-                                        span.material-icons.md-16.ml-1 help_outline
+                                        span.material-icons.ms-16.ml-1 help_outline
                     .form-group.col-md.type-2.type-3
                         .input-group.pb-1
                             label.col-lg-4.col-md-6(for="roundAmount") # of Rounds:
                                 span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Number of Rounds" data-content="Length of the round is based on how many people there are in the room. For example, for quiz type room, 1 round ends when everyone in the room asks a question.")
-                                    span.material-icons.md-16.ml-1 help_outline
+                                    span.material-icons.ms-16.ml-1 help_outline
                             input#roundAmount.col-lg-8.col-md-6.form-control(type="number" name="roundAmount" value=3 min=1)
                             .input-group-append
                                 .input-group-text round(s)
@@ -79,7 +79,7 @@ block content
                         .input-group
                             label.col-lg-4.col-md-6(for="turnEnd") Turn ends after:
                                 span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Turn ends after" data-content="If this is set to a smaller number than the participants, a turn ends after that many correct answers.")
-                                    span.material-icons.md-16.ml-1 help_outline
+                                    span.material-icons.ms-16.ml-1 help_outline
                             input#turnLimit.col-lg-8.col-md-6.form-control(type="number" name="turnLimit" value=60 min=5)
                             .input-group-append
                                 .input-group-text answers
