@@ -46,3 +46,16 @@
   margin-top: -10px;
   margin-left: -10px;
 }
+.chat-text {
+  animation: 1s ease-in-out new_message;
+  -webkit-animation: 1s ease-in-out new_message;
+}
+@keyframes new_message {
+  0% {
+    /* background: rgb(255, 248, 151); */
+    background: rgb(255, 248, 151);
+  }
+  50% {
+    background: #fff;
+  }
+}

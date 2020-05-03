@@ -7,6 +7,13 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   });
 });
 
+function copy_to_clipboard(elem) {
+  if (typeof elem === "string") elem = document.getElementById(elem);
+  elem.select();
+  elem.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+}
+
 function loading_overlay(display, text = "Loading...") {
   let overlay = document.getElementById("loading-overlay");
   let overlay_text = document.getElementById("loading-text");

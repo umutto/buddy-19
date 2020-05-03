@@ -57,6 +57,9 @@ nav.navbar {
 .p-line {
   white-space: pre-line;
 }
+.p-nowrap {
+  white-space: nowrap;
+}
 
 .t-ind-2 {
   text-indent: 2rem;
@@ -78,33 +81,14 @@ nav.navbar {
   }
 }
 
-.theme-label {
-  width: 64px;
-  height: 64px;
-  border: 2px solid #555;
-  border-radius: 15px;
-  border-radius: 5px;
+.btn-group-toggle > .btn-primary:not(:disabled):not(.disabled).active {
+  color: black;
+  background-color: white;
+  border-color: #131313;
 }
-.theme-label:hover {
+
+.cursor-pointer {
   cursor: pointer;
-  border-color: #17a2b8;
-  border-radius: 35px;
-}
-
-input[type="radio"]:checked + label {
-  border-color: #17a2b8;
-  border-radius: 35px;
-}
-
-input[type="radio"]:checked + label:before {
-  content: "\2713";
-  font-weight: bold;
-  color: rgb(44, 139, 156);
-  text-shadow: 0px 0px 4px #ffffff;
-  position: absolute;
-  font-size: 20px;
-  left: 30px;
-  top: 20px;
 }
 
 #loading-overlay {

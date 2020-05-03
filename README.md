@@ -27,6 +27,8 @@ You can create a room from the index url. Once you've create the room, people ca
 
 - **Youtube room**: You can watch youtube videos in sync with your friends, this could be a new trailer where you all want to react together, a funny cat video or the background music in your online meetings. Depending on your settings, this could be a playlist you're DJ'ing to your friends or a complete free list where everyone can play their most funny videos.
 
+- **Custom rooms**: This is currently in idea phase, eventually aimed to be something where people can create their own custom games using a simple JSON rule sheet.
+
 In all rooms, hosts can set a background theme, users can chat and interact with reactions and more. Moreover you can create and join as many rooms as you want (you want a background music while playing in a quiz room? sure!). And there is no time or participant limit on rooms! (Limit is the sky! or more like the processing power of my cheap server in the cloud. As well as the ui elements, it would most probably break with more that 10 people.)
 
 ### Background
@@ -44,7 +46,7 @@ This just a fun project that I've started doing to practice my node backend and 
 - Public servers and room listings.
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
 - Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms. Could be simply attaching c_user_alias to socket and db)
-- Add user reactions on chat (something like these https://youtu.be/ffnqLIrM3n8 but obviously royalty free)
+- Add user reactions on chat (something like these [https://youtu.be/ffnqLIrM3n8](https://youtu.be/ffnqLIrM3n8) but obviously royalty free)
 - Add an emoji picker on chat.
 - Get a good Chrome Lighthouse score.
   - Seems like bootstrap.min.css is the worst culprit. It's MIT license, so prune the unused, and add font-swap etc...

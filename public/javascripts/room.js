@@ -47,6 +47,24 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       chat_input.value = "";
     }
   });
+
+  let btn_copy_url = document.getElementById("btn_copy_url");
+  let input_copy_url = document.getElementById("qr_room_url");
+
+  input_copy_url.addEventListener("focus", function () {
+    this.select();
+    this.setSelectionRange(0, 99999);
+  });
+  btn_copy_url.addEventListener("click", function () {
+    copy_to_clipboard(input_copy_url);
+
+    create_toast(
+      "Copied!",
+      "Your room url has been copied to clipboard, send this url to your friends to join!",
+      "#4287f5",
+      2000
+    ).toast("show");
+  });
 });
 
 function send_chat_message(socket, text) {
@@ -58,13 +76,14 @@ function send_chat_message(socket, text) {
 
 function append_to_chat(message_type, context) {
   let chat_display = document.getElementById("chat-display");
+  let message_time = new Date(context.TimeReceived).toTimeString().substr(0, 5);
 
   if (
     message_type === messageType.userConnected ||
     message_type === messageType.userDisconnected
   ) {
     let chat_msg = chatMessageTemplate({
-      MessageTime: new Date(context.TimeReceived).toTimeString().substr(0, 5),
+      MessageTime: message_time,
       MessageText: context.ChatMessage,
     });
 
@@ -74,13 +93,15 @@ function append_to_chat(message_type, context) {
       MessageUserId: context.UserId,
       MessageUserAvatar: context.UserAvatar,
       MessageUserName: context.UserName,
-      MessageTime: new Date(context.TimeReceived).toTimeString().substr(0, 5),
+      MessageTime: message_time,
       MessageText: context.ChatMessage,
     });
 
     if (
       chat_display.lastChild &&
-      chat_display.lastChild.dataset.userid === context.UserId
+      chat_display.lastChild.dataset.userid === context.UserId &&
+      chat_display.lastChild.getElementsByClassName("chat-time")[0].lastChild
+        .textContent === message_time
     ) {
       let msg_text = new DOMParser()
         .parseFromString(chat_msg, "text/html")
