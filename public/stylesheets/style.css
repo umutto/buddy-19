@@ -71,7 +71,7 @@ nav.navbar {
 }
 
 .transparent-bg {
-  background-color: #ffffffaa;
+  background-color: #ffffffc9;
   box-shadow: 0 0 5px 5px #d8d8d830;
 }
 
@@ -139,13 +139,15 @@ nav.navbar {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f1f122;
+}
+::-webkit-scrollbar-track:hover {
+  background: #f1f1f192;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 20px;
-  border: 2px solid #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -156,46 +158,24 @@ nav.navbar {
 /* Background patterns */
 
 .bg-jumbotron {
-  background: linear-gradient(140deg, #e3e81daa, #43f6ffaa);
+  background: linear-gradient(140deg, #e3e81d1a, #43f6ff52);
 }
 
-.bg-rainbow-anim {
+.bg-rainbow {
   background: linear-gradient(
-    0deg,
+    140deg,
     #ff2400aa,
     #e81d1daa,
     #e8b71daa,
     #e3e81daa,
     #1de840aa,
     #1ddde8aa,
+    #1d5de8aa,
     #dd00f3aa,
-    #dd00f3aa
+    #ff2400aa,
+    #e81d1daa
   );
-  background-size: 1200% 1200%;
-  -webkit-animation: rainbow 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-  animation: rainbow 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
-@-webkit-keyframes rainbow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes rainbow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  background-size: 800% 800%;
 }
 
 .bg-squiggly {
@@ -217,7 +197,7 @@ nav.navbar {
       )
       0 -50px;
   background-size: 75px 100px;
-  background-color: #ba83c436;
+  background-color: #f0e4f2;
 }
 
 .bg-polka {
@@ -270,6 +250,7 @@ nav.navbar {
 
 .bg-christmas {
   background-image: url(/images/patterns/christmas-colour.png);
+  background-color: #da6b7f;
 }
 
 .bg-pentagon {
@@ -294,6 +275,48 @@ nav.navbar {
 
 .bg-canadian {
   background-image: url(/images/patterns/canadian-dollar.png);
+}
+
+.bg-anim-move-vert {
+  -webkit-animation: move-vert 30s linear infinite;
+  animation: move-vert 30s linear infinite;
+}
+@-webkit-keyframes move-vert {
+  0% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 50% 100%;
+  }
+}
+@keyframes move-vert {
+  0% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 50% 100%;
+  }
+}
+
+.bg-anim-move-diag {
+  -webkit-animation: move-diag 30s linear infinite;
+  animation: move-diag 30s linear infinite;
+}
+@-webkit-keyframes move-diag {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+@keyframes move-diag {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
 }
 
 /* Background patterns end*/

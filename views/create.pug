@@ -41,8 +41,8 @@ block content
                                 span.material-icons.ms-16.ml-1 help_outline
                         input#roomPassword.form-control(type="text" name="roomPassword" placeholder="my super secret password")
 
-                .form-row.pt-3
-                    .form-group.col-md.type-1
+                .form-row.pt-2
+                    .form-group.col-md.pt-2.type-1
                         .input-group.pb-1
                             label.col-md-4.p-nowrap(for="syncMode") Sync Mode:
                                 span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>:Participants are only synced when they first join.<br/><b>Normal</b>:Participants are synced when they join and when a new video starts playing.<br/><b>Strict</b>:Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
@@ -63,7 +63,11 @@ block content
                                 label.form-check-label.cursor-pointer(for="readOnly") Read Only
                                     span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Read Only" data-content="If selected, participants can't directly interact with the videos.")
                                         span.material-icons.ms-16.ml-1 help_outline
-                    .form-group.col-md.type-2.type-3
+                        .form-group.ml-5.pt-1
+                            .form-check
+                                input#fullScreen.form-check-input(type="checkbox" name="fullScreen")
+                                label.form-check-label.cursor-pointer(for="fullScreen") Start in full screen
+                    .form-group.col-md.pt-2.type-2.type-3
                         .input-group.pb-1
                             label.col-lg-4.col-md-6(for="roundAmount") # of Rounds:
                                 span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Number of Rounds" data-content="Length of the round is based on how many people there are in the room. For example, for quiz type room, 1 round ends when everyone in the room asks a question.")
@@ -87,7 +91,7 @@ block content
                             .form-check
                                 input#doublePoints.form-check-input(type="checkbox" name="doublePoints" checked)
                                 label.form-check-label.cursor-pointer(for="doublePoints") Double points on last round
-                    .form-group.col-md.pl-5
+                    .form-group.col-md.pl-3.pl-sm-5
                         label.col-md-6(for="roomTheme") Theme:
                         .form-row
                             .col-lg-2.col-4
@@ -108,6 +112,25 @@ block content
                             .col-lg-2.col-4
                                 input#themeChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
                                 label.theme-label.bg-christmas(for="themeChristmas" title="Christmas")
+                        .form-row
+                            .col-lg-2.col-4
+                                input#themeZigzag.d-none(type="radio" name="roomTheme" value="bg-zigzag" checked=(selected_theme === 'bg-zigzag' ? true : false))
+                                label.theme-label.bg-zigzag(for="themeZigzag" title="Zig Zags")
+                            .col-lg-2.col-4
+                                input#themeWifi.d-none(type="radio" name="roomTheme" value="bg-wifi" checked=(selected_theme === 'bg-wifi' ? true : false))
+                                label.theme-label.bg-wifi(for="themeWifi" title="Wifi Signal")
+                            .col-lg-2.col-4
+                                input#themeCircles.d-none(type="radio" name="roomTheme" value="bg-circular" checked=(selected_theme === 'bg-circular' ? true : false))
+                                label.theme-label.bg-circular(for="themeCircles" title="Circles")
+                            .col-lg-2.col-4
+                                input#themeYellow.d-none(type="radio" name="roomTheme" value="bg-yellow" checked=(selected_theme === 'bg-yellow' ? true : false))
+                                label.theme-label.bg-yellow(for="themeYellow" title="Yellow")
+                            .col-lg-2.col-4
+                                input#themeTriangles.d-none(type="radio" name="roomTheme" value="bg-gplay" checked=(selected_theme === 'bg-gplay' ? true : false))
+                                label.theme-label.bg-gplay(for="themeTriangles" title="Triangles")
+                            .col-lg-2.col-4
+                                input#themeCanadian.d-none(type="radio" name="roomTheme" value="bg-canadian" checked=(selected_theme === 'bg-canadian' ? true : false))
+                                label.theme-label.bg-canadian(for="themeCanadian" title="Canadian Dollar")
 
                 button(class='btn btn-lg btn-primary btn-block my-3' type="submit") Create
 
@@ -119,4 +142,4 @@ block content
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                     span(aria-hidden='true') ×
                 .modal-body
-                    | Onboarding text
+                    | Onboarding overlay

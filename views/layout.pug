@@ -45,8 +45,8 @@ html(lang="en")
         script(src='/javascripts/layout.js')
         block metas
 
-    - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay"]
-    - var selected_theme = RoomTheme in themes ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
+    - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay", "bg-canadian", "bg-rainbow", "bg-hypnotize"]
+    - var selected_theme = themes.includes(RoomTheme) ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
     body.d-flex.flex-column.min-vh-100(class=selected_theme)
         .wrapper.flex-grow-1
             block content
