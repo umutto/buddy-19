@@ -17,7 +17,7 @@ router.get("/create", async function (req, res, next) {
 
 router.post("/create", async function (req, res, next) {
   let roomType = req.body.roomType || 1;
-  let roomName = req.body.roomName || `A Buddy-19 ${roomType} Room`;
+  let roomName = req.body.roomName || `A room with no name`;
   let roomPassword = req.body.roomPassword || null;
   let roundAmount = req.body.roundAmount || 3;
   let turnLimit = req.body.turnLimit || 60;
@@ -51,9 +51,10 @@ router.get("/room/:id", async function (req, res, next) {
     let room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
 
+    console.log(res.locals.User);
     room_details.Settings = JSON.parse(room_details.Settings);
     res.render("room.pug", {
-      title: `Buddy-19 Room ${room_id}`,
+      title: `Buddy-19: ${room_details.Name}`,
       RoomId: room_id,
       RoomTheme: room_details.Settings.roomTheme,
       Room: room_details,

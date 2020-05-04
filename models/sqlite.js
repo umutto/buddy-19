@@ -22,6 +22,19 @@ const create_user = (uuid) => {
   });
 };
 
+const get_user_details = (uuid) => {
+  let query = `SELECT * FROM user WHERE UUID = ?`;
+  let params = [uuid];
+  return new Promise(function (resolve, reject) {
+    db.serialize(() => {
+      db.get(query, params, function (error, row) {
+        if (error) reject(error);
+        else resolve(row);
+      });
+    });
+  });
+};
+
 const create_new_room = async (
   roomUrl,
   roomType,
@@ -74,4 +87,10 @@ const set_room_active = async (room_url, state) => {
   });
 };
 
-module.exports = { create_user, create_new_room, get_room_details, set_room_active };
+module.exports = {
+  create_user,
+  get_user_details,
+  create_new_room,
+  get_room_details,
+  set_room_active,
+};

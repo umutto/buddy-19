@@ -28,7 +28,7 @@ nav.navbar {
   border-right: 0;
   border-bottom: 1px solid #dddf;
 }
-@media (max-width: 576px) {
+@media (max-width: 575px) {
   .dropdown-menu {
     display: block;
     position: relative;
