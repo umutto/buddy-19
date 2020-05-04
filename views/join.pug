@@ -9,9 +9,11 @@ block content
         a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
-    #main-wrapper.container
+    #main-wrapper.container.pt-3
+        .row.text-center
+            h2 Joining to #{Room.Name}
         form#joinForm.mx-3(method="POST" action="/room/join/" + RoomId)
-            if Room.Password
+            if Room.Password && Room.Host != User.Id
                 .row.d-flex.align-items-center
                     label(for="roomPassword") Room Password:
                     input#roomPassword.form-control(type="text" name="roomPassword" placeholder="Enter the room password" required)

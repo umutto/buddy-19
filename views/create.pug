@@ -21,7 +21,7 @@ block content
             .text-info.flash-info-message #{info_message}
             form(method="POST" action="/create")
                 .text-center
-                    h1.font-weight-bold Create a Room
+                    h1 Create a Room
                 .form-row
                     .form-group.col-md-2
                         label(for="roomType") Room Type
@@ -102,7 +102,7 @@ block content
         .modal-dialog.modal-lg.modal-dialog-centered(role='document')
             .modal-content
                 .modal-header
-                    h5#help-modal-label.modal-title.font-weight-bold Help
+                    h5#help-modal-label.modal-title Help
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                     span(aria-hidden='true') ×
                 .modal-body

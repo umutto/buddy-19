@@ -23,7 +23,7 @@ const create_user = (uuid) => {
 };
 
 const get_user_details = (uuid) => {
-  let query = `SELECT user.UUID, user.CreationDate, user.LastSeenDate, user.Name, user.Avatar,
+  let query = `SELECT user.UUID AS Id, user.CreationDate, user.LastSeenDate, user.Name, user.Avatar,
                   json_group_array(json_object('Url', room.PublicUrl,
                                                'IsActive', room.IsActive,
                                                'Name', room.Name,
@@ -32,16 +32,12 @@ const get_user_details = (uuid) => {
                                                'MembershipDate', room_member.EnterDate,
                                                'UserName', room_member.UserName,
                                                'UserAvatar', room_member.UserAvatar)) AS RoomMembership
-                FROM
-                  user
-                  LEFT JOIN
-                    room_member
+                FROM user
+                  LEFT JOIN room_member
                     ON user.UUID = room_member.UserId
-                  INNER JOIN
-                    room
+                  LEFT JOIN room
                     ON room_member.RoomId = room.PublicUrl
-                GROUP BY
-                  user.UUID
+                GROUP BY user.UUID
                 HAVING user.UUID = ?`;
   let params = [uuid];
   return new Promise((resolve, reject) => {
@@ -84,13 +80,20 @@ const create_new_room = async (
   });
 };
 
-const get_room_details = async (room_url) => {
-  let query = `SELECT * FROM room WHERE PublicUrl = ? AND IsActive = 1`;
-  let params = [room_url];
+const add_room_member = (uuid, room_id, name, avatar) => {
+  let query_update = `UPDATE user SET Name = COALESCE(?, Name), Avatar = COALESCE(?, Avatar) WHERE UUID = ?`;
+  let params_update = [name, avatar, uuid];
+  let query_member = `INSERT INTO room_member (RoomId, UserId, UserName, UserAvatar) VALUES(?, ?, ?, ?)`;
+  let params_member = [room_id, uuid, name, avatar];
   return new Promise((resolve, reject) => {
-    db.get(query, params, function (error, row) {
-      if (error) reject(error);
-      else resolve(row);
+    db.serialize(() => {
+      db.run(query_update, params_update, function (error) {
+        if (error) reject(error);
+      });
+      db.run(query_member, params_member, function (error) {
+        if (error) reject(error);
+        else resolve({ lastID: this.lastID, changes: this.changes });
+      });
     });
   });
 };
@@ -106,10 +109,22 @@ const set_room_active = async (room_url, state) => {
   });
 };
 
+const get_room_details = async (room_url) => {
+  let query = `SELECT * FROM room WHERE PublicUrl = ? AND IsActive = 1`;
+  let params = [room_url];
+  return new Promise((resolve, reject) => {
+    db.get(query, params, function (error, row) {
+      if (error) reject(error);
+      else resolve(row);
+    });
+  });
+};
+
 module.exports = {
   create_user,
   get_user_details,
   create_new_room,
-  get_room_details,
+  add_room_member,
   set_room_active,
+  get_room_details,
 };

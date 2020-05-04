@@ -89,19 +89,18 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
   ) {
     let chat_msg = chatMessageTemplate({
       UserAlias: c_user_alias,
-      MessageUserId: context.UserId,
+      MessageUser: context.User,
       MessageTime: message_time,
       MessageText: context.ChatMessage,
       MessageType: message_type,
+      TextHint: context.Reason,
     });
 
     chat_display.insertAdjacentHTML("beforeend", chat_msg);
   } else if (message_type === messageType.userChatMessage) {
     let chat_msg = chatMessageTemplate({
       UserAlias: c_user_alias,
-      MessageUserId: context.UserId,
-      MessageUserAvatar: context.UserAvatar,
-      MessageUserName: context.UserName,
+      MessageUser: context.User,
       MessageTime: message_time,
       MessageText: context.ChatMessage,
       MessageType: message_type,
@@ -110,7 +109,7 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
     if (
       chat_display.lastChild &&
       chat_display.lastChild.dataset.type == messageType.userChatMessage &&
-      chat_display.lastChild.dataset.userid === context.UserId &&
+      chat_display.lastChild.dataset.userid === context.User.Id &&
       chat_display.lastChild.getElementsByClassName("chat-text").length < 10 &&
       chat_display.lastChild.getElementsByClassName("chat-time")[0].lastChild
         .textContent === message_time

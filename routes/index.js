@@ -60,18 +60,18 @@ router.get("/room/:id", async function (req, res, next) {
 
   // Check if user is a member of room, if not redirect to join page
   let current_room = req.UserClient.RoomMembership.filter((m) => m.Url === req.params.id);
-  if (!current_room) return res.redirect("/room/join/" + room_id);
+  if (!current_room || current_room.length == 0)
+    return res.redirect("/room/join/" + room_id);
 
   // Room is active and the user is a member
+
   res.locals.User.Name =
     current_room[0].UserName ||
     req.UserClient.UserName ||
     "User-" + (Math.random() + 1).toString(36).substr(2, 5);
   let avatars = await get_file_list("./public/images/user_icons");
   let usr_avatar = current_room[0].UserAvatar || req.UserClient.Avatar;
-  res.locals.User.Avatar = avatars.includes(usr_avatar)
-    ? usr_avatar
-    : avatars[Math.floor(Math.random() * avatars.length)];
+  res.locals.User.Avatar = avatars.includes(usr_avatar) ? usr_avatar : null;
 
   room_details.Settings = JSON.parse(room_details.Settings);
   res.render("room.pug", {
@@ -99,10 +99,13 @@ router.get("/room/join/:id", async function (req, res, next) {
 });
 
 router.post("/room/join/:id", async function (req, res, next) {
-  // update user table
-  // update room_member table
   let room_id = req.params.id;
-  console.log(req.body);
+  await sqliteController.add_room_member(
+    req.UserClient.Id,
+    room_id,
+    req.body.userName,
+    req.body.userAvatar
+  );
   res.redirect("/room/" + room_id);
 });
 
