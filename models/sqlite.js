@@ -14,7 +14,7 @@ const create_user = (uuid) => {
                 VALUES (?)
                ON CONFLICT(UUID) DO UPDATE SET LastSeenDate=CURRENT_TIMESTAMP`;
   let params = [uuid];
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.run(query, params, function (error) {
       if (error) reject(error);
       else resolve({ lastID: this.lastID, changes: this.changes });
@@ -44,7 +44,7 @@ const get_user_details = (uuid) => {
                   user.UUID
                 HAVING user.UUID = ?`;
   let params = [uuid];
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.get(query, params, function (error, row) {
         if (error) reject(error);
@@ -74,7 +74,7 @@ const create_new_room = async (
     roomTheme,
   });
   let params = [roomUrl, 1, roomName, roomPassword, roomType, roomSettings, hostUUID];
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.run(query, params, function (error) {
         if (error) reject(error);
@@ -87,7 +87,7 @@ const create_new_room = async (
 const get_room_details = async (room_url) => {
   let query = `SELECT * FROM room WHERE PublicUrl = ? AND IsActive = 1`;
   let params = [room_url];
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.get(query, params, function (error, row) {
       if (error) reject(error);
       else resolve(row);
@@ -98,7 +98,7 @@ const get_room_details = async (room_url) => {
 const set_room_active = async (room_url, state) => {
   let query = `UPDATE room SET IsActive = ? WHERE PublicUrl = ? AND IsActive = ?`;
   let params = [+state, room_url, +!state];
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.run(query, params, function (error) {
       if (error) reject(error);
       else resolve({ lastID: this.lastID, changes: this.changes });

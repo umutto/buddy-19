@@ -4,6 +4,7 @@ var router = express.Router();
 const nanoid = require("nanoid");
 
 var sqliteController = require("../models/sqlite");
+var get_file_list = require("../helpers/common").get_file_list;
 
 router.get("/", async function (req, res, next) {
   res.render("index", {
@@ -62,8 +63,15 @@ router.get("/room/:id", async function (req, res, next) {
   if (!current_room) return res.redirect("/room/join/" + room_id);
 
   // Room is active and the user is a member
-  res.locals.User.Name = current_room[0].UserName || req.UserClient.UserName;
-  res.locals.User.Avatar = current_room[0].UserAvatar || req.UserClient.Avatar;
+  res.locals.User.Name =
+    current_room[0].UserName ||
+    req.UserClient.UserName ||
+    "User-" + (Math.random() + 1).toString(36).substr(2, 5);
+  let avatars = await get_file_list("./public/images/user_icons");
+  let usr_avatar = current_room[0].UserAvatar || req.UserClient.Avatar;
+  res.locals.User.Avatar = avatars.includes(usr_avatar)
+    ? usr_avatar
+    : avatars[Math.floor(Math.random() * avatars.length)];
 
   room_details.Settings = JSON.parse(room_details.Settings);
   res.render("room.pug", {
@@ -80,8 +88,8 @@ router.get("/room/join/:id", async function (req, res, next) {
     room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
 
-    console.log(req.body);
     res.render("join.pug", {
+      RoomId: room_id,
       title: `Buddy-19: ${room_details.Name}`,
       Room: room_details,
     });
@@ -91,6 +99,10 @@ router.get("/room/join/:id", async function (req, res, next) {
 });
 
 router.post("/room/join/:id", async function (req, res, next) {
+  // update user table
+  // update room_member table
+  let room_id = req.params.id;
+  console.log(req.body);
   res.redirect("/room/" + room_id);
 });
 

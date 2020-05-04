@@ -12,6 +12,10 @@ block metas
     if Room.Host === UserAliasCookie
         script(src='/javascripts/host.js')
 
+    script.
+        const c_user_name = !{typeof User !== 'undefined' && User.Name !== 'undefined' ? JSON.stringify(User.Name) : `null`}
+        const c_user_avatar = !{typeof User !== 'undefined' && User.Avatar !== 'undefined' ? JSON.stringify(User.Avatar) : `null`}
+
 block content
     nav.navbar.navbar-expand-sm
         a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')

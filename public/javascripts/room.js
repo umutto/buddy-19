@@ -6,13 +6,11 @@ const messageType = Object.freeze({
 });
 
 window.addEventListener("DOMContentLoaded", function (evt) {
-  // TODO: ask user for avatar and name and then init connection to room
-  // Show a modal with room name as title, ask for username, ask for password (if exists), ask for avatar (same as theme selection)
   const socket = io({
     query: serialize_params({
       UserId: c_user_alias,
-      UserName: "Temporaryname",
-      UserAvatar: "/images/user_icons/cat.png",
+      UserName: c_user_name,
+      UserAvatar: c_user_avatar,
       LoginDate: new Date().toJSON(),
       SourceUrl: window.location.pathname,
     }),

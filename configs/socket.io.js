@@ -16,6 +16,12 @@ const init = (server) => {
 
   io.on("connection", function (socket) {
     let conn_client = socket.request._query;
+
+    // TODO:
+    // get user details from db
+
+    // when user changes details, set them in db by an ajax call on client side and send a user_edit message here
+    // when that message is received, update these user_details object from database
     let user_details = {
       UserId: conn_client.UserId,
       UserName: conn_client.UserName || "Guest-" + Math.floor(Math.random() * 10000),
