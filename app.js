@@ -25,8 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // custom local vars and consistent alias cookie middleware
-app.use(locals);
 app.use(usercookie);
+app.use(locals);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

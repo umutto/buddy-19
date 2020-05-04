@@ -47,26 +47,51 @@ router.post("/create", async function (req, res, next) {
 
 router.get("/room/:id", async function (req, res, next) {
   let room_id = req.params.id;
+  let room_details = null;
+
+  // Check if room exists & active
   try {
-    let room_details = await sqliteController.get_room_details(room_id);
+    room_details = await sqliteController.get_room_details(room_id);
+    if (!room_details) return next({ status: 404, code: "Room Not Found" });
+  } catch (error) {
+    return next(error);
+  }
+
+  // Check if user is a member of room, if not redirect to join page
+  let current_room = req.UserClient.RoomMembership.filter((m) => m.Url === req.params.id);
+  if (!current_room) return res.redirect("/room/join/" + room_id);
+
+  // Room is active and the user is a member
+  res.locals.User.Name = current_room[0].UserName || req.UserClient.UserName;
+  res.locals.User.Avatar = current_room[0].UserAvatar || req.UserClient.Avatar;
+
+  room_details.Settings = JSON.parse(room_details.Settings);
+  res.render("room.pug", {
+    title: `Buddy-19: ${room_details.Name}`,
+    RoomId: room_id,
+    RoomTheme: room_details.Settings.roomTheme,
+    Room: room_details,
+  });
+});
+
+router.get("/room/join/:id", async function (req, res, next) {
+  let room_id = req.params.id;
+  try {
+    room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
 
-    console.log(res.locals.User);
-    room_details.Settings = JSON.parse(room_details.Settings);
-    res.render("room.pug", {
+    console.log(req.body);
+    res.render("join.pug", {
       title: `Buddy-19: ${room_details.Name}`,
-      RoomId: room_id,
-      RoomTheme: room_details.Settings.roomTheme,
       Room: room_details,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 
-router.post("/room/:id", async function (req, res, next) {
-  console.log(req.body);
-  res.redirect("/");
+router.post("/room/join/:id", async function (req, res, next) {
+  res.redirect("/room/" + room_id);
 });
 
 module.exports = router;

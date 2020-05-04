@@ -1,0 +1,22 @@
+extends layout
+
+block metas
+  link(rel='stylesheet', href='/stylesheets/room.css')
+  link(rel='stylesheet', href='/stylesheets/theme.css')
+
+
+block content
+    nav.navbar
+        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+            img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
+            | Buddy-19
+    #main-wrapper.container
+        form#joinForm.mx-3
+            if Room.Password
+                .row.d-flex.align-items-center
+                    label(for="roomPassword") Room Password:
+                    input#roomPassword.form-control(type="text" placeholder="Enter the room password" required)
+            .row.pb-3
+                label(for="userName") User Name:
+                input#userName.form-control(type="text" placeholder="Enter a nickname" value=User.Name required)
+            include user_avatar_select

@@ -56,6 +56,10 @@ nav.navbar {
   display: none;
 }
 
+.btn-blue {
+  background-color: #2196f3;
+}
+
 .p-line {
   white-space: pre-line;
 }

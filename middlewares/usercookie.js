@@ -12,10 +12,18 @@ module.exports = async (req, res, next) => {
     if (req.app.get("env") === "production") cookie_opts.secure = "true";
     res.cookie("user_alias", user_alias, cookie_opts);
     console.log(`A new user with ${user_alias}.`);
+    req.UserClient = {
+      UUID: res.locals.UserAliasCookie,
+      CreationDate: null,
+      LastSeenDate: null,
+      Avatar: null,
+      RoomMembership: [],
+    };
   } else {
-    res.locals.User = await sqliteController.get_user_details(user_alias);
+    req.UserClient = await sqliteController.get_user_details(user_alias);
+    req.UserClient.RoomMembership = JSON.parse(req.UserClient.RoomMembership);
   }
-  sqliteController.create_user(user_alias);
+  await sqliteController.create_user(user_alias);
   res.locals.UserAliasCookie = user_alias;
   next();
 };

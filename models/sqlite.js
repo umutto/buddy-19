@@ -23,7 +23,26 @@ const create_user = (uuid) => {
 };
 
 const get_user_details = (uuid) => {
-  let query = `SELECT * FROM user WHERE UUID = ?`;
+  let query = `SELECT user.UUID, user.CreationDate, user.LastSeenDate, user.Name, user.Avatar,
+                  json_group_array(json_object('Url', room.PublicUrl,
+                                               'IsActive', room.IsActive,
+                                               'Name', room.Name,
+                                               'Type', room.RoomType,
+                                               'CreationDate', room.CreationDate,
+                                               'MembershipDate', room_member.EnterDate,
+                                               'UserName', room_member.UserName,
+                                               'UserAvatar', room_member.UserAvatar)) AS RoomMembership
+                FROM
+                  user
+                  LEFT JOIN
+                    room_member
+                    ON user.UUID = room_member.UserId
+                  INNER JOIN
+                    room
+                    ON room_member.RoomId = room.PublicUrl
+                GROUP BY
+                  user.UUID
+                HAVING user.UUID = ?`;
   let params = [uuid];
   return new Promise(function (resolve, reject) {
     db.serialize(() => {

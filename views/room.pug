@@ -56,58 +56,10 @@ block content
                         span(aria-hidden='true') ×
                 .modal-body
                     .container
-                        .row.mr-md-0
-                            label(for="userAvatar") Avatar:
-                        .row.d-flex.flex-wrap
-                            .mx-1
-                                input#avatarCat.d-none(type="radio" name="userAvatar" value="avt-cat" checked=(User.Avatar === 'avt-cat' ? true : false))
-                                label.avatar-label.avt-cat(for="avatarCat" title="Cat")
-                            .mx-1
-                                input#avatarDeer.d-none(type="radio" name="userAvatar" value="avt-deer" checked=(User.Avatar === 'avt-deer' ? true : false))
-                                label.avatar-label.avt-deer(for="avatarDeer" title="Deer")
-                            .mx-1
-                                input#avatarDog.d-none(type="radio" name="userAvatar" value="avt-dog" checked=(User.Avatar === 'avt-dog' ? true : false))
-                                label.avatar-label.avt-dog(for="avatarDog" title="Dog")
-                            .mx-1
-                                input#avatarElephant.d-none(type="radio" name="userAvatar" value="avt-elephant" checked=(User.Avatar === 'avt-elephant' ? true : false))
-                                label.avatar-label.avt-elephant(for="avatarElephant" title="Elephant")
-                            .mx-1
-                                input#avatarFox.d-none(type="radio" name="userAvatar" value="avt-fox" checked=(User.Avatar === 'avt-fox' ? true : false))
-                                label.avatar-label.avt-fox(for="avatarFox" title="Fox")
-                            .mx-1
-                                input#avatarGiraffe.d-none(type="radio" name="userAvatar" value="avt-giraffe" checked=(User.Avatar === 'avt-giraffe' ? true : false))
-                                label.avatar-label.avt-giraffe(for="avatarGiraffe" title="Giraffe")
-                            .mx-1
-                                input#avatarGoat.d-none(type="radio" name="userAvatar" value="avt-goat" checked=(User.Avatar === 'avt-goat' ? true : false))
-                                label.avatar-label.avt-goat(for="avatarGoat" title="Goat")
-                            .mx-1
-                                input#avatarKoala.d-none(type="radio" name="userAvatar" value="avt-koala" checked=(User.Avatar === 'avt-koala' ? true : false))
-                                label.avatar-label.avt-koala(for="avatarKoala" title="Koala")
-                            .mx-1
-                                input#avatarLion.d-none(type="radio" name="userAvatar" value="avt-lion" checked=(User.Avatar === 'avt-lion' ? true : false))
-                                label.avatar-label.avt-lion(for="avatarLion" title="Lion")
-                            .mx-1
-                                input#avatarMonkey.d-none(type="radio" name="userAvatar" value="avt-monkey" checked=(User.Avatar === 'avt-monkey' ? true : false))
-                                label.avatar-label.avt-monkey(for="avatarMonkey" title="Monkey")
-                            .mx-1
-                                input#avatarPanda.d-none(type="radio" name="userAvatar" value="avt-panda" checked=(User.Avatar === 'avt-panda' ? true : false))
-                                label.avatar-label.avt-panda(for="avatarPanda" title="Panda")
-                            .mx-1
-                                input#avatarPig.d-none(type="radio" name="userAvatar" value="avt-pig" checked=(User.Avatar === 'avt-pig' ? true : false))
-                                label.avatar-label.avt-pig(for="avatarPig" title="Pig")
-                            .mx-1
-                                input#avatarRaccoon.d-none(type="radio" name="userAvatar" value="avt-raccoon" checked=(User.Avatar === 'avt-raccoon' ? true : false))
-                                label.avatar-label.avt-raccoon(for="avatarRaccoon" title="Raccoon")
-                            .mx-1
-                                input#avatarTiger.d-none(type="radio" name="userAvatar" value="avt-tiger" checked=(User.Avatar === 'avt-tiger' ? true : false))
-                                label.avatar-label.avt-tiger(for="avatarTiger" title="Tiger")
-                            .mx-1
-                                input#avatarWolf.d-none(type="radio" name="userAvatar" value="avt-wolf" checked=(User.Avatar === 'avt-wolf' ? true : false))
-                                label.avatar-label.avt-wolf(for="avatarWolf" title="Wolf")
-
-                        .row.mr-md-0.d-flex.align-items-center
-                            label.col-4.col-md-3(for="userName") User Name:
-                            input#userName.form-control.col-8.col-md-9(type="text" placeholder="Enter a nickname" value=User.Name)
+                        .row.mr-md-0.d-flex.align-items-center.pb-3
+                            label.flex-fill(for="userName") User Name:
+                            input#userName.form-control.col-9(type="text" placeholder="Enter a nickname" value=User.Name)
+                        include user_avatar_select
                 .modal-footer
                     button.btn.btn-primary(type="button") Save changes
                     button.btn.btn-secondary(type="button" data-dismiss="modal") Close
@@ -123,46 +75,7 @@ block content
                     //- if Room.Host === UserAliasCookie
                                         .form-group.col-md.pl-3.pl-sm-5
                     .container
-                        .row.mr-md-0
-                            label.col-md-6(for="roomTheme") Theme:
-                        .row.mr-md-0
-                            .col-lg-2.col-4
-                                input#themePentagon.d-none(type="radio" name="roomTheme" value="bg-pentagon" checked=(selected_theme === 'bg-pentagon' ? true : false))
-                                label.theme-label.bg-pentagon(for="themePentagon" title="Pentagons")
-                            .col-lg-2.col-4
-                                input#themeSquigly.d-none(type="radio" name="roomTheme" value="bg-squiggly" checked=(selected_theme === 'bg-squiggly' ? true : false))
-                                label.theme-label.bg-squiggly(for="themeSquigly" title="Squiggly Lines")
-                            .col-lg-2.col-4
-                                input#themePolka.d-none(type="radio" name="roomTheme" value="bg-polka" checked=(selected_theme === 'bg-polka' ? true : false))
-                                label.theme-label.bg-polka(for="themePolka" title="Polka Dots")
-                            .col-lg-2.col-4
-                                input#themeSymphony.d-none(type="radio" name="roomTheme" value="bg-symphony" checked=(selected_theme === 'bg-symphony' ? true : false))
-                                label.theme-label.bg-symphony(for="themeSymphony" title="Symphony")
-                            .col-lg-2.col-4
-                                input#themeSakura.d-none(type="radio" name="roomTheme" value="bg-sakura" checked=(selected_theme === 'bg-sakura' ? true : false))
-                                label.theme-label.bg-sakura(for="themeSakura" title="Sakura Leaves")
-                            .col-lg-2.col-4
-                                input#themeChristmas.d-none(type="radio" name="roomTheme" value="bg-christmas" checked=(selected_theme === 'bg-christmas' ? true : false))
-                                label.theme-label.bg-christmas(for="themeChristmas" title="Christmas")
-                        .row.mr-md-0
-                            .col-lg-2.col-4
-                                input#themeZigzag.d-none(type="radio" name="roomTheme" value="bg-zigzag" checked=(selected_theme === 'bg-zigzag' ? true : false))
-                                label.theme-label.bg-zigzag(for="themeZigzag" title="Zig Zags")
-                            .col-lg-2.col-4
-                                input#themeWifi.d-none(type="radio" name="roomTheme" value="bg-wifi" checked=(selected_theme === 'bg-wifi' ? true : false))
-                                label.theme-label.bg-wifi(for="themeWifi" title="Wifi Signal")
-                            .col-lg-2.col-4
-                                input#themeCircles.d-none(type="radio" name="roomTheme" value="bg-circular" checked=(selected_theme === 'bg-circular' ? true : false))
-                                label.theme-label.bg-circular(for="themeCircles" title="Circles")
-                            .col-lg-2.col-4
-                                input#themeYellow.d-none(type="radio" name="roomTheme" value="bg-yellow" checked=(selected_theme === 'bg-yellow' ? true : false))
-                                label.theme-label.bg-yellow(for="themeYellow" title="Yellow")
-                            .col-lg-2.col-4
-                                input#themeTriangles.d-none(type="radio" name="roomTheme" value="bg-gplay" checked=(selected_theme === 'bg-gplay' ? true : false))
-                                label.theme-label.bg-gplay(for="themeTriangles" title="Triangles")
-                            .col-lg-2.col-4
-                                input#themeCanadian.d-none(type="radio" name="roomTheme" value="bg-canadian" checked=(selected_theme === 'bg-canadian' ? true : false))
-                                label.theme-label.bg-canadian(for="themeCanadian" title="Canadian Dollar")
+                        include room_theme_select
                         .row.mr-md-0
                             label.col-md-6(for="roomVolume") Volume:
                             .d-flex.align-items-center.w-100
@@ -186,7 +99,7 @@ block content
                     .input-group
                         input#qr_room_url.form-control(type="text" value=room_url autofocus readonly)
                         .input-group-append
-                            button#btn_copy_url.btn.btn-primary(type='submit')
+                            button#btn_copy_url.btn.btn-primary.btn-blue(type='submit')
                                 | Copy
                     label.pt-3 Or use the QR code below
                     a(href=qr_url, target="_blank", rel="noopener", title="QR Code")
