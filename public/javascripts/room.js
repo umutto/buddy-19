@@ -3,6 +3,7 @@ const messageType = Object.freeze({
   userDisconnected: 1,
   userChatMessage: 2,
   userChatReaction: 3,
+  userDetails: 4,
 });
 
 window.addEventListener("DOMContentLoaded", function (evt) {
@@ -19,17 +20,53 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   let room = document.getElementById("main-wrapper").dataset.room;
   socket.emit("join", room, function (response) {
     if (response.status === 200) {
-      // TODO: append this to chat (You have joined the room (smth))
-      console.log(`You have successfully joined to ${response.message}!`);
+      append_to_chat(messageType.userConnected, response.context);
       room = response.message;
     } else {
-      console.log(response.message);
+      create_toast(response.status, response.message, "red", 2000).toast("show");
     }
   });
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
     if (context.ChatMessage) append_to_chat(message_type, context);
+    if (message_type === messageType.userDetails) {
+      update_user_details(context.User.Id, context.User.Name, context.User.Avatar);
+    }
     ack({ Code: 200, Message: context });
+  });
+
+  let profile_form = document.getElementById("profile-form");
+
+  profile_form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    loading_overlay(true, "Updating user profile...");
+
+    var formData = new FormData(this);
+    formData.append("roomId", c_room_id);
+
+    fetch(this.action, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          c_user_name = data.message.User.Name;
+          c_user_avatar = data.message.User.Avatar;
+          socket.emit("user-details", {
+            Name: c_user_name,
+            Avatar: c_user_avatar,
+          });
+          update_user_details(c_user_alias, c_user_name, c_user_avatar);
+        } else create_toast(response.status, response.message, red, 2000).toast("show");
+        $("#profile-modal").modal("hide");
+      })
+      .catch((error) => {
+        create_toast("An error has occured", error, red, 2000).toast("show");
+      })
+      .finally(function () {
+        loading_overlay(false);
+      });
   });
 
   let chat_input = document.getElementById("chat-input");
@@ -73,7 +110,10 @@ function send_chat_message(socket, text) {
       if (response.status === 200) {
         append_to_chat(messageType.userChatMessage, response.message);
       } else {
-        create_toast(response.status, `${response.message}</br>${response.details}`);
+        create_toast(
+          response.status,
+          `${response.message}</br>${response.details}`
+        ).toast("show");
       }
     });
   }
@@ -127,4 +167,13 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
   }
   if (scroll_to_bottom)
     document.getElementById("chat-input").scrollIntoView({ behavior: "smooth" });
+}
+
+function update_user_details(uuid, name, avatar) {
+  document.querySelectorAll(`[data-userid="${uuid}"]`).forEach((u) => {
+    u.querySelectorAll(".user-name").forEach((n) => (n.textContent = name));
+    u.querySelectorAll(".user-avatar").forEach(
+      (a) => (a.src = `/images/user_icons/${avatar}`)
+    );
+  });
 }

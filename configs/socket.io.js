@@ -6,6 +6,17 @@ const messageType = {
   userDisconnected: 1,
   userChatMessage: 2,
   userChatReaction: 3,
+  userDetails: 4,
+};
+
+const update_user_details = async (user_details, room) => {
+  let result = await sqliteController.get_user_details(user_details.Id);
+  let current_room =
+    result.RoomMembership && result.RoomMembership.length > 0
+      ? JSON.parse(result.RoomMembership).filter((r) => r.Url === room)
+      : {};
+  user_details.Name = current_room.UserName || result.Name;
+  user_details.Avatar = current_room.UserAvatar || result.Avatar;
 };
 
 const init = (server) => {
@@ -18,8 +29,6 @@ const init = (server) => {
     let conn_client = socket.request._query;
 
     // TODO:
-    // get user details from db
-
     // when user changes details, set them in db by an ajax call on client side and send a user_edit message here
     // when that message is received, update these user_details object from database
     let user_details = {
@@ -52,16 +61,17 @@ const init = (server) => {
           ack({ status: 401, message: "Wrong password." });
         } else {
           socket.join(room);
-          await sqliteController.get_user_details(user_details.Id).then(function (rows) {
-            let current_room =
-              rows.RoomMembership && rows.RoomMembership.length > 0
-                ? JSON.parse(rows.RoomMembership).filter((r) => r.Url === room)
-                : {};
-            user_details.Name = current_room.UserName || rows.Name;
-            user_details.Avatar = current_room.UserAvatar || rows.Avatar;
-          });
+          await update_user_details(user_details, room);
 
-          ack({ status: 200, message: room });
+          ack({
+            status: 200,
+            message: room,
+            context: {
+              User: user_details,
+              ChatMessage: `You have joined the ${room_details.Name} room!`,
+              TimeReceived: new Date().toJSON(),
+            },
+          });
           socket.to(room).emit("message_echo", messageType.userConnected, {
             User: user_details,
             ChatMessage: `${user_details.Name} has joined the room!`,
@@ -69,6 +79,7 @@ const init = (server) => {
           });
         }
       } catch (error) {
+        console.log(error);
         ack({
           status: 500,
           message: "Something went wrong, try again later.",
@@ -83,6 +94,17 @@ const init = (server) => {
           TimeReceived: new Date().toJSON(),
         };
         socket.to(room).emit("message_echo", message_type, context_echo);
+        ack({ status: 200, message: context_echo });
+      });
+
+      socket.on("user-details", async function (context, ack = () => {}) {
+        await update_user_details(user_details, room);
+        let context_echo = {
+          User: user_details,
+          ...context,
+          TimeReceived: new Date().toJSON(),
+        };
+        socket.to(room).emit("message_echo", messageType.userDetails, context_echo);
         ack({ status: 200, message: context_echo });
       });
     });

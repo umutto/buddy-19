@@ -50,6 +50,25 @@ const get_user_details = (uuid) => {
   });
 };
 
+const update_user_details = async (uuid, room, name, avatar) => {
+  let query_user = `UPDATE user SET Name = COALESCE($name, Name), Avatar = COALESCE($avatar, Avatar) WHERE UUID = $uuid`;
+  let query_member = `UPDATE room_member SET UserName = COALESCE($name, UserName), UserAvatar = COALESCE($avatar, UserAvatar)
+                      WHERE UserId = $uuid AND RoomId = $room`;
+  let params_user = { $uuid: uuid, $name: name, $avatar: avatar };
+  let params_member = { $uuid: uuid, $room: room, $name: name, $avatar: avatar };
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      db.run(query_user, params_user, function (error) {
+        if (error) reject(error);
+      });
+      db.run(query_member, params_member, function (error) {
+        if (error) reject(error);
+        else resolve({ lastID: this.lastID, changes: this.changes });
+      });
+    });
+  });
+};
+
 const create_new_room = async (
   roomUrl,
   roomType,
@@ -123,6 +142,7 @@ const get_room_details = async (room_url) => {
 module.exports = {
   create_user,
   get_user_details,
+  update_user_details,
   create_new_room,
   add_room_member,
   set_room_active,

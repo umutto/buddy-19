@@ -10,6 +10,7 @@ var locals = require("./middlewares/locals");
 var usercookie = require("./middlewares/usercookie");
 
 var indexRouter = require("./routes/index");
+var userRouter = require("./routes/users");
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(usercookie);
 app.use(locals);
 
 app.use("/", indexRouter);
+app.use("/user", userRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
