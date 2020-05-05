@@ -1,0 +1,117 @@
+extends layout
+
+block metas
+    link(rel='stylesheet', href='/stylesheets/room.css')
+    link(rel='stylesheet', href='/stylesheets/theme.css')
+
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/theme.js')
+    script(src='/javascripts/room.js')
+    script(src='/templates/chat_message.js')
+
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify-element.min.js')
+
+    if Room.Host === UserAliasCookie
+        script(src='/javascripts/host.js')
+
+    script.
+        var c_user_name = !{typeof User !== 'undefined' && User.Name !== 'undefined' ? JSON.stringify(User.Name) : `null`}
+        var c_user_avatar = !{typeof User !== 'undefined' && User.Avatar !== 'undefined' ? JSON.stringify(User.Avatar) : `null`}
+        const c_room_id = !{typeof RoomId !== 'undefined' ? JSON.stringify(RoomId) : `null`}
+
+block content
+    nav.navbar.navbar-expand-sm
+        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+            img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
+            | Buddy-19
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar-content', aria-controls='navbar-content', aria-expanded='false', aria-label='Toggle navigation')
+            span.material-icons.ms-48 menu
+        #navbar-content.collapse.navbar-collapse
+            .room-header #{Room.Name}
+            ul.navbar-nav.ml-auto
+                li.nav-item.dropdown
+                    a#navbar-dropdown-link.nav-link.d-none.d-sm-block(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                        span.material-icons.ms-48 menu
+                    .dropdown-menu.dropdown-menu-right(aria-labelledby='navbar-dropdown-link')
+                        span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
+                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#profile-modal")
+                                span.material-icons.mr-1 person
+                                | User Profile
+                        span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
+                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#settings-modal")
+                                span.material-icons.mr-1 settings
+                                | Room Settings
+                        span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
+                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#qr-modal")
+                                span.material-icons.mr-1 filter_center_focus
+                                | Room Code
+
+    #main-wrapper.container.my-3(data-room=RoomId data-type=Room.Type)
+        #chat-wrapper.wobbly-border.border-md-0
+            #chat-history
+                #chat-display.container-fluid.pl-1.pt-1
+                .position-relative
+                    input#chat-input.form-control.border-0.mb-1(type='text', placeholder='Type a message')
+                    button#btn-chat-send.btn.btn-light(type='button') Send
+
+    #profile-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='profile-modal-label', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                form#profile-form(method="POST" action="/user/update")
+                    .modal-header
+                        h5#profile-modal-label.modal-title Profile Settings
+                        button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                    .modal-body
+                        .container
+                            .row.mr-md-0.d-flex.align-items-center.pb-3
+                                label.flex-fill(for="userName") User Name:
+                                input#userName.form-control.col-9(type="text" placeholder="Enter a nickname" value=User.Name name="userName")
+                            include user_avatar_select
+                    .modal-footer
+                        button.btn.btn-primary(type="submit") Save changes
+                        button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
+    #settings-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='settings-modal-label', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#settings-modal-label.modal-title Room Settings
+                    button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    //- if Room.Host === UserAliasCookie
+                                        .form-group.col-md.pl-3.pl-sm-5
+                    .container
+                        include room_theme_select
+                        .row.mr-md-0
+                            label.col-md-6(for="roomVolume") Volume:
+                            .d-flex.align-items-center.w-100
+                                a#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Mute")
+                                    span.material-icons volume_mute
+                                input#roomVolume.flex-fill.custom-range.w-unset.h-unset(type="range" value=70)
+                                a#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Full")
+                                    span.material-icons volume_up
+
+    #qr-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='qr-modal-label', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#qr-modal-label.modal-title Room Code: #{RoomId}
+                    button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    - let room_url = "https://" + DOMAIN_NAME + "/room/" + RoomId
+                    - let qr_url = "https://chart.googleapis.com/chart?cht=qr&chs=512x512&chl=" + room_url + "chld=H"
+                    label(for="qr_room_url") Invite your friends using the url below
+                    .input-group
+                        input#qr_room_url.form-control(type="text" value=room_url autofocus readonly)
+                        .input-group-append
+                            button#btn_copy_url.btn.btn-primary.btn-blue(type='submit')
+                                | Copy
+                    label.pt-3 Or use the QR code below
+                    a(href=qr_url, target="_blank", rel="noopener", title="QR Code")
+                        img.img-fluid.h-100.form-control(src=qr_url, alt="QR Code")
+
+

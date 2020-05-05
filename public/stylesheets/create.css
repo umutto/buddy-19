@@ -1,0 +1,15 @@
+#main-wrapper[data-type="1"] .type-1 {
+  display: initial;
+}
+#main-wrapper[data-type="2"] .type-2 {
+  display: initial;
+}
+#main-wrapper[data-type="3"] .type-3 {
+  display: initial;
+}
+
+.type-1,
+.type-2,
+.type-3 {
+  display: none;
+}

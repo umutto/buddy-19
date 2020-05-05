@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    .container.d-flex.flex-column.h-100
+        .flex-grow-1
+        .row.justify-content-center.align-items-center(style="font-size:100px;")
+            h1.display-1 #{status}
+            .d-none.d-lg-block.border-right.border-dark.mr-3.display-3 &nbsp
+            .d-block.d-lg-none.w-100
+            h2.display-4.lead(style='overflow-wrap: anywhere;') #{code}
+        if error.stack
+            .row.justify-content-center
+                pre.w-100
+                    | #{error.stack}
+        .row.justify-content-center
+            a.btn.btn-primary.btn-lg.btn-block(href="/", title='Return to main page') Return to main page
+        .flex-grow-1
+        .flex-grow-1
+
+

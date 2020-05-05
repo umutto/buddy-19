@@ -1,0 +1,158 @@
+.room-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+}
+@media only screen and (min-width: 576px) {
+  .room-header {
+    max-width: 45vw;
+    white-space: nowrap;
+  }
+}
+
+#chat-wrapper {
+  background-color: #fff9;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 185px);
+}
+
+#btn-chat-send {
+  position: absolute;
+  top: 0px;
+  right: 2px;
+  background: #fff06cb5;
+  font-weight: 700;
+}
+
+#chat-input {
+  padding-right: 4rem;
+}
+
+.chat-icon {
+  max-width: 36px;
+  max-height: 36px;
+  contain: content;
+}
+
+.chat-time {
+  top: 0px;
+  right: 0.25rem;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #fff;
+  border-radius: 0.4em;
+}
+
+.speech-bubble:after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  margin-top: -10px;
+}
+.speech-bubble.sb-left:after {
+  border-left: 0;
+  border-right-color: #fff;
+  left: 0;
+  margin-left: -10px;
+}
+.speech-bubble.sb-right:after {
+  border-right: 0;
+  border-left-color: #fff;
+  right: 0;
+  margin-right: -10px;
+}
+.chat-text {
+  animation: 1s ease-in-out new_message;
+  -webkit-animation: 1s ease-in-out new_message;
+}
+@keyframes new_message {
+  0% {
+    /* background: rgb(255, 248, 151); */
+    background: rgb(255, 248, 151);
+  }
+  50% {
+    background: #fff;
+  }
+}
+
+.avatar-label {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #555;
+  border-radius: 15px;
+  border-radius: 5px;
+  background-size: contain;
+}
+.avatar-label:hover {
+  cursor: pointer;
+  border-color: #17a2b8;
+  background-color: #9ed8e1;
+  border-radius: 35px;
+}
+input[type="radio"][name="userAvatar"]:checked + label {
+  background-color: #9ed8e1;
+}
+input[type="radio"][name="userAvatar"]:checked + label:before {
+  left: unset !important;
+  top: unset !important;
+  margin: 8px 15px;
+}
+
+.avt-cat {
+  background-image: url(/images/user_icons/cat.png);
+}
+.avt-deer {
+  background-image: url(/images/user_icons/deer.png);
+}
+.avt-dog {
+  background-image: url(/images/user_icons/dog.png);
+}
+.avt-elephant {
+  background-image: url(/images/user_icons/elephant.png);
+}
+.avt-fox {
+  background-image: url(/images/user_icons/fox.png);
+}
+.avt-giraffe {
+  background-image: url(/images/user_icons/giraffe.png);
+}
+.avt-goat {
+  background-image: url(/images/user_icons/goat.png);
+}
+.avt-koala {
+  background-image: url(/images/user_icons/koala.png);
+}
+.avt-lion {
+  background-image: url(/images/user_icons/lion.png);
+}
+.avt-monkey {
+  background-image: url(/images/user_icons/monkey.png);
+}
+.avt-owl {
+  background-image: url(/images/user_icons/owl.png);
+}
+.avt-panda {
+  background-image: url(/images/user_icons/panda.png);
+}
+.avt-pig {
+  background-image: url(/images/user_icons/pig.png);
+}
+.avt-raccoon {
+  background-image: url(/images/user_icons/raccoon.png);
+}
+.avt-tiger {
+  background-image: url(/images/user_icons/tiger.png);
+}
+.avt-wolf {
+  background-image: url(/images/user_icons/wolf.png);
+}
