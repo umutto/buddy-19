@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 const nanoid = require("nanoid");
+var formidable = require("formidable");
 
 var sqliteController = require("../models/sqlite");
 var get_file_list = require("../helpers/common").get_file_list;
@@ -84,6 +85,11 @@ router.get("/room/:id", async function (req, res, next) {
 
 router.get("/room/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
+
+  // user is already a member
+  let current_room = req.UserClient.RoomMembership.filter((m) => m.Url === room_id);
+  if (current_room && current_room.length > 0) return res.redirect("/room/" + room_id);
+
   try {
     room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
@@ -100,13 +106,43 @@ router.get("/room/join/:id", async function (req, res, next) {
 
 router.post("/room/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
-  await sqliteController.add_room_member(
-    req.UserClient.Id,
-    room_id,
-    req.body.userName,
-    req.body.userAvatar
-  );
-  res.redirect("/room/" + room_id);
+  var form = formidable({ multiples: true });
+
+  try {
+    form.parse(req, async (err, fields, files) => {
+      room_details = await sqliteController.get_room_details(room_id);
+      console.log(room_details);
+      console.log(fields);
+      if (
+        !room_details.Password ||
+        room_details.Host === req.UserClient.Id ||
+        room_details.Password === fields.roomPassword
+      ) {
+        await sqliteController.add_room_member(
+          req.UserClient.Id,
+          room_id,
+          fields.userName,
+          fields.userAvatar
+        );
+        return res.status(200).send({
+          status: 200,
+          message: room_details,
+        });
+      } else {
+        return res.status(401).send({
+          status: 401,
+          message: "Wrong password!",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: 500,
+      message: "Something went wrong, try again later.",
+      details: error,
+    });
+  }
 });
 
 module.exports = router;

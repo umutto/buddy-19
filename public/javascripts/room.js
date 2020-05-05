@@ -58,11 +58,11 @@ window.addEventListener("DOMContentLoaded", function (evt) {
             Avatar: c_user_avatar,
           });
           update_user_details(c_user_alias, c_user_name, c_user_avatar);
-        } else create_toast(response.status, response.message, red, 2000).toast("show");
+        } else create_toast(data.status, data.message, "red", 2000).toast("show");
         $("#profile-modal").modal("hide");
       })
       .catch((error) => {
-        create_toast("An error has occured", error, red, 2000).toast("show");
+        create_toast("An error has occured", error, "red", 2000).toast("show");
       })
       .finally(function () {
         loading_overlay(false);
@@ -73,13 +73,15 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   let chat_input_btn = document.getElementById("btn-chat-send");
 
   chat_input_btn.addEventListener("click", function () {
-    send_chat_message(socket, chat_input.value);
-    chat_input.value = "";
+    send_chat_message(socket, chat_input.value, function () {
+      chat_input.value = "";
+    });
   });
   chat_input.addEventListener("keyup", function () {
     if (event.keyCode === 13) {
-      send_chat_message(socket, chat_input.value);
-      chat_input.value = "";
+      send_chat_message(socket, chat_input.value, function () {
+        chat_input.value = "";
+      });
     }
   });
 
@@ -102,13 +104,14 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   });
 });
 
-function send_chat_message(socket, text) {
+function send_chat_message(socket, text, cb) {
   if (text !== "") {
     socket.emit("message", messageType.userChatMessage, { ChatMessage: text }, function (
       response
     ) {
       if (response.status === 200) {
         append_to_chat(messageType.userChatMessage, response.message);
+        cb();
       } else {
         create_toast(
           response.status,
@@ -138,12 +141,29 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
 
     chat_display.insertAdjacentHTML("beforeend", chat_msg);
   } else if (message_type === messageType.userChatMessage) {
-    let chat_msg = chatMessageTemplate({
-      UserAlias: c_user_alias,
-      MessageUser: context.User,
-      MessageTime: message_time,
-      MessageText: context.ChatMessage,
-      MessageType: message_type,
+    let chat_msg = htmlToElement(
+      chatMessageTemplate({
+        UserAlias: c_user_alias,
+        MessageUser: context.User,
+        MessageTime: message_time,
+        MessageText: context.ChatMessage,
+        MessageType: message_type,
+      }),
+      "text/html"
+    );
+
+    linkifyElement(chat_msg.querySelector(".chat-text .p-wrap"), {
+      className: "chat-text-link",
+      attributes: {
+        rel: "noopener",
+      },
+      format: function (value, type) {
+        if (type === "url" && value.length > 20) {
+          value = value.slice(0, 17) + "…";
+        }
+        return value;
+      },
+      chat_msg,
     });
 
     if (
@@ -154,17 +174,16 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
       chat_display.lastChild.getElementsByClassName("chat-time")[0].lastChild
         .textContent === message_time
     ) {
-      let msg_text = new DOMParser()
-        .parseFromString(chat_msg, "text/html")
-        .getElementsByClassName("chat-text")[0];
-      document
-        .getElementById("chat-display")
-        .lastChild.getElementsByClassName("chat-text")[0]
-        .appendChild(msg_text);
+      let msg_text = chat_msg.getElementsByClassName("chat-text")[0];
+      chat_display.lastChild.getElementsByClassName("chat-text")[0].appendChild(msg_text);
     } else {
-      chat_display.insertAdjacentHTML("beforeend", chat_msg);
+      chat_display.appendChild(chat_msg);
     }
+
+    if (document.hidden && c_user_alias !== context.User.Id)
+      title_blink(`New message from ${context.User.Name}`);
   }
+
   if (scroll_to_bottom)
     document.getElementById("chat-input").scrollIntoView({ behavior: "smooth" });
 }
@@ -176,4 +195,28 @@ function update_user_details(uuid, name, avatar) {
       (a) => (a.src = `/images/user_icons/${avatar}`)
     );
   });
+}
+
+function htmlToElement(html) {
+  var template = document.createElement("template");
+  html = html.trim();
+  template.innerHTML = html;
+  return template.content.firstChild;
+}
+
+function title_blink(message) {
+  var old_title = document.title;
+
+  var blinker = setInterval(function () {
+    document.title = document.title == message ? old_title : message;
+  }, 1000);
+
+  var listener = null;
+  listener = function () {
+    clearInterval(blinker);
+    document.title = old_title;
+    window.removeEventListener("mousemove", listener, false);
+  };
+
+  window.addEventListener("mousemove", listener, false);
 }

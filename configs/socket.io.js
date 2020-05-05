@@ -1,6 +1,8 @@
 var socket_io = require("socket.io");
 var sqliteController = require("../models/sqlite");
 
+var sanitizeHtml = require("sanitize-html");
+
 const messageType = {
   userConnected: 0,
   userDisconnected: 1,
@@ -28,9 +30,6 @@ const init = (server) => {
   io.on("connection", function (socket) {
     let conn_client = socket.request._query;
 
-    // TODO:
-    // when user changes details, set them in db by an ajax call on client side and send a user_edit message here
-    // when that message is received, update these user_details object from database
     let user_details = {
       Id: conn_client.UserId,
       Name: conn_client.UserName || "Guest-" + Math.floor(Math.random() * 10000),
@@ -88,6 +87,8 @@ const init = (server) => {
       }
 
       socket.on("message", function (message_type, context, ack = () => {}) {
+        if (context.ChatMessage) context.ChatMessage = sanitizeHtml(context.ChatMessage);
+
         let context_echo = {
           User: user_details,
           ...context,

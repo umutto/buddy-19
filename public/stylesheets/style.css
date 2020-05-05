@@ -124,6 +124,7 @@ nav.navbar {
   top: 0;
   left: 0;
   overflow-x: hidden;
+  background: #fff6;
 }
 
 .loading-overlay-content {

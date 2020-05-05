@@ -4,6 +4,8 @@ block metas
   link(rel='stylesheet', href='/stylesheets/room.css')
   link(rel='stylesheet', href='/stylesheets/theme.css')
 
+  script(src='/javascripts/join.js')
+
 block content
     nav.navbar
         a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
@@ -12,7 +14,7 @@ block content
     #main-wrapper.container.pt-3
         .row.text-center
             h2 Joining to #{Room.Name}
-        form#joinForm.mx-3(method="POST" action="/room/join/" + RoomId)
+        form#join-form.mx-3(method="POST" action="/room/join/" + RoomId data-room=RoomId)
             if Room.Password && Room.Host != User.Id
                 .row.d-flex.align-items-center
                     label(for="roomPassword") Room Password:
