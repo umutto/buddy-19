@@ -18,7 +18,8 @@ h6,
 .h3,
 .h4,
 .h5,
-.h6 {
+.h6,
+small {
   font-weight: 700;
 }
 
@@ -90,7 +91,7 @@ nav.navbar {
   text-indent: 2rem;
 }
 
-.transparent-bg {
+.bg-transparent-white {
   background-color: #ffffffc9;
   box-shadow: 0 0 5px 5px #d8d8d830;
 }

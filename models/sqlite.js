@@ -131,7 +131,10 @@ const set_room_active = async (room_url, state) => {
 };
 
 const get_room_details = async (room_url) => {
-  let query = `SELECT * FROM room WHERE PublicUrl = ?`;
+  let query = `SELECT room.PublicUrl, room.IsActive, room.Name, room.Password,
+                      room.RoomType AS 'Type', room.Settings, room.Host,
+                      room.CreationDate, room.History
+                FROM room WHERE PublicUrl = ?`;
   let params = [room_url];
   return new Promise((resolve, reject) => {
     db.get(query, params, function (error, row) {

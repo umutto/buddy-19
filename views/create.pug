@@ -9,14 +9,14 @@ block metas
 
 block content
     nav.navbar
-        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.bg-transparent-white.px-3(href='/', title='Home')
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
         a.navbar-item.ml-auto.d-flex.aling-items-center.align-self-start(href="#" title="Tutorial" data-toggle="modal" data-target="#help-modal")
               span.material-icons.ms-32 help_outline
 
     #main-wrapper.container-fluid.my-3(data-type="1")
-        .container.py-3.transparent-bg.wobbly-border.border-md-0
+        .container.py-3.bg-transparent-white.wobbly-border.border-md-0
             .text-danger.flash-error-message #{error_message}
             .text-info.flash-info-message #{info_message}
             form(method="POST" action="/create")
@@ -104,6 +104,6 @@ block content
                 .modal-header
                     h5#help-modal-label.modal-title Help
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
-                    span(aria-hidden='true') ×
+                        span(aria-hidden='true') ×
                 .modal-body
                     | Onboarding overlay

@@ -7,6 +7,17 @@ const messageType = Object.freeze({
 });
 
 window.addEventListener("DOMContentLoaded", function (evt) {
+  $("#chat-wrapper").on("hidden.bs.collapse", function () {
+    this.querySelectorAll(".chat-text").forEach((c) => c.classList.add("no-animation"));
+  });
+  $("#chat-wrapper").on("shown.bs.collapse", function () {
+    document.getElementById("chat-display").scrollTo({
+      top: document.getElementById("chat-display").scrollHeight,
+      behavior: "smooth",
+    });
+    document.getElementById("chat-text-append").textContent = "";
+  });
+
   const socket = io({
     query: serialize_params({
       UserId: c_user_alias,
@@ -182,10 +193,20 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
 
     if (document.hidden && c_user_alias !== context.User.Id)
       title_blink(`New message from ${context.User.Name}`);
+
+    if (!document.getElementById("chat-wrapper").classList.contains("show")) {
+      let chat_indicator = document.getElementById("chat-text-append");
+      chat_indicator.textContent = chat_indicator.textContent
+        ? `(${parseInt(chat_indicator.textContent.match(/\d+/)[0]) + 1})`
+        : "(1)";
+    }
   }
 
   if (scroll_to_bottom)
-    document.getElementById("chat-input").scrollIntoView({ behavior: "smooth" });
+    document.getElementById("chat-display").scrollTo({
+      top: document.getElementById("chat-display").scrollHeight,
+      behavior: "smooth",
+    });
 }
 
 function update_user_details(uuid, name, avatar) {

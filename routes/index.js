@@ -32,12 +32,9 @@ router.post("/create", async function (req, res, next) {
   try {
     let current_rooms = await sqliteController.get_all_rooms();
     current_rooms = current_rooms.map((r) => r.PublicUrl);
-    console.log(current_rooms);
     do {
       roomUrl = nanoid.nanoid(6);
     } while (current_rooms.includes(roomUrl));
-
-    console.log(roomUrl);
 
     await sqliteController.create_new_room(
       roomUrl,
@@ -57,9 +54,6 @@ router.post("/create", async function (req, res, next) {
 });
 
 router.get("/room/:id", async function (req, res, next) {
-  let current_rooms = await sqliteController.get_all_rooms();
-  current_rooms = current_rooms.map((r) => r.PublicUrl);
-  console.log(current_rooms);
   let room_id = req.params.id;
   let room_details = null;
 
@@ -127,8 +121,6 @@ router.post("/join/:id", async function (req, res, next) {
   try {
     form.parse(req, async (err, fields, files) => {
       room_details = await sqliteController.get_room_details(room_id);
-      console.log(room_details);
-      console.log(fields);
       if (
         !room_details.Password ||
         room_details.Host === req.UserClient.Id ||
