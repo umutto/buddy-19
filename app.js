@@ -12,6 +12,9 @@ var usercookie = require("./middlewares/usercookie");
 var indexRouter = require("./routes/index");
 var userRouter = require("./routes/users");
 
+var CronJob = require("cron").CronJob;
+var sqliteController = require("./models/sqlite");
+
 var app = express();
 
 // view engine setup
@@ -30,6 +33,17 @@ app.use(locals);
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+
+// custom cronjob to clean unactivated, old rooms at every 02:30
+new CronJob(
+  "00 30 02 * * *",
+  function () {
+    console.log("Cleaning unactivated rooms");
+    sqliteController.clean_rooms();
+  },
+  null,
+  true
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

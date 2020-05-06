@@ -26,10 +26,19 @@ router.post("/create", async function (req, res, next) {
   let doublePoints = "doublePoints" in req.body && req.body.doublePoints === "on";
   let roomTheme = req.body.roomTheme || null;
 
-  let roomUrl = nanoid.nanoid(6);
+  let roomUrl = null;
   let hostUUID = res.locals.UserAliasCookie;
 
   try {
+    let current_rooms = await sqliteController.get_all_rooms();
+    current_rooms = current_rooms.map((r) => r.PublicUrl);
+    console.log(current_rooms);
+    do {
+      roomUrl = nanoid.nanoid(6);
+    } while (current_rooms.includes(roomUrl));
+
+    console.log(roomUrl);
+
     await sqliteController.create_new_room(
       roomUrl,
       roomType,
@@ -48,6 +57,9 @@ router.post("/create", async function (req, res, next) {
 });
 
 router.get("/room/:id", async function (req, res, next) {
+  let current_rooms = await sqliteController.get_all_rooms();
+  current_rooms = current_rooms.map((r) => r.PublicUrl);
+  console.log(current_rooms);
   let room_id = req.params.id;
   let room_details = null;
 
@@ -61,8 +73,7 @@ router.get("/room/:id", async function (req, res, next) {
 
   // Check if user is a member of room, if not redirect to join page
   let current_room = req.UserClient.RoomMembership.filter((m) => m.Url === req.params.id);
-  if (!current_room || current_room.length == 0)
-    return res.redirect("/room/join/" + room_id);
+  if (!current_room || current_room.length == 0) return res.redirect("/join/" + room_id);
 
   // Room is active and the user is a member
 
@@ -83,7 +94,7 @@ router.get("/room/:id", async function (req, res, next) {
   });
 });
 
-router.get("/room/join/:id", async function (req, res, next) {
+router.get("/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
 
   // user is already a member
@@ -93,6 +104,11 @@ router.get("/room/join/:id", async function (req, res, next) {
   try {
     room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
+    if (!room_details.IsActive && room_details.Host !== req.UserClient.Id)
+      return next({
+        status: 401,
+        code: "Room is not active, waiting for host.",
+      });
 
     res.render("join.pug", {
       RoomId: room_id,
@@ -104,7 +120,7 @@ router.get("/room/join/:id", async function (req, res, next) {
   }
 });
 
-router.post("/room/join/:id", async function (req, res, next) {
+router.post("/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
   var form = formidable({ multiples: true });
 
@@ -124,6 +140,8 @@ router.post("/room/join/:id", async function (req, res, next) {
           fields.userName,
           fields.userAvatar
         );
+        if (room_details.Host === req.UserClient.Id)
+          await sqliteController.set_room_active(room_id, true);
         return res.status(200).send({
           status: 200,
           message: room_details,

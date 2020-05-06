@@ -14,7 +14,7 @@ block content
     #main-wrapper.container.pt-3
         .row.text-center
             h2 Joining to #{Room.Name}
-        form#join-form.mx-3(method="POST" action="/room/join/" + RoomId data-room=RoomId)
+        form#join-form.mx-3(method="POST" action="/join/" + RoomId data-room=RoomId)
             if Room.Password && Room.Host != User.Id
                 .row.d-flex.align-items-center
                     label(for="roomPassword") Room Password:
