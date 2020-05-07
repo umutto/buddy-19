@@ -25,12 +25,12 @@ block content
                 .form-row
                     .form-group.col-md-2
                         label(for="roomType") Room Type
-                            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br/><b>Quiz</b>: You take turns to ask each other questions.<br/><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br/><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
+                            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br/><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br/><b>Quiz (NOT IMPLEMENTED)</b>: You take turns to ask each other questions.<br/><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
                                 span.material-icons.ms-16.ml-1 help_outline
                         select#roomType.form-control(name="roomType")
                             option(value=1 selected) Youtube
-                            option(value=2) Quiz
-                            option(value=3 disabled) Sketch
+                            option(value=2 disabled) Sketch
+                            option(value=3) Quiz
                             option(value=4 disabled) Custom
                     .form-group.col-md-5
                         label(for="roomName" maxlength="20") Room Name

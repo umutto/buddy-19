@@ -21,9 +21,7 @@ router.post("/create", async function (req, res, next) {
   let roomType = req.body.roomType || 1;
   let roomName = req.body.roomName || `A room with no name`;
   let roomPassword = req.body.roomPassword || null;
-  let roundAmount = req.body.roundAmount || 3;
-  let turnLimit = req.body.turnLimit || 60;
-  let doublePoints = "doublePoints" in req.body && req.body.doublePoints === "on";
+
   let roomTheme = req.body.roomTheme || null;
 
   let roomUrl = null;
@@ -36,14 +34,36 @@ router.post("/create", async function (req, res, next) {
       roomUrl = nanoid.nanoid(6);
     } while (current_rooms.includes(roomUrl));
 
+    let roomSettings = {};
+    if (roomType === 1)
+      // Youtube type room
+      roomSettings = {
+        ...roomSettings,
+        ...{},
+      };
+    else if (roomType === 2)
+      // Sketch type room
+      roomSettings = {
+        ...roomSettings,
+        ...{},
+      };
+    else if (roomType === 3)
+      // Quiz type room
+      roomSettings = {
+        ...roomSettings,
+        ...{
+          roundAmount: req.body.roundAmount || 3,
+          turnLimit: req.body.turnLimit || 60,
+          doublePoints: "doublePoints" in req.body && req.body.doublePoints === "on",
+        },
+      };
+
     await sqliteController.create_new_room(
       roomUrl,
       roomType,
       roomName,
       roomPassword,
-      roundAmount,
-      turnLimit,
-      doublePoints,
+      JSON.stringify(roomSettings),
       roomTheme,
       hostUUID
     );
@@ -83,7 +103,7 @@ router.get("/room/:id", async function (req, res, next) {
   res.render("room.pug", {
     title: `Buddy-19: ${room_details.Name}`,
     RoomId: room_id,
-    RoomTheme: room_details.Settings.roomTheme,
+    RoomTheme: room_details.Theme,
     Room: room_details,
   });
 });

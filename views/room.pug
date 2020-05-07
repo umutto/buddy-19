@@ -51,9 +51,11 @@ block content
         .row.mx-3.wobbly-border.border-md-0.overflow-hidden.h-100.position-relative
             #play-area-wrapper.col.px-1
                 if Room.Type === 1
-                    include youtube_area
+                    include rooms/youtube_area
                 else if Room.Type === 2
-                    include quiz_area
+                    include rooms/sketch_area
+                else if Room.Type === 3
+                    include rooms/quiz_area
                 else
                     .h-100.d-flex.justify-content-center.align-items-center.text-center
                         h1.bg-light.m-3.p-3.text-danger This functionality is not implemented yet~

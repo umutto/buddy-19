@@ -18,7 +18,7 @@ const get_user_details = (uuid) => {
                   json_group_array(json_object('Url', room.PublicUrl,
                                                'IsActive', room.IsActive,
                                                'Name', room.Name,
-                                               'Type', room.RoomType,
+                                               'Type', room.Type,
                                                'CreationDate', room.CreationDate,
                                                'MembershipDate', room_member.EnterDate,
                                                'UserName', room_member.UserName,
@@ -65,21 +65,22 @@ const create_new_room = async (
   roomType,
   roomName,
   roomPassword,
-  roundAmount,
-  turnLimit,
-  doublePoints,
+  roomSettings,
   roomTheme,
   hostUUID
 ) => {
-  let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, RoomType, Settings, Host)
+  let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, Type, Settings, Theme, Host)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  let roomSettings = JSON.stringify({
-    roundAmount,
-    turnLimit,
-    doublePoints,
+  let params = [
+    roomUrl,
+    0,
+    roomName,
+    roomPassword,
+    roomType,
+    roomSettings,
     roomTheme,
-  });
-  let params = [roomUrl, 0, roomName, roomPassword, roomType, roomSettings, hostUUID];
+    hostUUID,
+  ];
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.run(query, params, function (error) {
@@ -132,7 +133,7 @@ const set_room_active = async (room_url, state) => {
 
 const get_room_details = async (room_url) => {
   let query = `SELECT room.PublicUrl, room.IsActive, room.Name, room.Password,
-                      room.RoomType AS 'Type', room.Settings, room.Host,
+                      room.Type, room.Settings, room.Theme, room.Host,
                       room.CreationDate, room.History
                 FROM room WHERE PublicUrl = ?`;
   let params = [room_url];
