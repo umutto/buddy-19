@@ -18,9 +18,9 @@ block content
             if Room.Password && Room.Host != User.Id
                 .row.d-flex.align-items-center
                     label(for="roomPassword") Room Password:
-                    input#roomPassword.form-control(type="text" name="roomPassword" placeholder="Enter the room password" required)
+                    input#roomPassword.form-control(type="password" name="roomPassword" placeholder="Enter the room password" autocomplete="current-password" required)
             .row.pb-3
                 label(for="userName") User Name:
-                input#userName.form-control(type="text" name="userName" placeholder="Enter a nickname" value=User.Name required)
+                input#userName.form-control(type="text" name="userName" placeholder="Enter a nickname" value=User.Name autocomplete="nickname" required)
             include user_avatar_select
             button.btn.btn-lg.btn-primary.btn-block.my-3(type="submit") Enter the room!

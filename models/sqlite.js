@@ -70,7 +70,7 @@ const create_new_room = async (
   hostUUID
 ) => {
   let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, Type, Settings, Theme, Host)
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
   let params = [
     roomUrl,
     0,

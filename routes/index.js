@@ -39,13 +39,25 @@ router.post("/create", async function (req, res, next) {
       // Youtube type room
       roomSettings = {
         ...roomSettings,
-        ...{},
+        ...{
+          syncMode: req.body.syncMode,
+          readOnly: "readOnly" in req.body && req.body.readOnly === "on",
+          fullScreen: "fullScreen" in req.body && req.body.fullScreen === "on",
+        },
       };
     else if (roomType === 2)
       // Sketch type room
       roomSettings = {
         ...roomSettings,
-        ...{},
+        ...{
+          wordDic: req.body.wordDic || 1,
+          roundAmount: req.body.roundAmount || 3,
+          turnLimit: req.body.turnLimit || 60,
+          turnEnd: req.body.turnEnd || 0,
+          doublePoints: "doublePoints" in req.body && req.body.doublePoints === "on",
+          customDict: req.body.customDict || null,
+          customFreq: req.body.customDict ? req.body.customFreq || 50 : 0,
+        },
       };
     else if (roomType === 3)
       // Quiz type room
@@ -54,6 +66,7 @@ router.post("/create", async function (req, res, next) {
         ...{
           roundAmount: req.body.roundAmount || 3,
           turnLimit: req.body.turnLimit || 60,
+          turnEnd: req.body.turnEnd || 0,
           doublePoints: "doublePoints" in req.body && req.body.doublePoints === "on",
         },
       };

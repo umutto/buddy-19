@@ -11,7 +11,11 @@ module.exports = async (req, res, next) => {
     };
     if (req.app.get("env") === "production") cookie_opts.secure = "true";
     res.cookie("user_alias", user_alias, cookie_opts);
-    console.log(`A new user with ${user_alias}.`);
+    console.log(
+      `A new user with alias ${user_alias} have visited ${
+        req.protocol + "://" + req.get("host") + req.originalUrl
+      }.`
+    );
     req.UserClient = {
       UUID: res.locals.UserAliasCookie,
       CreationDate: null,
