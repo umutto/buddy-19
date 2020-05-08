@@ -24,31 +24,35 @@ block content
                     h1 Create a Room
                 .form-row
                     .form-group.col-md-2
-                        label(for="roomType") Room Type
-                            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br /><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br /><b>Quiz (NOT IMPLEMENTED)</b>: You take turns to ask each other questions.<br /><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
-                                span.material-icons.ms-16.ml-1 help_outline
+                        .col.p-nowrap
+                            label(for="roomType") Room Type
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br /><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br /><b>Quiz (NOT IMPLEMENTED)</b>: You take turns to ask each other questions.<br /><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
+                                span.material-icons.ms-16 help_outline
                         select#roomType.form-control(name="roomType")
                             option(value=1 selected) Youtube
                             option(value=2 ) Sketch
                             option(value=3 ) Quiz
                             option(value=4 ) Custom
                     .form-group.col-md-5
-                        label(for="roomName") Room Name
-                            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Name" data-html="true" data-content="Name of the room for your friends. (Not required)<hr><b>Disclaimer!</b>Passwords are stored and send as plain text in server, so don't use any important passwords. This is a simple access restriction step, not exactly secure against attacks.")
-                                span.material-icons.ms-16.ml-1 help_outline
+                        .col.p-nowrap
+                            label(for="roomName") Room Name
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Name" data-html="true" data-content="Name of the room for your friends. (Not required)<hr><b>Disclaimer!</b><br />Passwords are stored and send as plain text in server, so don't use any important passwords. This is a simple access restriction step, not exactly secure against attacks.")
+                                span.material-icons.ms-16 help_outline
                         input#roomName.form-control(type="text" name="roomName" placeholder="My amazing room!" maxlength="20" autocomplete="off")
                     .form-group.col-md-5
-                        label(for="roomPassword") Room Password
-                            span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
-                                span.material-icons.ms-16.ml-1 help_outline
+                        .col.p-nowrap
+                            label(for="roomPassword") Room Password
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
+                                span.material-icons.ms-16 help_outline
                         input#roomPassword.form-control(type="password" name="roomPassword" placeholder="my super secret password" autocomplete="new-password")
 
                 .form-row.pt-2
                     .form-group.col-md.pt-2.type-1
                         .input-group.pb-1
-                            label.col-md-4.p-nowrap(for="syncMode") Sync Mode:
-                                span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>:Participants are only synced when they first join.<br /><b>Normal</b>:Participants are synced when they join and when a new video starts playing.<br /><b>Strict</b>:Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
-                                    span.material-icons.ms-16.ml-1 help_outline
+                            .col-md-4.p-nowrap
+                                label(for="syncMode") Sync Mode:
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>:Participants are only synced when they first join.<br /><b>Normal</b>:Participants are synced when they join and when a new video starts playing.<br /><b>Strict</b>:Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
+                                    span.material-icons.ms-16 help_outline
                             .btn-group.btn-group-toggle.col-md-8(data-toggle='buttons')
                                 label.btn.btn-primary.active
                                     input(type='radio', name='syncMode', autocomplete='off', value=1)
@@ -63,8 +67,8 @@ block content
                             .form-check
                                 input#readOnly.form-check-input(type="checkbox" name="readOnly")
                                 label.form-check-label.cursor-pointer(for="readOnly") Read Only
-                                    span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Read Only" data-content="If selected, participants can't directly interact with the videos.")
-                                        span.material-icons.ms-16.ml-1 help_outline
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Read Only" data-content="If selected, participants can't directly interact with the videos.")
+                                    span.material-icons.ms-16 help_outline
                         .form-group.ml-5.pt-1
                             .form-check
                                 input#fullScreen.form-check-input(type="checkbox" name="fullScreen")
@@ -72,29 +76,48 @@ block content
                     .form-group.col-md.pt-2.type-2.type-3
                         .type-2
                             .input-group.pb-3
-                                label.col-lg-4.col-md-6.p-nowrap(for="wordDic") Word Dictionary
-                                    span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Word Dictionary" data-html="true" data-content="Select the word dictionary you want to use:<hr><b></b><br />")
-                                        span.material-icons.ms-16.ml-1 help_outline
+                                .col-lg-4.col-md-6.p-nowrap
+                                    label(for="wordDic") Word Dictionary
+                                    button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Word Dictionary" data-html="true" data-content="Select the word dictionary you want to use:<hr><b></b><br />")
+                                        span.material-icons.ms-16 help_outline
                                 select#wordDic.form-control.col-lg-8.col-md-6(name="wordDic")
                                     option(value=1 selected) dic1
                                     option(value=2 ) dic2
                                     option(value=3 ) dic3
+                        .type-2
+                            .form-group
+                                .input-group.d-flex.align-items-center.pb-3.pb-md-1
+                                    .col.p-nowrap
+                                        label(for="customDict") Custom Dictionary of Words
+                                        button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Custom Dictionary of Words" data-content="If you want to include custom words, enter a list of words here separated by commas.")
+                                            span.material-icons.ms-16 help_outline
+                                .pl-2
+                                    textarea#customDict.form-control(type="text" name="customDict" placeholder="Enter a list of words separated by commas.")
+                            .input-group.d-flex.align-items-center
+                                .col.pb-3
+                                    .p-nowrap
+                                        label(for="customFreq") Custom Dictionary Frequency (%)
+                                        button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Custom Dictionary Frequency" data-content="Frequency of which percentage of the words will come from your custom dictionary.")
+                                            span.material-icons.ms-16 help_outline
+                                    input#customFreq.custom-range(name="customFreq" type="range" value=50)
                         .input-group.pb-1
-                            label.col-lg-4.col-md-6(for="roundAmount") # of Rounds:
-                                span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Number of Rounds" data-content="Length of the round is based on how many people there are in the room. For example, for quiz type room, 1 round ends when everyone in the room asks a question.")
-                                    span.material-icons.ms-16.ml-1 help_outline
+                            .col-lg-4.col-md-6.p-nowrap
+                                label(for="roundAmount") # of Rounds:
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Number of Rounds" data-content="Length of the round is based on how many people there are in the room. For example, for quiz type room, 1 round ends when everyone in the room asks a question.")
+                                    span.material-icons.ms-16 help_outline
                             input#roundAmount.col-lg-8.col-md-6.form-control(type="number" name="roundAmount" value=3 min=1)
                             .input-group-append.d-block
                                 .input-group-text round(s)
                         .input-group.pb-1
-                            label.col-lg-4.col-md-6(for="turnLimit") Turn Limit:
+                            label.col-lg-4.col-md-6.p-nowrap(for="turnLimit") Turn Limit:
                             input#turnLimit.col-lg-8.col-md-6.form-control(type="number" name="turnLimit" value=60 min=5)
                             .input-group-append.d-block
                                 .input-group-text seconds
                         .input-group.pb-3
-                            label.col-lg-4.col-md-6(for="turnEnd") Turn ends after:
-                                span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Turn ends after" data-content="If this is set to a smaller number than the participants, a turn ends after that many correct answers. Set it to 0 to disable.")
-                                    span.material-icons.ms-16.ml-1 help_outline
+                            .col-lg-4.col-md-6.p-nowrap
+                                label(for="turnEnd") Turn ends after:
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Turn ends after" data-content="If this is set to a smaller number than the participants, a turn ends after that many correct answers. Set it to 0 to disable.")
+                                    span.material-icons.ms-16 help_outline
                             input#turnEnd.col-lg-8.col-md-6.form-control(type="number" name="turnEnd" value=0 min=0)
                             .input-group-append.d-block
                                 .input-group-text answers
@@ -102,20 +125,6 @@ block content
                             .form-check
                                 input#doublePoints.form-check-input(type="checkbox" name="doublePoints" checked)
                                 label.form-check-label.cursor-pointer(for="doublePoints") Double points on last round
-                        .type-2
-                            .form-group
-                                .input-group.d-flex.align-items-center.pb-3.pb-md-1
-                                    label.col-lg-5.col-md-6(for="customDict") Custom Dictionary of Words
-                                        span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Custom Dictionary of Words" data-content="If you want to include custom words, enter a list of words here separated by commas.")
-                                            span.material-icons.ms-16.ml-1 help_outline
-                                .pl-2
-                                    textarea#customDict.form-control(type="text" name="customDict" placeholder="Enter a list of words separated by commas.")
-                            .input-group.d-flex.align-items-center
-                                .col
-                                    label(for="customFreq") Custom Dictionary Frequency
-                                        span.d-inline-block(tabindex="-1" data-toggle="popover" data-trigger="hover" title="Custom Dictionary Frequency" data-content="Frequency of which percentage of the words will come from your custom dictionary.")
-                                            span.material-icons.ms-16.ml-1 help_outline
-                                    input#customFreq.custom-range(name="customFreq" type="range" value=50)
                     .form-group.col-md.pl-3.pl-sm-5
                         include room_theme_select
 
