@@ -8,6 +8,7 @@ block metas
     script(src='/javascripts/theme.js')
     script(src='/javascripts/room.js')
     script(src='/templates/chat_message.js')
+    script(src='/templates/list_user.js')
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify-element.min.js')
@@ -39,6 +40,10 @@ block content
                                 span.material-icons.mr-1 person
                                 | User Profile
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
+                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Participants" data-toggle="modal" data-target="#participant-modal")
+                                span.material-icons.mr-1 view_list
+                                | Participants
+                        span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
                             a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#settings-modal")
                                 span.material-icons.mr-1 settings
                                 | Room Settings
@@ -69,7 +74,9 @@ block content
             #chat-wrapper.collapse.chat-collapse.show.col-lg-4.ml-2.px-1.border-left.bg-transparent-white
                 #chat-history.d-flex.flex-column.h-100
                     .d-flex.px-3.pt-1.border-bottom.bg-transparent-white
-                        h4.flex-grow-1 Chat
+                        h4.d-flex.align-items-end.mr-auto
+                            | Chat
+                            small#chat-participant-header.text-truncate.d-inline-block.font-weight-light(style="max-width:200px;")
                         button.close.text-dark(type="button" data-toggle="collapse" data-target=".chat-collapse" aria-expanded="false" aria-controls="chat-wrapper btn-float-chat" aria-label='Close')
                             span(aria-hidden='true') ×
                     #chat-display.container-fluid.pl-1.pt-1.flex-grow-1
@@ -95,6 +102,31 @@ block content
                         button.btn.btn-primary(type="submit") Save changes
                         button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 
+    #participant-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='participant-modal-label', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#participant-modal-label.modal-title Current Participants:
+                    button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    .container
+                        .row
+                            span#no-participant-holder.w-100.bg-warning.text-center.m-3.p-3 There is no one in this room yet :'(
+                            #participant-table.table-responsive.d-none
+                                table.table.table-hover.table-striped
+                                    caption.text-right List of participants
+                                    thead
+                                        tr
+                                            th.border-top-0(scope="col")
+                                                span User
+                                            th.border-top-0(scope="col")
+                                                span Joined
+                                            th.border-top-0(scope="col")
+                                                span Status
+                                            th.border-top-0(scope="col")
+                                    tbody
+
     #settings-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='settings-modal-label', aria-hidden='true')
         .modal-dialog.modal-dialog-centered(role='document')
             .modal-content
@@ -103,8 +135,11 @@ block content
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') ×
                 .modal-body
+                    //- Add a form here with ajax backend
                     //- if Room.Host === UserAliasCookie
                                         .form-group.col-md.pl-3.pl-sm-5
+                        button.btn.btn-primary(type="submit") Save changes
+                        button.btn.btn-secondary(type="button" data-dismiss="modal") Close
                     .container
                         include room_theme_select
                         .row.mr-md-0

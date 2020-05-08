@@ -26,7 +26,7 @@ block content
                     .form-group.col-md-2
                         .col.p-nowrap
                             label(for="roomType") Room Type
-                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>: Watch youtube videos or listen to music in sync with your friends!<br /><b>Sketch (NOT IMPLEMENTED)</b>: Draw with your firends, like pictionary.<br /><b>Quiz (NOT IMPLEMENTED)</b>: You take turns to ask each other questions.<br /><b>Custom (IDEA PHASE)</b>: Create your custom game using a JSON rule sheet.")
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Type" data-html="true" data-content="Select the type of the room you want to create:<hr><b>Youtube</b>:  Watch youtube videos or listen to music in sync with your friends!<br /><b>Sketch (NOT IMPLEMENTED)</b>:  Draw with your firends, like pictionary.<br /><b>Quiz (NOT IMPLEMENTED)</b>:  You take turns to ask each other questions.<br /><b>Custom (IDEA PHASE)</b>:  Create your custom game using a JSON rule sheet.")
                                 span.material-icons.ms-16 help_outline
                         select#roomType.form-control(name="roomType")
                             option(value=1 selected) Youtube
@@ -51,24 +51,33 @@ block content
                         .input-group.pb-1
                             .col-md-4.p-nowrap
                                 label(for="syncMode") Sync Mode:
-                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>:Participants are only synced when they first join.<br /><b>Normal</b>:Participants are synced when they join and when a new video starts playing.<br /><b>Strict</b>:Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Synchronization Mode" data-html="true" data-content="Select the synchronization frequency of the room:<hr><b>Relaxed</b>: Participants are only synced when they first join.<br /><b>Normal</b>: Participants are synced when they join and when a new video starts playing.<br /><b>Strict</b>: Participants are synced aggressively every 10 seconds. (Could cause frequent skips, or pauses if not all participants have a perfect connection)")
                                     span.material-icons.ms-16 help_outline
                             .btn-group.btn-group-toggle.col-md-8(data-toggle='buttons')
                                 label.btn.btn-primary.active
-                                    input(type='radio', name='syncMode', autocomplete='off', value=1)
+                                    input(type='radio', name='syncMode', autocomplete='off', value=1, checked)
                                     |  Relaxed
                                 label.btn.btn-primary
-                                    input(type='radio', name='syncMode', autocomplete='off', value=2, checked)
+                                    input(type='radio', name='syncMode', autocomplete='off', value=2)
                                     |  Normal
                                 label.btn.btn-primary
                                     input(type='radio', name='syncMode', autocomplete='off', value=3)
                                     |  Strict
-                        .form-group.ml-5.pt-3
-                            .form-check
-                                input#readOnly.form-check-input(type="checkbox" name="readOnly")
-                                label.form-check-label.cursor-pointer(for="readOnly") Read Only
-                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Read Only" data-content="If selected, participants can't directly interact with the videos.")
+                        .input-group.pb-1
+                            .col-md-4.p-nowrap
+                                label(for="interactiveControls") Interactivity:
+                                button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Interactivity" data-html="true" data-content="Select how the room participants interact with the video controls.<hr><b>Free</b>: Participants can interact with the current video controls (stop, play etc..), and edit the video playlist.<br /><b>Moderated</b>: Participants can only recommend songs to play, host controls everything.<br /><b>None</b>: Read only mode, participants can't interact in anyway. Host controls everything.")
                                     span.material-icons.ms-16 help_outline
+                            .btn-group.btn-group-toggle.col-md-8(data-toggle='buttons')
+                                label.btn.btn-primary
+                                    input(type='radio', name='interactiveControls', autocomplete='off', value=1)
+                                    |  Free
+                                label.btn.btn-primary.active
+                                    input(type='radio', name='interactiveControls', autocomplete='off', value=2, checked)
+                                    |  Moderated
+                                label.btn.btn-primary
+                                    input(type='radio', name='interactiveControls', autocomplete='off', value=3)
+                                    |  None
                         .form-group.ml-5.pt-1
                             .form-check
                                 input#fullScreen.form-check-input(type="checkbox" name="fullScreen")

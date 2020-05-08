@@ -1,0 +1,28 @@
+tr.participant-row(data-userid=Participant.Id)
+    td.border-top-0.align-middle
+        .row
+            .col-12.col-sm.p-0.d-flex
+                img.user-avatar.m-auto(src=Participant.Avatar, alt=Participant.Name)
+            .d-flex.align-items-center.col-12.col-sm.p-0.pl-1.pl-sm-0
+                span.d-block.text-truncate.m-auto(style="max-width:100px;" title=Participant.Name) Participant.Name
+    td.border-top-0.align-middle Participant.EnterDate
+    td.border-top-0.align-middle
+        if Participant.IsActive === 0
+            span.badge.badge-success Active
+        else if Participant.IsActive === 1
+            span.badge.badge-dark Inactive
+        else if Participant.IsActive === 2
+            span.badge.badge-warning Banned
+    td.border-top-0.align-middle.pr-0
+        if Participant.IsMuted
+            a.d-inline-block.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Unmute")
+                span.material-icons.align-middle.p-1 volume_off
+        else
+            a.d-inline-block.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Mute")
+                span.material-icons.btn-info.rounded-10.p-1 volume_up
+        if UserAlias === Host
+            a.d-inline-block.btn-danger.rounded-10(href='#' alt="Remove Participant")
+                span.material-icons.align-middle.p-1 remove_circle_outline
+        else
+            a.d-inline-block.btn-danger.rounded-10(href='#' alt="Request for Removal")
+                span.material-icons.btn-danger.rounded-10.p-1 outlined_flag

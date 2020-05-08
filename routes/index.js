@@ -18,7 +18,7 @@ router.get("/create", async function (req, res, next) {
 });
 
 router.post("/create", async function (req, res, next) {
-  let roomType = req.body.roomType || 1;
+  let roomType = req.body.roomType ? parseInt(req.body.roomType) : 1;
   let roomName = req.body.roomName || `A room with no name`;
   let roomPassword = req.body.roomPassword || null;
 
@@ -41,7 +41,7 @@ router.post("/create", async function (req, res, next) {
         ...roomSettings,
         ...{
           syncMode: req.body.syncMode,
-          readOnly: "readOnly" in req.body && req.body.readOnly === "on",
+          interactiveControls: req.body.interactiveControls,
           fullScreen: "fullScreen" in req.body && req.body.fullScreen === "on",
         },
       };

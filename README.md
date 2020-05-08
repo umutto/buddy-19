@@ -43,6 +43,7 @@ This just a fun project that I've started doing to practice my node backend and 
 - Sketch room.
 - Youtube room.
 - User & room histories.
+- Participant list interactions (muting, removing, reporting etc..)
 - Public servers and room listings.
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
 - Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms. Could be simply attaching c_user_alias to socket and db)

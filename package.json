@@ -15,7 +15,7 @@
   },
   "homepage": "https://buddy19.umu.to",
   "scripts": {
-    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/chat_message.pug",
+    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/users/chat_message.pug&&pug --client --name-after-file --no-debug -o public/templates/ views/users/list_user.pug",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "wstart": "set NODE_ENV=production&&node ./bin/www",

@@ -87,6 +87,10 @@ nav.navbar {
   white-space: nowrap;
 }
 
+.rounded-10 {
+  border-radius: 10px !important;
+}
+
 .t-ind-2 {
   text-indent: 2rem;
 }
