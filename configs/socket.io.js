@@ -11,6 +11,8 @@ const messageType = {
   userDetails: 4,
 };
 
+var room_sessions = {};
+
 const update_user_details = async (user_details, room) => {
   let result = await sqliteController.get_user_details(user_details.Id);
   let current_room =
@@ -34,6 +36,7 @@ const init = (server) => {
       Id: conn_client.UserId,
       Name: conn_client.UserName || "Guest-" + Math.floor(Math.random() * 10000),
       Avatar: conn_client.UserAvatar || "",
+      EnterDate: new Date().toJSON(),
       SocketId: socket.id,
     };
     console.log(
@@ -70,7 +73,23 @@ const init = (server) => {
             User: user_details,
             ChatMessage: `${user_details.Name} has joined the room!`,
             TimeReceived: new Date().toJSON(),
+            EnterDate: user_details.EnterDate,
           });
+
+          // update server room sessions
+          if (!Object.keys(room_sessions).includes(room_details.PublicUrl)) {
+            room_sessions[room_details.PublicUrl] = room_details;
+            room_sessions[room_details.PublicUrl].Members = [];
+          }
+          socket.emit(
+            "join_echo",
+            room_sessions[room_details.PublicUrl].Members.filter(
+              (u) => u.Id !== user_details.Id
+            ).map((u) => {
+              return { Id: u.Id, Name: u.Name, Avatar: u.Avatar, EnterDate: u.EnterDate };
+            })
+          );
+          room_sessions[room_details.PublicUrl].Members.push(user_details);
         }
       } catch (error) {
         console.log(error);
@@ -102,6 +121,13 @@ const init = (server) => {
         };
         socket.to(room).emit("message_echo", messageType.userDetails, context_echo);
         ack({ status: 200, message: context_echo });
+
+        // update server room sessions
+        room_sessions[room_details.PublicUrl].Members[
+          room_sessions[room_details.PublicUrl].Members.findIndex(
+            (u) => u.Id === user_details.Id
+          )
+        ] = user_details;
       });
     });
 
@@ -121,6 +147,14 @@ const init = (server) => {
           TimeReceived: new Date().toJSON(),
           Reason: reason,
         });
+
+        // update server room sessions
+        let del_index = room_sessions[room_details.PublicUrl].Members.findIndex(
+          (u) => u.Id === user_details.Id
+        );
+        room_sessions[room_details.PublicUrl].Members.splice(del_index, 1);
+        if (room_sessions[room_details.PublicUrl].Members.length === 0)
+          delete room_sessions[room_details.PublicUrl];
       });
 
       console.log(

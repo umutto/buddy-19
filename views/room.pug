@@ -112,7 +112,7 @@ block content
                 .modal-body
                     .container
                         .row
-                            span#no-participant-holder.w-100.bg-warning.text-center.m-3.p-3 There is no one in this room yet :'(
+                            span#no-participant-holder.w-100.bg-warning.text-center.m-3.p-3 There is no one else in this room yet :'(
                             #participant-table.table-responsive.d-none
                                 table.table.table-hover.table-striped.text-center
                                     caption.text-right List of participants
@@ -135,6 +135,7 @@ block content
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') ×
                 .modal-body
+                    //- TODO:
                     //- Add a form here with ajax backend
                     //- if Room.Host === UserAliasCookie
                                         .form-group.col-md.pl-3.pl-sm-5

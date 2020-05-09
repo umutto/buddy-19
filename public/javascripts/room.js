@@ -38,75 +38,20 @@ window.addEventListener("DOMContentLoaded", function (evt) {
     }
   });
 
+  socket.on("join_echo", function (user_list, ack = function () {}) {
+    console.log(user_list);
+    user_list.forEach((u) => update_participant_list_add(u));
+    ack({ Code: 200, Message: c_user_alias });
+  });
+
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
     if (context.ChatMessage) append_to_chat(message_type, context);
     if (message_type === messageType.userDetails) {
       update_user_details(context.User.Id, context.User.Name, context.User.Avatar);
     } else if (message_type === messageType.userConnected) {
-      let EnterDate = new Date(context.TimeReceived).toTimeString().substr(0, 5);
-
-      let user_row = htmlToElement(
-        listUserTemplate({
-          UserAlias: c_user_alias,
-          Participant: {
-            Id: context.User.Id,
-            Name: context.User.Name,
-            Avatar: context.User.Avatar,
-            EnterDate,
-            Status: 0,
-            IsMuted: false,
-          },
-        }),
-        "text/html"
-      );
-
-      let participant_holder = document.getElementById("no-participant-holder");
-      if (participant_holder) participant_holder.remove();
-
-      let old_user = document.querySelector(
-        `.participant-row[data-userid=${context.User.Id}`
-      );
-      if (old_user) {
-        let user_participant_badge = old_user.getElementsByClassName("status-badge")[0];
-        if (user_participant_badge.classList.contains("badge-success")) {
-          // A second connection from same user
-          let user_row_badge = user_row.getElementsByClassName("status-badge")[0];
-          user_row_badge.dataset.sessions =
-            parseInt(user_participant_badge.dataset.sessions) + 1;
-        }
-        old_user.remove();
-      }
-
-      let participant_table_wrapper = document.getElementById("participant-table");
-      let participant_table = participant_table_wrapper.getElementsByTagName("tbody")[0];
-      participant_table.insertBefore(user_row, participant_table.firstChild);
-
-      if (participant_table_wrapper.classList.contains("d-none"))
-        participant_table_wrapper.classList.remove("d-none");
-
-      update_chat_title();
+      update_participant_list_add(context.User);
     } else if (message_type === messageType.userDisconnected) {
-      let old_user = document.querySelector(
-        `.participant-row[data-userid=${context.User.Id}]`
-      );
-      if (old_user) {
-        let status_badge = old_user.getElementsByClassName("status-badge")[0];
-        status_badge.dataset.sessions = parseInt(status_badge.dataset.sessions) - 1;
-        if (status_badge.dataset.sessions <= 0) {
-          if (context.Reason === "transport close") {
-            status_badge.className = "status-badge badge badge-dark";
-            status_badge.textContent = "Inactive";
-          } else {
-            status_badge.className = "status-badge badge badge-danger";
-            status_badge.textContent = "Banned";
-          }
-          sortTable(
-            document.getElementById("participant-table").getElementsByTagName("table")[0]
-          );
-        }
-      }
-
-      update_chat_title();
+      update_participant_list_remove(context.User, context.Reason);
     }
     ack({ Code: 200, Message: context });
   });
@@ -289,6 +234,13 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
 }
 
 function update_user_details(uuid, name, avatar) {
+  if (uuid === c_user_alias) {
+    document.getElementById("userName").value = name;
+    document.querySelector(`[name="userAvatar"][checked]`).checked = false;
+    document.querySelector(`[name="userAvatar"][value="${avatar}"]`).checked = true;
+    c_user_name = name;
+    c_user_avatar = avatar;
+  }
   document.querySelectorAll(`[data-userid="${uuid}"]`).forEach((u) => {
     u.querySelectorAll(".user-name").forEach((n) => (n.textContent = name));
     u.querySelectorAll(".user-avatar").forEach(
@@ -325,12 +277,77 @@ function update_chat_title() {
   let usr_list = [];
   document.querySelectorAll("#participant-table .participant-row").forEach((r) => {
     if (r.getElementsByClassName("badge-success").length > 0)
-      usr_list.push(r.getElementsByClassName("participant-name")[0].textContent);
+      usr_list.push(r.getElementsByClassName("user-name")[0].textContent);
   });
   document.getElementById("chat-participant-header").textContent = `(You and ${
     usr_list.length
   } other${usr_list.length > 1 ? "s" : ""})`;
   document.getElementById("chat-participant-header").title = usr_list.join(", ");
+}
+
+function update_participant_list_add(user) {
+  let EnterDate = new Date(user.EnterDate).toTimeString().substr(0, 5);
+
+  let user_row = htmlToElement(
+    listUserTemplate({
+      UserAlias: c_user_alias,
+      Participant: {
+        Id: user.Id,
+        Name: user.Name,
+        Avatar: user.Avatar,
+        EnterDate,
+        Status: 0,
+        IsMuted: false,
+      },
+    }),
+    "text/html"
+  );
+
+  let participant_holder = document.getElementById("no-participant-holder");
+  if (participant_holder) participant_holder.remove();
+
+  let old_user = document.querySelector(`.participant-row[data-userid=${user.Id}`);
+  if (old_user) {
+    let user_participant_badge = old_user.getElementsByClassName("status-badge")[0];
+    if (user_participant_badge.classList.contains("badge-success")) {
+      // A second connection from same user
+      let user_row_badge = user_row.getElementsByClassName("status-badge")[0];
+      user_row_badge.dataset.sessions =
+        parseInt(user_participant_badge.dataset.sessions) + 1;
+    }
+    old_user.remove();
+  }
+
+  let participant_table_wrapper = document.getElementById("participant-table");
+  let participant_table = participant_table_wrapper.getElementsByTagName("tbody")[0];
+  participant_table.insertBefore(user_row, participant_table.firstChild);
+
+  if (participant_table_wrapper.classList.contains("d-none"))
+    participant_table_wrapper.classList.remove("d-none");
+
+  update_chat_title();
+}
+
+function update_participant_list_remove(user, reason = "transport close") {
+  let old_user = document.querySelector(`.participant-row[data-userid=${user.Id}]`);
+  if (old_user) {
+    let status_badge = old_user.getElementsByClassName("status-badge")[0];
+    status_badge.dataset.sessions = parseInt(status_badge.dataset.sessions) - 1;
+    if (status_badge.dataset.sessions <= 0) {
+      if (reason === "transport close") {
+        status_badge.className = "status-badge badge badge-dark";
+        status_badge.textContent = "Inactive";
+      } else {
+        status_badge.className = "status-badge badge badge-danger";
+        status_badge.textContent = "Banned";
+      }
+      sortTable(
+        document.getElementById("participant-table").getElementsByTagName("table")[0]
+      );
+    }
+  }
+
+  update_chat_title();
 }
 
 // modified from https://www.w3schools.com/howto/howto_js_sort_table.asp

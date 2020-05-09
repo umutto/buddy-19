@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
   if (user_alias === undefined) {
     var user_alias = nanoid.nanoid();
     var cookie_opts = {
-      maxAge: 365 * 24 * 60 * 60,
+      maxAge: 365 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     };
     if (req.app.get("env") === "production") cookie_opts.secure = "true";
