@@ -34,6 +34,7 @@ const init = (server) => {
       Id: conn_client.UserId,
       Name: conn_client.UserName || "Guest-" + Math.floor(Math.random() * 10000),
       Avatar: conn_client.UserAvatar || "",
+      SocketId: socket.id,
     };
     console.log(
       `(${user_details.Id}) has established a connection using socket (${socket.id}).`
@@ -52,12 +53,6 @@ const init = (server) => {
             status: 404,
             message: `Room (${room}) is not found or not available anymore.`,
           });
-        } else if (
-          user_details.Id !== room_details.Host &&
-          room_details.password &&
-          room_details.password !== conn_client.password
-        ) {
-          ack({ status: 401, message: "Wrong password." });
         } else {
           socket.join(room);
           await update_user_details(user_details, room);

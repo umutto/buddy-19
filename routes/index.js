@@ -42,7 +42,6 @@ router.post("/create", async function (req, res, next) {
         ...{
           syncMode: req.body.syncMode,
           interactiveControls: req.body.interactiveControls,
-          fullScreen: "fullScreen" in req.body && req.body.fullScreen === "on",
         },
       };
     else if (roomType === 2)
@@ -113,6 +112,7 @@ router.get("/room/:id", async function (req, res, next) {
   res.locals.User.Avatar = avatars.includes(usr_avatar) ? usr_avatar : null;
 
   room_details.Settings = JSON.parse(room_details.Settings);
+  console.log(room_details);
   res.render("room.pug", {
     title: `Buddy-19: ${room_details.Name}`,
     RoomId: room_id,

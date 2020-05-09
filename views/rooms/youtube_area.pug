@@ -2,4 +2,5 @@
 .container-fluid.h-100.py-3.d-flex.flex-column
     .play-area-contents.flex-grow-1
         iframe#youtube-player(type='text/html', style="height:100%; width:100%;", src='http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com', frameborder='0')
-    .play-area-controls
+    if Room.Settings.interactiveControls != 3
+        .play-area-controls Controls

@@ -2,27 +2,18 @@ tr.participant-row(data-userid=Participant.Id)
     td.border-top-0.align-middle
         .row
             .col-12.col-sm.p-0.d-flex
-                img.user-avatar.m-auto(src=Participant.Avatar, alt=Participant.Name)
+                img.user-avatar.m-auto(src="/images/user_icons/" + (Participant.Avatar || "user.png"), alt=Participant.Name)
             .d-flex.align-items-center.col-12.col-sm.p-0.pl-1.pl-sm-0
-                span.d-block.text-truncate.m-auto(style="max-width:100px;" title=Participant.Name) Participant.Name
-    td.border-top-0.align-middle Participant.EnterDate
+                span.participant-name.d-block.text-truncate.m-auto(style="max-width:100px;" title=Participant.Name) #{Participant.Name}
+    td.border-top-0.align-middle #{Participant.EnterDate}
     td.border-top-0.align-middle
-        if Participant.IsActive === 0
-            span.badge.badge-success Active
-        else if Participant.IsActive === 1
-            span.badge.badge-dark Inactive
-        else if Participant.IsActive === 2
-            span.badge.badge-warning Banned
+        - var badge_class = Participant.Status === 0 ? "badge-success" : Participant.Status === 1 ? "badge-dark" : "badge-danger"
+        - var badge_text = Participant.Status === 0 ? "Active" : Participant.Status === 1 ? "Inactive" : "Banned"
+        span.status-badge.badge(class=badge_class data-sessions=1) #{badge_text}
     td.border-top-0.align-middle.pr-0
-        if Participant.IsMuted
-            a.d-inline-block.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Unmute")
-                span.material-icons.align-middle.p-1 volume_off
-        else
-            a.d-inline-block.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Mute")
-                span.material-icons.btn-info.rounded-10.p-1 volume_up
-        if UserAlias === Host
-            a.d-inline-block.btn-danger.rounded-10(href='#' alt="Remove Participant")
-                span.material-icons.align-middle.p-1 remove_circle_outline
-        else
-            a.d-inline-block.btn-danger.rounded-10(href='#' alt="Request for Removal")
-                span.material-icons.btn-danger.rounded-10.p-1 outlined_flag
+        a.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Unmute" class=(Participant.IsMuted ? "d-inline-block" : "d-none"))
+            span.btn-user-unmute.material-icons.align-middle.p-1 volume_off
+        a.btn-info.rounded-10.mb-1.mr-1(href='#' alt="Mute" class=(Participant.IsMuted ? "d-none" : "d-inline-block"))
+            span.btn-user-mute.material-icons.align-middle.p-1 volume_up
+        a.d-inline-block.btn-danger.rounded-10(href='#' alt="Remove Participant")
+            span.btn-user-remove.material-icons.align-middle.p-1 remove_circle_outline

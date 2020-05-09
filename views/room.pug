@@ -71,12 +71,12 @@ block content
                         h5.m-0
                             | Chat
                             small#chat-text-append.pl-1
-            #chat-wrapper.collapse.chat-collapse.show.col-lg-4.ml-2.px-1.border-left.bg-transparent-white
+            #chat-wrapper.collapse.chat-collapse.show.col-lg-4.ml-lg-1.px-1.border-left.bg-transparent-white
                 #chat-history.d-flex.flex-column.h-100
                     .d-flex.px-3.pt-1.border-bottom.bg-transparent-white
                         h4.d-flex.align-items-end.mr-auto
                             | Chat
-                            small#chat-participant-header.text-truncate.d-inline-block.font-weight-light(style="max-width:200px;")
+                            small#chat-participant-header.text-truncate.d-inline-block.ml-1(style="max-width:200px;") (You and 0 others)
                         button.close.text-dark(type="button" data-toggle="collapse" data-target=".chat-collapse" aria-expanded="false" aria-controls="chat-wrapper btn-float-chat" aria-label='Close')
                             span(aria-hidden='true') ×
                     #chat-display.container-fluid.pl-1.pt-1.flex-grow-1
@@ -114,7 +114,7 @@ block content
                         .row
                             span#no-participant-holder.w-100.bg-warning.text-center.m-3.p-3 There is no one in this room yet :'(
                             #participant-table.table-responsive.d-none
-                                table.table.table-hover.table-striped
+                                table.table.table-hover.table-striped.text-center
                                     caption.text-right List of participants
                                     thead
                                         tr
