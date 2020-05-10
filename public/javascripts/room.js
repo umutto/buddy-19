@@ -39,7 +39,6 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   });
 
   socket.on("join_echo", function (user_list, ack = function () {}) {
-    console.log(user_list);
     user_list.forEach((u) => update_participant_list_add(u));
     ack({ Code: 200, Message: c_user_alias });
   });
@@ -306,7 +305,7 @@ function update_participant_list_add(user) {
   let participant_holder = document.getElementById("no-participant-holder");
   if (participant_holder) participant_holder.remove();
 
-  let old_user = document.querySelector(`.participant-row[data-userid=${user.Id}`);
+  let old_user = document.querySelector(`.participant-row[data-userid="${user.Id}"`);
   if (old_user) {
     let user_participant_badge = old_user.getElementsByClassName("status-badge")[0];
     if (user_participant_badge.classList.contains("badge-success")) {
@@ -329,7 +328,7 @@ function update_participant_list_add(user) {
 }
 
 function update_participant_list_remove(user, reason = "transport close") {
-  let old_user = document.querySelector(`.participant-row[data-userid=${user.Id}]`);
+  let old_user = document.querySelector(`.participant-row[data-userid="${user.Id}"]`);
   if (old_user) {
     let status_badge = old_user.getElementsByClassName("status-badge")[0];
     status_badge.dataset.sessions = parseInt(status_badge.dataset.sessions) - 1;

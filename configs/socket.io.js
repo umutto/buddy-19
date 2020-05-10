@@ -105,7 +105,7 @@ const init = (server) => {
 
         let context_echo = {
           User: user_details,
-          ...context,
+          ...{ ChatMessage: context.ChatMessage },
           TimeReceived: new Date().toJSON(),
         };
         socket.to(room).emit("message_echo", message_type, context_echo);
@@ -116,7 +116,7 @@ const init = (server) => {
         await update_user_details(user_details, room);
         let context_echo = {
           User: user_details,
-          ...context,
+          ...{ Name: context.Name, Avatar: context.Avatar },
           TimeReceived: new Date().toJSON(),
         };
         socket.to(room).emit("message_echo", messageType.userDetails, context_echo);

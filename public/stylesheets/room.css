@@ -20,6 +20,24 @@ table td {
   background-color: #ffffffe0 !important;
 }
 
+#playlist-videos {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+#playlist-collapse ul {
+  border: 0;
+  border-radius: unset;
+}
+#playlist-collapse li:nth-child(even) {
+  background-color: #f9f9f9;
+}
+#playlist-collapse li:first-child {
+  background-color: #ff756b;
+  border-bottom: 1px solid #333;
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
 #participant-modal .modal-body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;

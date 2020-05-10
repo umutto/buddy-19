@@ -30,6 +30,8 @@ small {
 
 .navbar a,
 .footer a,
+.navbar button,
+.footer button,
 .material-icons {
   text-decoration: none !important;
 }

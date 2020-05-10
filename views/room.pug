@@ -13,6 +13,14 @@ block metas
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify-element.min.js')
 
+    if Room.Type === 1
+        script(src='/templates/playlist_video.js')
+        script(src='/javascripts/youtube_controls.js')
+    else if Room.Type === 2
+        script(src='/javascripts/sketch_controls.js')
+    else if Room.Type === 3
+        script(src='/javascripts/quiz_controls.js')
+
     if Room.Host === UserAliasCookie
         script(src='/javascripts/host.js')
 
@@ -36,19 +44,19 @@ block content
                         span.material-icons.ms-48 menu
                     .dropdown-menu.dropdown-menu-right(aria-labelledby='navbar-dropdown-link')
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#profile-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Profile" data-toggle="modal" data-target="#profile-modal")
                                 span.material-icons.mr-1 person
                                 | User Profile
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Participants" data-toggle="modal" data-target="#participant-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Participants" data-toggle="modal" data-target="#participant-modal")
                                 span.material-icons.mr-1 view_list
                                 | Participants
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#settings-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Room Settings" data-toggle="modal" data-target="#settings-modal")
                                 span.material-icons.mr-1 settings
                                 | Room Settings
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#qr-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Room Code" data-toggle="modal" data-target="#qr-modal")
                                 span.material-icons.mr-1 filter_center_focus
                                 | Room Code
 

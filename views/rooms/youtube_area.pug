@@ -1,6 +1,46 @@
 //- if Room.Host === UserAliasCookie
-.container-fluid.h-100.py-3.d-flex.flex-column
+.h-100.py-3.px-sm-3.d-flex.flex-column
     .play-area-contents.flex-grow-1
         iframe#youtube-player(type='text/html', style="height:100%; width:100%;", src='http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com', frameborder='0')
-    if Room.Settings.interactiveControls != 3
-        .play-area-controls Controls
+
+    .play-area-controls.mt-3.pt-1.bg-transparent-white
+        .d-flex.align-items-center.mx-sm-2
+            //- - var thumbnail = "https://img.youtube.com/vi/" + video_url + "/sddefault.jpg"
+            - var thumbnail = "/images/logo.png"
+            img.img-fluid.rounded.mx-2(src=thumbnail, alt="Video Name" style="max-width:48px;")
+            span.mr-auto Video name here
+            if Room.Settings.interactiveControls != 3 || Room.Host === UserAliasCookie
+                button.btn.btn-link(type="button" title="Playlist" data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="false" aria-controls="playlist-collapse")
+                    span.material-icons.ms-32 playlist_play
+
+        if Room.Settings.interactiveControls != 3 || Room.Host === UserAliasCookie
+            .d-flex.flex-row.align-items-center.flex-wrap
+                .m-auto
+                    button#yt-controls-previous.btn.px-1.px-sm-2.btn-link(type="button" title="Previous")
+                        span.material-icons.d-flex.align-items-center skip_previous
+                    button#yt-controls-play.btn.btn-large.px-1.px-sm-2.btn-link(type="button" title="Play")
+                        span.material-icons.ms-48.d-flex.align-items-center play_circle_outline
+                    button#yt-controls-pause.btn.btn-large.px-1.px-sm-2.btn-link.d-none(type="button" title="Pause")
+                        span.material-icons.ms-48.d-flex.align-items-center pause_circle_outline
+                    button#yt-controls-next.btn.px-1.px-sm-2.btn-link(type="button" title="Next")
+                        span.material-icons.d-flex.align-items-center skip_next
+                .w-100.d-block.d-sm-none
+                .position-relative.d-flex.align-items-center.flex-fill.mx-3.pb-3.pb-md-0
+                    small.position-absolute(style="top:-15px; left:5px;") 00:12 / 05:32
+                    small.position-absolute.d-inline-block.text-truncate(style="top:-15px; right:5px; max-width:50%;") Next: Fear of The Dark
+                    input#yt-controls-track.custom-range(type="range" value=0)
+            #playlist-collapse.collapse.border
+                .p-1
+                    .w-100.mb-1.border-bottom.pl-3.pr-1
+                        span#playlist-header 10 songs in playlist
+                        button.close.text-dark(type='button', data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="true" aria-controls="playlist-collapse")
+                            span(aria-hidden='true') ×
+                ul#playlist-videos.list-group.list-group-flush
+                .p-1
+                    .input-group
+                        input#yt-playlist-input.form-control(type="text" name="playlistAdd" placeholder="Paste a youtube video url here" autofocus)
+                        .input-group-append
+                            button#yt-playlist-add.btn.btn-primary.px-1.px-sm-2(type="button" title="Add to playlist")
+                                span.material-icons.d-flex.align-items-center playlist_add
+
+
