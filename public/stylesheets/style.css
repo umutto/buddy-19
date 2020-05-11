@@ -28,14 +28,10 @@ small {
   background-color: #fffc;
 }
 
-.navbar a,
-.footer a,
-.navbar button,
-.footer button,
-.material-icons {
-  text-decoration: none !important;
+a {
+  text-decoration: none;
 }
-.footer a:hover {
+a:hover {
   text-decoration: underline;
 }
 
