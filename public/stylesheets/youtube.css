@@ -10,7 +10,7 @@
   background-color: #f9f9f9;
 }
 #playlist-collapse .active-child {
-  background-color: #ff756b;
+  background-color: #f7f999 !important;
 }
 
 input[type="checkbox"]:checked + label.check-emphasize {

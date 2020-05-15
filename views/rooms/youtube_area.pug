@@ -22,9 +22,11 @@
                             small#yt-playing-time.mr-1
                             button#yt-control-skip-next.btn.btn-link.p-1.d-none(type="button" title="Skip")
                                 span.material-icons.d-flex.align-items-center skip_next
-                    #next-wrapper.d-flex.flex-row.flex-wrap.align-items-center.justify-content-start.flex-wrap
-                        small#yt-next-title.ml-3 There is nothing next...
-                        small#yt-next-time.ml-auto.mr-1 05:24
+                    #next-wrapper.d-none
+                        .d-flex.flex-row.flex-wrap.align-items-center.justify-content-start.flex-wrap.font-italic
+                            small.mr-1.ml-3 Up next:
+                            small#yt-next-title
+                            small#yt-next-time.ml-auto.mr-1
                 button.btn.btn-link.ml-auto(type="button" title="Playlist" data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="false" aria-controls="playlist-collapse")
                     span.material-icons.ms-32 playlist_play
             #playlist-collapse.collapse.border.mt-3

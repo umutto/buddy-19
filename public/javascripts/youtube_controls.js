@@ -174,14 +174,22 @@ function addToPlaylistByData(video_data, cb = function () {}) {
   }
 
   if (video_data.title) {
-    let pl_video = playlistVideoTemplate(video_data);
+    let pl_length = document.getElementById("playlist-videos").children.length;
+    let pl_video = playlistVideoTemplate({ is_active: pl_length === 0, video_data });
     document.getElementById("playlist-videos").insertAdjacentHTML("beforeend", pl_video);
 
-    if (player.getVideoData().title === "") playNextVideo();
-    // TODO
-    // Add to playlist and stuff
-    // If there is current video but no next video, load it into as well
-    // emit a message to all (but client) which has a ToastMessage attribute in context
+    if (pl_length === 0) playNextVideo();
+    else if (pl_length === 1) {
+      document.getElementById("next-wrapper").classList.remove("d-none");
+      document.getElementById("yt-next-title").textContent = document
+        .getElementById("playlist-videos")
+        .lastChild.getElementsByClassName("video-title")[0].textContent;
+      document.getElementById("yt-next-time").textContent = document
+        .getElementById("playlist-videos")
+        .lastChild.getElementsByClassName("video-duration")[0].textContent;
+    }
+    document.getElementById("playlist-header-num").textContent =
+      parseInt(document.getElementById("playlist-header-num").textContent) + 1;
 
     cb(video_data);
   } else {
@@ -200,17 +208,38 @@ function addToPlaylistByData(video_data, cb = function () {}) {
 }
 
 function playNextVideo() {
-  let next_video = document
-    .getElementById("playlist-videos")
-    .getElementsByTagName("li")[0];
-  if (next_video) loadAndPlay(player, next_video.dataset.video, true);
+  if (document.getElementById("playlist-videos").getElementsByTagName("li").length === 0)
+    return create_toast(
+      "Playback Error",
+      "There are no videos on the playlist",
+      "red",
+      2500
+    );
 
-  let playlist_elems = document
-    .getElementById("playlist-videos")
-    .getElementsByTagName("li");
-  if (playlist_elems.length > 0) playlist_elems[0].remove();
+  let current_video = document.querySelector("#playlist-videos li.active-child");
 
-  // TODO: update next playing stuff here
+  let next_video = current_video.nextElementSibling
+    ? current_video.nextElementSibling
+    : current_video.parentElement.firstElementChild;
+
+  loadAndPlay(player, next_video.dataset.video, true);
+
+  current_video.classList.remove("active-child");
+  next_video.classList.add("active-child");
+
+  if (current_video.nextElementSibling) {
+    let playlist_next = current_video.nextElementSibling.nextElementSibling
+      ? current_video.nextElementSibling.nextElementSibling
+      : current_video.parentElement.firstElementChild;
+
+    document.getElementById(
+      "yt-next-title"
+    ).textContent = playlist_next.getElementsByClassName("video-title")[0].textContent;
+    document.getElementById(
+      "yt-next-time"
+    ).textContent = playlist_next.getElementsByClassName("video-duration")[0].textContent;
+  }
+
   document.getElementById("yt-control-skip-next").classList.remove("d-none");
 }
 
