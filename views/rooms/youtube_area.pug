@@ -1,6 +1,10 @@
 //- if Room.Host === UserAliasCookie
 .h-100.py-3.px-sm-3.d-flex.flex-column
     .play-area-contents.flex-grow-1
+        #youtube-player-loader.d-none
+        #player-placeholder.w-100.h-100
+            .d-flex.w-100.h-100.justify-content-center.align-items-center.text-center.bg-transparent-white
+                h2.m-3.p-3 Start playing videos by adding to the playlist below!
         #youtube-player.d-none(style="height:100%; width:100%;")
 
     .play-area-controls.mt-3.pt-1.bg-transparent-white
@@ -9,29 +13,40 @@
                 a.yt-playing-video-link(href="" rel="noopener" target="_blank" style="display:contents;")
                     img#yt-playing-thumbnail.img-fluid.rounded.mx-2(src="/images/logo.png", alt="Video Name" style="width:48px; height:48px; object-fit: cover;")
                 .flex-fill
-                    .d-flex.flex-row.flex-wrap.border-bottom.mb-1.pb-1
+                    #playing-wrapper.d-flex.flex-row.flex-wrap.border-bottom.mb-1.pb-1
                         a.flex-column.yt-playing-video-link(href="" rel="noopener" target="_blank")
                             span#yt-playing-title
                         a.flex-column#yt-playing-author-link(href="" rel="noopener" target="_blank")
                             span#yt-playing-author.text-secondary.ml-1
-                        small#yt-playing-time.align-self-end.ml-auto.mr-1
-                    .d-flex.flex-row.flex-wrap.align-items-center.justify-content-start.flex-wrap
+                        .align-self-end.ml-auto.mr-1
+                            small#yt-playing-time.mr-1
+                            button#yt-control-skip-next.btn.btn-link.p-1.d-none(type="button" title="Skip")
+                                span.material-icons.d-flex.align-items-center skip_next
+                    #next-wrapper.d-flex.flex-row.flex-wrap.align-items-center.justify-content-start.flex-wrap
                         small#yt-next-title.ml-3 There is nothing next...
                         small#yt-next-time.ml-auto.mr-1 05:24
                 button.btn.btn-link.ml-auto(type="button" title="Playlist" data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="false" aria-controls="playlist-collapse")
                     span.material-icons.ms-32 playlist_play
-            #playlist-collapse.collapse.border
+            #playlist-collapse.collapse.border.mt-3
                 .p-1
-                    .w-100.mb-1.border-bottom.pl-3.pr-1
-                        span#playlist-header
-                            span#playlist-header-num 0
-                            span.ml-1 songs in playlist
-                        button.close.text-dark(type='button', data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="true" aria-controls="playlist-collapse")
-                            span(aria-hidden='true') ×
+                    .w-100.mb-1.border-bottom.pl-0.pr-1
+                        #playlist-header.d-flex.align-items-center
+                            input#yt-control-autoplay.d-none(type="checkbox" checked)
+                            label.check-emphasize.p-1(for="yt-control-autoplay" title="Autoplay")
+                                span.material-icons.d-flex.align-items-center.ms-16 repeat
+                            input#yt-control-sync.d-none(type="checkbox" checked)
+                            label.check-emphasize.p-1(for="yt-control-sync" title="Sync with the host")
+                                span.material-icons.d-flex.align-items-center.ms-16.sync-checked-icon sync
+                                span.material-icons.d-flex.align-items-center.ms-16.sync-unchecked-icon sync_disabled
+                            .flex-fill.pl-3
+                                span#playlist-header-num 0
+                                span.ml-1 songs in playlist
+                            button.close.text-dark(type='button', data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="true" aria-controls="playlist-collapse")
+                                span(aria-hidden='true') ×
                 ul#playlist-videos.list-group.list-group-flush
                 .p-1
                     .input-group
-                        input#yt-playlist-input.form-control(type="text" name="playlistAdd" placeholder="Paste a youtube video url here" autofocus)
+                        input#yt-playlist-input.form-control(type="text" name="playlistAdd" placeholder="Paste a youtube video url here" autofocus value="https://www.youtube.com/watch?v=2XITBuWNROk")
                         .input-group-append
                             button#yt-playlist-add.btn.btn-primary.px-1.px-sm-2(type="button" title="Add to playlist")
                                 span.material-icons.d-flex.align-items-center playlist_add

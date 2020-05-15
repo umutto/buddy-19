@@ -20,29 +20,6 @@ table td {
   background-color: #ffffffe0 !important;
 }
 
-#playlist-videos {
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-}
-#playlist-collapse ul {
-  border: 0;
-  border-radius: unset;
-}
-#playlist-collapse li:nth-child(even) {
-  background-color: #f9f9f9;
-}
-#playlist-collapse li:first-child {
-  background-color: #ff756b;
-  border-bottom: 1px solid #333;
-  margin-bottom: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-
-#participant-modal .modal-body {
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-}
-
 #btn-float-chat {
   position: absolute;
   top: 1%;
@@ -136,6 +113,11 @@ table td {
   }
 }
 
+#participant-modal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
 .avatar-label {
   width: 48px;
   height: 48px;
@@ -145,7 +127,6 @@ table td {
   background-size: contain;
 }
 .avatar-label:hover {
-  cursor: pointer;
   border-color: #17a2b8;
   background-color: #9ed8e1;
   border-radius: 35px;

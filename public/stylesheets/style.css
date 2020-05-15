@@ -28,6 +28,11 @@ small {
   background-color: #fffc;
 }
 
+input[type="radio"] + label:hover,
+input[type="checkbox"] + label:hover {
+  cursor: pointer;
+}
+
 a {
   text-decoration: none;
 }

@@ -4,7 +4,10 @@ const messageType = Object.freeze({
   userChatMessage: 2,
   userChatReaction: 3,
   userDetails: 4,
+  roomControl: 5,
 });
+
+var socket = null;
 
 window.addEventListener("DOMContentLoaded", function (evt) {
   $("#chat-wrapper").on("hidden.bs.collapse", function () {
@@ -18,7 +21,7 @@ window.addEventListener("DOMContentLoaded", function (evt) {
     document.getElementById("chat-text-append").textContent = "";
   });
 
-  const socket = io({
+  socket = io({
     query: serialize_params({
       UserId: c_user_alias,
       UserName: c_user_name,
@@ -45,6 +48,14 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
     if (context.ChatMessage) append_to_chat(message_type, context);
+    if (context.ToastMessage)
+      create_toast(
+        context.ToastMessage.Title || context.User.Name,
+        context.ToastMessage.Message,
+        "#539fe2",
+        2000
+      ).toast("show");
+
     if (message_type === messageType.userDetails) {
       update_user_details(context.User.Id, context.User.Name, context.User.Avatar);
     } else if (message_type === messageType.userConnected) {
@@ -153,19 +164,22 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
 function send_chat_message(socket, text, cb) {
   if (text !== "") {
-    socket.emit("message", messageType.userChatMessage, { ChatMessage: text }, function (
-      response
-    ) {
-      if (response.status === 200) {
-        append_to_chat(messageType.userChatMessage, response.message);
-        cb();
-      } else {
-        create_toast(
-          response.status,
-          `${response.message}</br>${response.details}`
-        ).toast("show");
+    socket.emit(
+      "message",
+      messageType.userChatMessage,
+      { ChatMessage: { Message: text } },
+      function (response) {
+        if (response.status === 200) {
+          append_to_chat(messageType.userChatMessage, response.message);
+          cb();
+        } else {
+          create_toast(
+            response.status,
+            `${response.message}</br>${response.details}`
+          ).toast("show");
+        }
       }
-    });
+    );
   }
 }
 
@@ -178,7 +192,7 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
       UserAlias: c_user_alias,
       MessageUser: context.User,
       MessageTime: message_time,
-      MessageText: context.ChatMessage,
+      MessageText: context.ChatMessage.Message,
       MessageType: message_type,
       TextHint: context.Reason,
     }),
@@ -235,7 +249,7 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
 function update_user_details(uuid, name, avatar) {
   if (uuid === c_user_alias) {
     document.getElementById("userName").value = name;
-    document.querySelector(`[name="userAvatar"][checked]`).checked = false;
+    document.querySelector(`[name="userAvatar"]:checked`).checked = false;
     document.querySelector(`[name="userAvatar"][value="${avatar}"]`).checked = true;
     c_user_name = name;
     c_user_avatar = avatar;

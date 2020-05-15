@@ -9,6 +9,7 @@ const messageType = {
   userChatMessage: 2,
   userChatReaction: 3,
   userDetails: 4,
+  roomControl: 5,
 };
 
 var room_sessions = {};
@@ -65,13 +66,13 @@ const init = (server) => {
             message: room,
             context: {
               User: user_details,
-              ChatMessage: `You have joined the ${room_details.Name} room!`,
+              ChatMessage: { Message: `You have joined the ${room_details.Name} room!` },
               TimeReceived: new Date().toJSON(),
             },
           });
           socket.to(room).emit("message_echo", messageType.userConnected, {
             User: user_details,
-            ChatMessage: `${user_details.Name} has joined the room!`,
+            ChatMessage: { Message: `${user_details.Name} has joined the room!` },
             TimeReceived: new Date().toJSON(),
             EnterDate: user_details.EnterDate,
           });
@@ -101,11 +102,12 @@ const init = (server) => {
       }
 
       socket.on("message", function (message_type, context, ack = () => {}) {
-        if (context.ChatMessage) context.ChatMessage = sanitizeHtml(context.ChatMessage);
+        if (context.ChatMessage)
+          context.ChatMessage.Message = sanitizeHtml(context.ChatMessage.Message);
 
         let context_echo = {
           User: user_details,
-          ...{ ChatMessage: context.ChatMessage },
+          ...context,
           TimeReceived: new Date().toJSON(),
         };
         socket.to(room).emit("message_echo", message_type, context_echo);
@@ -143,7 +145,7 @@ const init = (server) => {
         });
         socket.to(room).emit("message_echo", messageType.userDisconnected, {
           User: user_details,
-          ChatMessage: `${user_details.Name} has left the room.`,
+          ChatMessage: { Message: `${user_details.Name} has left the room.` },
           TimeReceived: new Date().toJSON(),
           Reason: reason,
         });

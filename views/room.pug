@@ -14,6 +14,7 @@ block metas
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify-element.min.js')
 
     if Room.Type === 1
+        link(rel='stylesheet', href='/stylesheets/youtube.css')
         script(src='/templates/playlist_video.js')
         script(src='/javascripts/youtube_controls.js')
     else if Room.Type === 2
@@ -37,7 +38,8 @@ block content
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar-content', aria-controls='navbar-content', aria-expanded='false', aria-label='Toggle navigation')
             span.material-icons.ms-48 menu
         #navbar-content.collapse.navbar-collapse
-            .room-header #{Room.Name}
+            a(href="https://" + DOMAIN_NAME + "/room/" + RoomId)
+                .room-header #{Room.Name}
             ul.navbar-nav.ml-auto
                 li.nav-item.dropdown
                     a#navbar-dropdown-link.nav-link.d-none.d-sm-block(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
