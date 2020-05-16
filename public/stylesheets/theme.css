@@ -1,0 +1,28 @@
+.theme-label {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #555;
+  border-radius: 15px;
+  border-radius: 5px;
+}
+.theme-label:hover {
+  cursor: pointer;
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label {
+  border-color: #17a2b8;
+  border-radius: 35px;
+}
+
+input[type="radio"]:checked + label:before {
+  content: "\2713";
+  font-weight: bold;
+  color: rgb(44, 139, 156);
+  text-shadow: 0px 0px 4px #ffffff;
+  position: absolute;
+  font-size: 20px;
+  left: 40px;
+  top: 20px;
+}

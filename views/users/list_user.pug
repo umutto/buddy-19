@@ -1,0 +1,24 @@
+- var participant_status = Participant.Status || 0
+- var participant_muted = Participant.IsMuted || false
+tr.participant-row(data-userid=Participant.Id)
+    td.border-top-0.align-middle
+        .row
+            .col-12.col-sm.p-0.d-flex
+                img.user-avatar.m-auto(src="/images/user_icons/" + (Participant.Avatar || "user.png"), alt=Participant.Name)
+            .d-flex.align-items-center.col-12.col-sm.p-0.pl-1.pl-sm-0
+                span.user-name.d-block.text-truncate.m-auto(style="max-width:100px;" title=Participant.Name) #{Participant.Name}
+    td.border-top-0.align-middle #{Participant.EnterDate}
+    td.border-top-0.align-middle
+        if participant_status === 0
+            span.status-badge.badge(class="badge-success" data-sessions=1) Active
+        if participant_status === 1
+            span.status-badge.badge(class="badge-dark" data-sessions=1) Inactive
+        if participant_status === 2
+            span.status-badge.badge(class="badge-danger" data-sessions=1) Banned
+    td.border-top-0.align-middle.pr-0
+        button.btn-user-unmute.btn-info.rounded-10.mb-1.mr-md-1(type="button" alt="Unmute" class=(participant_muted ? "d-inline-block" : "d-none"))
+            span.material-icons.align-middle.p-1 volume_off
+        button.btn-user-mute.btn-info.rounded-10.mb-1.mr-md-1(type="button" alt="Mute" class=(participant_muted ? "d-none" : "d-inline-block"))
+            span.material-icons.align-middle.p-1 volume_up
+        button.btn-user-remove.d-inline-block.btn-danger.rounded-10(type="button" alt="Remove Participant")
+            span.material-icons.align-middle.p-1 remove_circle_outline

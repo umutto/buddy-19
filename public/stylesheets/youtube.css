@@ -1,0 +1,32 @@
+#playlist-videos {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+#playlist-collapse ul {
+  border: 0;
+  border-radius: unset;
+}
+#playlist-collapse li:nth-child(even) {
+  background-color: #f9f9f9;
+}
+#playlist-collapse .active-child {
+  background-color: #f7f999 !important;
+}
+
+input[type="checkbox"]:checked + label.check-emphasize {
+  background-color: #333;
+  color: #fff;
+}
+
+input[type="checkbox"]:checked + label > span.sync-checked-icon {
+  display: block !important;
+}
+input[type="checkbox"]:checked + label > span.sync-unchecked-icon {
+  display: none !important;
+}
+input[type="checkbox"] + label > span.sync-checked-icon {
+  display: none !important;
+}
+input[type="checkbox"] + label > span.sync-unchecked-icon {
+  display: block !important;
+}
