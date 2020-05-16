@@ -18,26 +18,64 @@ router.get("/create", async function (req, res, next) {
 });
 
 router.post("/create", async function (req, res, next) {
-  let roomType = req.body.roomType || 1;
+  let roomType = req.body.roomType ? parseInt(req.body.roomType) : 1;
   let roomName = req.body.roomName || `A room with no name`;
   let roomPassword = req.body.roomPassword || null;
-  let roundAmount = req.body.roundAmount || 3;
-  let turnLimit = req.body.turnLimit || 60;
-  let doublePoints = "doublePoints" in req.body && req.body.doublePoints === "on";
+
   let roomTheme = req.body.roomTheme || null;
 
-  let roomUrl = nanoid.nanoid(6);
+  let roomUrl = null;
   let hostUUID = res.locals.UserAliasCookie;
 
   try {
+    let current_rooms = await sqliteController.get_all_rooms();
+    current_rooms = current_rooms.map((r) => r.PublicUrl);
+    do {
+      roomUrl = nanoid.nanoid(6);
+    } while (current_rooms.includes(roomUrl));
+
+    let roomSettings = {};
+    if (roomType === 1)
+      // Youtube type room
+      roomSettings = {
+        ...roomSettings,
+        ...{
+          syncMode: req.body.syncMode,
+          interactiveControls: req.body.interactiveControls,
+        },
+      };
+    else if (roomType === 2)
+      // Sketch type room
+      roomSettings = {
+        ...roomSettings,
+        ...{
+          wordDic: req.body.wordDic || 1,
+          roundAmount: req.body.roundAmount || 3,
+          turnLimit: req.body.turnLimit || 60,
+          turnEnd: req.body.turnEnd || 0,
+          doublePoints: "doublePoints" in req.body && req.body.doublePoints === "on",
+          customDict: req.body.customDict || null,
+          customFreq: req.body.customDict ? req.body.customFreq || 50 : 0,
+        },
+      };
+    else if (roomType === 3)
+      // Quiz type room
+      roomSettings = {
+        ...roomSettings,
+        ...{
+          roundAmount: req.body.roundAmount || 3,
+          turnLimit: req.body.turnLimit || 60,
+          turnEnd: req.body.turnEnd || 0,
+          doublePoints: "doublePoints" in req.body && req.body.doublePoints === "on",
+        },
+      };
+
     await sqliteController.create_new_room(
       roomUrl,
       roomType,
       roomName,
       roomPassword,
-      roundAmount,
-      turnLimit,
-      doublePoints,
+      JSON.stringify(roomSettings),
       roomTheme,
       hostUUID
     );
@@ -61,8 +99,7 @@ router.get("/room/:id", async function (req, res, next) {
 
   // Check if user is a member of room, if not redirect to join page
   let current_room = req.UserClient.RoomMembership.filter((m) => m.Url === req.params.id);
-  if (!current_room || current_room.length == 0)
-    return res.redirect("/room/join/" + room_id);
+  if (!current_room || current_room.length == 0) return res.redirect("/join/" + room_id);
 
   // Room is active and the user is a member
 
@@ -78,12 +115,12 @@ router.get("/room/:id", async function (req, res, next) {
   res.render("room.pug", {
     title: `Buddy-19: ${room_details.Name}`,
     RoomId: room_id,
-    RoomTheme: room_details.Settings.roomTheme,
+    RoomTheme: room_details.Theme,
     Room: room_details,
   });
 });
 
-router.get("/room/join/:id", async function (req, res, next) {
+router.get("/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
 
   // user is already a member
@@ -93,6 +130,11 @@ router.get("/room/join/:id", async function (req, res, next) {
   try {
     room_details = await sqliteController.get_room_details(room_id);
     if (!room_details) return next({ status: 404, code: "Room Not Found" });
+    if (!room_details.IsActive && room_details.Host !== req.UserClient.Id)
+      return next({
+        status: 401,
+        code: "Room is not active, waiting for host.",
+      });
 
     res.render("join.pug", {
       RoomId: room_id,
@@ -104,15 +146,13 @@ router.get("/room/join/:id", async function (req, res, next) {
   }
 });
 
-router.post("/room/join/:id", async function (req, res, next) {
+router.post("/join/:id", async function (req, res, next) {
   let room_id = req.params.id;
   var form = formidable({ multiples: true });
 
   try {
     form.parse(req, async (err, fields, files) => {
       room_details = await sqliteController.get_room_details(room_id);
-      console.log(room_details);
-      console.log(fields);
       if (
         !room_details.Password ||
         room_details.Host === req.UserClient.Id ||
@@ -124,6 +164,8 @@ router.post("/room/join/:id", async function (req, res, next) {
           fields.userName,
           fields.userAvatar
         );
+        if (room_details.Host === req.UserClient.Id)
+          await sqliteController.set_room_active(room_id, true);
         return res.status(200).send({
           status: 200,
           message: room_details,

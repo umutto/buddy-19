@@ -48,7 +48,7 @@ html(lang="en")
     - var themes = ["bg-webb", "bg-pentagon", "bg-squiggly", "bg-polka", "bg-symphony", "bg-sakura", "bg-christmas", "bg-zigzag", "bg-wifi", "bg-circular", "bg-yellow", "bg-gplay", "bg-canadian", "bg-rainbow", "bg-hypnotize"]
     - var selected_theme = themes.includes(RoomTheme) ? RoomTheme : "bg-webb" // themes[Math.floor(Math.random() * themes.length)]
     body.d-flex.flex-column.min-vh-100(class=selected_theme data-themedef=selected_theme)
-        .wrapper.flex-grow-1
+        .wrapper.d-flex.flex-column.flex-grow-1
             block content
 
         footer.footer

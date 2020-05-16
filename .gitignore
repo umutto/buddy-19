@@ -9,6 +9,8 @@ lerna-debug.log*
 # Custom file and folders
 assets/
 *.db
+short_term_notes.txt
+ecosystem.config.js
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

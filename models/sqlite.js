@@ -1,14 +1,5 @@
 const db = require("../configs/sqlite3").database;
 
-// const all = (query, params = []) => {
-//   return new Promise(function (resolve, reject) {
-//     database.all(query, params, function (error, rows) {
-//       if (error) reject(error);
-//       else resolve({ rows: rows });
-//     });
-//   });
-// };
-
 const create_user = (uuid) => {
   let query = `INSERT INTO user (UUID)
                 VALUES (?)
@@ -27,7 +18,7 @@ const get_user_details = (uuid) => {
                   json_group_array(json_object('Url', room.PublicUrl,
                                                'IsActive', room.IsActive,
                                                'Name', room.Name,
-                                               'Type', room.RoomType,
+                                               'Type', room.Type,
                                                'CreationDate', room.CreationDate,
                                                'MembershipDate', room_member.EnterDate,
                                                'UserName', room_member.UserName,
@@ -74,27 +65,39 @@ const create_new_room = async (
   roomType,
   roomName,
   roomPassword,
-  roundAmount,
-  turnLimit,
-  doublePoints,
+  roomSettings,
   roomTheme,
   hostUUID
 ) => {
-  let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, RoomType, Settings, Host)
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  let roomSettings = JSON.stringify({
-    roundAmount,
-    turnLimit,
-    doublePoints,
+  let query = `INSERT INTO room (PublicUrl, IsActive, Name, Password, Type, Settings, Theme, Host)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  let params = [
+    roomUrl,
+    0,
+    roomName,
+    roomPassword,
+    roomType,
+    roomSettings,
     roomTheme,
-  });
-  let params = [roomUrl, 1, roomName, roomPassword, roomType, roomSettings, hostUUID];
+    hostUUID,
+  ];
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.run(query, params, function (error) {
         if (error) reject(error);
         else resolve({ lastID: this.lastID, changes: this.changes });
       });
+    });
+  });
+};
+
+const get_all_rooms = () => {
+  let query = `SELECT PublicUrl FROM room`;
+  let params = [];
+  return new Promise((resolve, reject) => {
+    db.all(query, params, function (error, rows) {
+      if (error) reject(error);
+      else resolve(rows);
     });
   });
 };
@@ -129,7 +132,10 @@ const set_room_active = async (room_url, state) => {
 };
 
 const get_room_details = async (room_url) => {
-  let query = `SELECT * FROM room WHERE PublicUrl = ? AND IsActive = 1`;
+  let query = `SELECT room.PublicUrl, room.IsActive, room.Name, room.Password,
+                      room.Type, room.Settings, room.Theme, room.Host,
+                      room.CreationDate, room.History
+                FROM room WHERE PublicUrl = ?`;
   let params = [room_url];
   return new Promise((resolve, reject) => {
     db.get(query, params, function (error, row) {
@@ -139,12 +145,25 @@ const get_room_details = async (room_url) => {
   });
 };
 
+const clean_rooms = async () => {
+  let query = `DELETE FROM room WHERE CreationDate < date("now", "-7 day") AND IsActive = 0`;
+  let params = [];
+  return new Promise((resolve, reject) => {
+    db.run(query, params, function (error) {
+      if (error) reject(error);
+      else resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+};
+
 module.exports = {
   create_user,
   get_user_details,
   update_user_details,
   create_new_room,
+  get_all_rooms,
   add_room_member,
   set_room_active,
   get_room_details,
+  clean_rooms,
 };
