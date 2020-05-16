@@ -18,8 +18,13 @@ h6,
 .h3,
 .h4,
 .h5,
-.h6 {
+.h6,
+small {
   font-weight: 700;
+}
+
+button > * {
+  pointer-events: none;
 }
 
 .footer {
@@ -27,12 +32,18 @@ h6,
   background-color: #fffc;
 }
 
-.navbar a,
-.footer a,
-.material-icons {
-  text-decoration: none !important;
+input[type="radio"] + label:hover,
+input[type="checkbox"] + label:hover {
+  cursor: pointer;
 }
-.footer a:hover {
+
+/* TODO: update bootstrap.min.css for this */
+a,
+.btn-link {
+  text-decoration: none;
+}
+a:hover,
+.btn-link:hover {
   text-decoration: underline;
 }
 
@@ -86,11 +97,15 @@ nav.navbar {
   white-space: nowrap;
 }
 
+.rounded-10 {
+  border-radius: 10px !important;
+}
+
 .t-ind-2 {
   text-indent: 2rem;
 }
 
-.transparent-bg {
+.bg-transparent-white {
   background-color: #ffffffc9;
   box-shadow: 0 0 5px 5px #d8d8d830;
 }

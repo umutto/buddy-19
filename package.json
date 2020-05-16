@@ -3,7 +3,7 @@
   "description": "Conferencing buddy serving real-time interactive applications over socket.io with Express.js",
   "author": "Umut Karakulak",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "main": "app.js",
   "repository": {
@@ -15,14 +15,18 @@
   },
   "homepage": "https://buddy19.umu.to",
   "scripts": {
-    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/chat_message.pug",
+    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/users/chat_message.pug && pug --client --name-after-file --no-debug -o public/templates/ views/users/list_user.pug && pug --client --name-after-file --no-debug -o public/templates/ views/rooms/playlist_video.pug",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "wstart": "set NODE_ENV=production&&node ./bin/www",
-    "wdev": "set NODE_ENV=development&&nodemon ./bin/www"
+    "wdev": "set NODE_ENV=development&&nodemon ./bin/www",
+    "restart": "pm2 startOrRestart ecosystem.config.js",
+    "deploy_setup": "pm2 deploy production setup",
+    "deploy": "pm2 deploy ecosystem.config.js production --force"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "cron": "^1.8.2",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",

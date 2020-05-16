@@ -14,11 +14,34 @@
   }
 }
 
-#chat-wrapper {
-  background-color: #fff9;
+/* TODO Fix below in bootstrap.min.css, blocks table-striped background colors */
+table th,
+table td {
+  background-color: #ffffffe0 !important;
+}
+
+#btn-float-chat {
+  position: absolute;
+  top: 1%;
+  right: 10px;
+  z-index: 101;
+}
+
+.chat-collapse.collapsing {
+  -webkit-transition: none;
+  transition: none;
+  display: none;
+  /* transition-property: height;
+  -webkit-transition-duration: 0.15s;
+  transition-duration: 0.15s;
+  -webkit-transition-timing-function: ease;
+  transition-timing-function: ease; */
+}
+
+#chat-display {
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: calc(100vh - 185px);
+  max-height: calc(100vh - 250px);
 }
 
 #btn-chat-send {
@@ -33,9 +56,9 @@
   padding-right: 4rem;
 }
 
-.chat-icon {
-  max-width: 36px;
-  max-height: 36px;
+.user-avatar {
+  max-width: 48px;
+  max-height: 48px;
   contain: content;
 }
 
@@ -71,18 +94,28 @@
   right: 0;
   margin-right: -10px;
 }
+
+.no-animation {
+  animation: none !important;
+  -webkit-animation: none !important;
+}
+
 .chat-text {
   animation: 1s ease-in-out new_message;
   -webkit-animation: 1s ease-in-out new_message;
 }
 @keyframes new_message {
   0% {
-    /* background: rgb(255, 248, 151); */
     background: rgb(255, 248, 151);
   }
   50% {
     background: #fff;
   }
+}
+
+#participant-modal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .avatar-label {
@@ -94,7 +127,6 @@
   background-size: contain;
 }
 .avatar-label:hover {
-  cursor: pointer;
   border-color: #17a2b8;
   background-color: #9ed8e1;
   border-radius: 35px;

@@ -8,9 +8,19 @@ block metas
     script(src='/javascripts/theme.js')
     script(src='/javascripts/room.js')
     script(src='/templates/chat_message.js')
+    script(src='/templates/list_user.js')
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/2.1.9/linkify-element.min.js')
+
+    if Room.Type === 1
+        link(rel='stylesheet', href='/stylesheets/youtube.css')
+        script(src='/templates/playlist_video.js')
+        script(src='/javascripts/youtube_controls.js')
+    else if Room.Type === 2
+        script(src='/javascripts/sketch_controls.js')
+    else if Room.Type === 3
+        script(src='/javascripts/quiz_controls.js')
 
     if Room.Host === UserAliasCookie
         script(src='/javascripts/host.js')
@@ -22,38 +32,67 @@ block metas
 
 block content
     nav.navbar.navbar-expand-sm
-        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.transparent-bg.px-3(href='/', title='Home')
+        a.navbar-brand.btn.btn-primary-outline.font-weight-bold.wobbly-border.bg-transparent-white.px-3(href='/', title='Home')
             img.mr-3(src='/images/icon_transparent.png', width='48', height='48', alt='Home')
             | Buddy-19
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar-content', aria-controls='navbar-content', aria-expanded='false', aria-label='Toggle navigation')
             span.material-icons.ms-48 menu
         #navbar-content.collapse.navbar-collapse
-            .room-header #{Room.Name}
+            a(href="https://" + DOMAIN_NAME + "/room/" + RoomId)
+                .room-header #{Room.Name}
             ul.navbar-nav.ml-auto
                 li.nav-item.dropdown
                     a#navbar-dropdown-link.nav-link.d-none.d-sm-block(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                         span.material-icons.ms-48 menu
                     .dropdown-menu.dropdown-menu-right(aria-labelledby='navbar-dropdown-link')
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#profile-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Profile" data-toggle="modal" data-target="#profile-modal")
                                 span.material-icons.mr-1 person
                                 | User Profile
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#settings-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Participants" data-toggle="modal" data-target="#participant-modal")
+                                span.material-icons.mr-1 view_list
+                                | Participants
+                        span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Room Settings" data-toggle="modal" data-target="#settings-modal")
                                 span.material-icons.mr-1 settings
                                 | Room Settings
                         span(data-toggle="collapse" data-target="#navbar-content.show" aria-expanded="false" aria-controls="navbar-content")
-                            a.dropdown-item.d-flex.aling-items-center.justify-content-center(href="#" title="Profile" data-toggle="modal" data-target="#qr-modal")
+                            button.dropdown-item.d-flex.aling-items-center.justify-content-center(type="button" title="Room Code" data-toggle="modal" data-target="#qr-modal")
                                 span.material-icons.mr-1 filter_center_focus
                                 | Room Code
 
-    #main-wrapper.container.my-3(data-room=RoomId data-type=Room.Type)
-        #chat-wrapper.wobbly-border.border-md-0
-            #chat-history
-                #chat-display.container-fluid.pl-1.pt-1
-                .position-relative
-                    input#chat-input.form-control.border-0.mb-1(type='text', placeholder='Type a message')
-                    button#btn-chat-send.btn.btn-light(type='button') Send
+    #main-wrapper.flex-grow-1.py-3(data-room=RoomId data-type=Room.Type)
+        .row.mx-3.wobbly-border.border-md-0.overflow-hidden.h-100.position-relative
+            #play-area-wrapper.col.px-1
+                if Room.Type === 1
+                    include rooms/youtube_area
+                else if Room.Type === 2
+                    include rooms/sketch_area
+                else if Room.Type === 3
+                    include rooms/quiz_area
+                else
+                    .h-100.d-flex.justify-content-center.align-items-center.text-center
+                        h1.bg-light.m-3.p-3.text-danger This functionality is not implemented yet~
+            #btn-float-chat.collapse.chat-collapse
+                button.btn.btn-outline-primary.bg-transparent-white(type="button" data-toggle="collapse" data-target=".chat-collapse" aria-expanded="false" aria-controls="chat-wrapper btn-float-chat" aria-label='Close')
+                    .d-flex.aling-items-center
+                        span.material-icons.mx-1 chat
+                        h5.m-0
+                            | Chat
+                            small#chat-text-append.pl-1
+            #chat-wrapper.collapse.chat-collapse.show.col-lg-4.ml-lg-1.px-1.border-left.bg-transparent-white
+                #chat-history.d-flex.flex-column.h-100
+                    .d-flex.px-3.pt-1.border-bottom.bg-transparent-white
+                        h4.d-flex.align-items-end.mr-auto
+                            | Chat
+                            small#chat-participant-header.text-truncate.d-inline-block.ml-1(style="max-width:200px;") (You and 0 others)
+                        button.close.text-dark(type="button" data-toggle="collapse" data-target=".chat-collapse" aria-expanded="false" aria-controls="chat-wrapper btn-float-chat" aria-label='Close')
+                            span(aria-hidden='true') ×
+                    #chat-display.container-fluid.pl-1.pt-1.flex-grow-1
+                    .position-relative
+                        input#chat-input.form-control.border-0.mb-1(type='text', placeholder='Type a message')
+                        button#btn-chat-send.btn.btn-light(type='button') Send
 
     #profile-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='profile-modal-label', aria-hidden='true')
         .modal-dialog.modal-dialog-centered(role='document')
@@ -73,6 +112,31 @@ block content
                         button.btn.btn-primary(type="submit") Save changes
                         button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 
+    #participant-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='participant-modal-label', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#participant-modal-label.modal-title Current Participants:
+                    button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                .modal-body
+                    .container
+                        .row
+                            span#no-participant-holder.w-100.bg-warning.text-center.m-3.p-3 There is no one else in this room yet :'(
+                            #participant-table.table-responsive.d-none
+                                table.table.table-hover.table-striped.text-center
+                                    caption.text-right List of participants
+                                    thead
+                                        tr
+                                            th.border-top-0(scope="col")
+                                                span User
+                                            th.border-top-0(scope="col")
+                                                span Joined
+                                            th.border-top-0(scope="col")
+                                                span Status
+                                            th.border-top-0(scope="col")
+                                    tbody
+
     #settings-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='settings-modal-label', aria-hidden='true')
         .modal-dialog.modal-dialog-centered(role='document')
             .modal-content
@@ -81,8 +145,12 @@ block content
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') ×
                 .modal-body
+                    //- TODO:
+                    //- Add a form here with ajax backend for host settings
                     //- if Room.Host === UserAliasCookie
                                         .form-group.col-md.pl-3.pl-sm-5
+                        button.btn.btn-primary(type="submit") Save changes
+                        button.btn.btn-secondary(type="button" data-dismiss="modal") Close
                     .container
                         include room_theme_select
                         .row.mr-md-0
@@ -90,7 +158,7 @@ block content
                             .d-flex.align-items-center.w-100
                                 a#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Mute")
                                     span.material-icons volume_mute
-                                input#roomVolume.flex-fill.custom-range.w-unset.h-unset(type="range" value=70)
+                                input#roomVolume.flex-fill.custom-range(type="range" value=70)
                                 a#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Full")
                                     span.material-icons volume_up
 

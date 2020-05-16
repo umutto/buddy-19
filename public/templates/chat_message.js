@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;function chatMessageTemplate(locals) {var pug_html =
 var is_title = MessageType === 2
 pug_html = pug_html + "\u003Cdiv" + (" class=\"chat-message d-flex pb-1\""+pug_attr("data-userid", MessageUser.Id, true, false)+pug_attr("data-type", MessageType, true, false)) + "\u003E";
 if ((is_title)) {
-pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["pr-1","d-flex","align-items-end",(is_self ? "order-2" : "order-1")], [false,false,false,true]), false, false)+" style=\"max-width: 48px;\"") + "\u003E\u003Cimg" + (" class=\"img-fluid mb-1 user-avatar\""+pug_attr("src", "/images/user_icons/" + (MessageUser.Avatar || "user.png"), true, false)+pug_attr("alt", MessageUser.Name, true, false)) + "\u002F\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["pr-1","d-flex","align-items-end",(is_self ? "order-2" : "order-1")], [false,false,false,true]), false, false)) + "\u003E\u003Cimg" + (" class=\"mb-1 user-avatar\""+pug_attr("src", "/images/user_icons/" + (MessageUser.Avatar || "user.png"), true, false)+pug_attr("alt", MessageUser.Name, true, false)) + "\u002F\u003E\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["flex-grow-1","px-1",(is_title ? is_self ? "speech-bubble sb-right order-1" : "speech-bubble sb-left order-2": "bg-light border")], [false,false,true]), false, false)) + "\u003E\u003Cdiv" + (pug_attr("class", pug_classes(["chat-header",(is_title ? "border-bottom" : "")], [false,true]), false, false)) + "\u003E";
 if ((is_title)) {

@@ -2,8 +2,8 @@
 - var is_title = MessageType === 2
 .chat-message.d-flex.pb-1(data-userid=MessageUser.Id data-type=MessageType)
     if (is_title)
-        .pr-1.d-flex.align-items-end(class=(is_self ? "order-2" : "order-1") style="max-width: 48px;")
-            img.img-fluid.mb-1.user-avatar(src="/images/user_icons/" + (MessageUser.Avatar || "user.png"), alt=MessageUser.Name)
+        .pr-1.d-flex.align-items-end(class=(is_self ? "order-2" : "order-1"))
+            img.mb-1.user-avatar(src="/images/user_icons/" + (MessageUser.Avatar || "user.png"), alt=MessageUser.Name)
     .flex-grow-1.px-1(class=(is_title ? is_self ? "speech-bubble sb-right order-1" : "speech-bubble sb-left order-2": "bg-light border"))
         .chat-header(class=(is_title ? "border-bottom" : ""))
             if (is_title)
