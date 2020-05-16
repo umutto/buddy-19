@@ -33,13 +33,16 @@
                 .p-1
                     .w-100.mb-1.border-bottom.pl-0.pr-1
                         #playlist-header.d-flex.align-items-center
-                            input#yt-control-autoplay.d-none(type="checkbox" checked)
-                            label.check-emphasize.p-1(for="yt-control-autoplay" title="Autoplay")
-                                span.material-icons.d-flex.align-items-center.ms-16 repeat
                             input#yt-control-sync.d-none(type="checkbox" checked)
-                            label.check-emphasize.p-1(for="yt-control-sync" title="Sync with the host")
-                                span.material-icons.d-flex.align-items-center.ms-16.sync-checked-icon sync
-                                span.material-icons.d-flex.align-items-center.ms-16.sync-unchecked-icon sync_disabled
+                            label.check-emphasize.p-1.mr-1(for="yt-control-sync" title="Sync with the host")
+                                span.material-icons.d-flex.align-items-center.ms-16.sync-checked-icon link
+                                span.material-icons.d-flex.align-items-center.ms-16.sync-unchecked-icon link_off
+                            input#yt-control-autoplay.d-none(type="checkbox" checked)
+                            label.check-emphasize.p-1.mr-1(for="yt-control-autoplay" title="Autoplay next video")
+                                span.material-icons.d-flex.align-items-center.ms-16 repeat
+                            input#yt-control-shuffle.d-none(type="checkbox")
+                            label.check-emphasize.p-1.mr-1(for="yt-control-shuffle" title="Shuffle playlist")
+                                span.material-icons.d-flex.align-items-center.ms-16 shuffle
                             .flex-fill.pl-3
                                 span#playlist-header-num 0
                                 span.ml-1 songs in playlist

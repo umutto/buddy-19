@@ -23,6 +23,10 @@ small {
   font-weight: 700;
 }
 
+button > * {
+  pointer-events: none;
+}
+
 .footer {
   border-top: 1px solid #dddf;
   background-color: #fffc;
@@ -33,10 +37,13 @@ input[type="checkbox"] + label:hover {
   cursor: pointer;
 }
 
-a {
+/* TODO: update bootstrap.min.css for this */
+a,
+.btn-link {
   text-decoration: none;
 }
-a:hover {
+a:hover,
+.btn-link:hover {
   text-decoration: underline;
 }
 

@@ -53,6 +53,37 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       playlist_evt_add();
     }
   });
+
+  document
+    .getElementById("yt-control-skip-next")
+    .addEventListener("click", function (evt) {
+      playNextVideo();
+    });
+
+  document.getElementById("playlist-videos").addEventListener("click", function (evt) {
+    if (evt.target) {
+      if (evt.target.classList.contains("btn-playlist-up")) {
+        let from = Array.from(
+          document.getElementById("playlist-videos").children
+        ).indexOf(evt.target.closest("[data-video]"));
+        if (from > 0) movePlaylistItem(from, from - 1);
+      } else if (evt.target.classList.contains("btn-playlist-down")) {
+        let from = Array.from(
+          document.getElementById("playlist-videos").children
+        ).indexOf(evt.target.closest("[data-video]"));
+        if (
+          from !== -1 &&
+          from + 1 < document.getElementById("playlist-videos").children.length
+        )
+          movePlaylistItem(from + 1, from);
+      } else if (evt.target.classList.contains("btn-playlist-remove")) {
+        let remove_idx = Array.from(
+          document.getElementById("playlist-videos").children
+        ).indexOf(evt.target.closest("[data-video]"));
+        removePlaylistItem(remove_idx);
+      }
+    }
+  });
 });
 
 function emit_message(socket, message_type, context) {
@@ -142,6 +173,8 @@ function controlWrapper(context) {
     player.pauseVideo();
   } else if (context.Command === "addToPlaylist") {
     addToPlaylistByData(context.VideoData);
+  } else if (context.Command === "loadFromPlaylist") {
+    console.log(context);
   }
 }
 
@@ -207,8 +240,9 @@ function addToPlaylistByData(video_data, cb = function () {}) {
   }
 }
 
-function playNextVideo() {
-  if (document.getElementById("playlist-videos").getElementsByTagName("li").length === 0)
+function playNextVideo(idx = null) {
+  let pl_childs = document.getElementById("playlist-videos").children;
+  if (pl_childs.length === 0)
     return create_toast(
       "Playback Error",
       "There are no videos on the playlist",
@@ -218,18 +252,33 @@ function playNextVideo() {
 
   let current_video = document.querySelector("#playlist-videos li.active-child");
 
-  let next_video = current_video.nextElementSibling
-    ? current_video.nextElementSibling
-    : current_video.parentElement.firstElementChild;
+  let next_video = null;
+  if (idx !== null && idx < pl_childs.length) {
+    next_video = pl_childs[idx];
+  } else if (
+    pl_childs.length > 1 &&
+    document.getElementById("yt-control-shuffle").checked
+  ) {
+    let c_idx = Array.from(pl_childs).indexOf(current_video),
+      r_idx = 0;
+    do {
+      r_idx = Math.floor(Math.random() * pl_childs.length);
+    } while (r_idx === c_idx);
+    next_video = pl_childs[r_idx];
+  } else if (current_video.nextElementSibling) {
+    next_video = current_video.nextElementSibling;
+  } else {
+    next_video = current_video.parentElement.firstElementChild;
+  }
 
   loadAndPlay(player, next_video.dataset.video, true);
 
   current_video.classList.remove("active-child");
   next_video.classList.add("active-child");
 
-  if (current_video.nextElementSibling) {
-    let playlist_next = current_video.nextElementSibling.nextElementSibling
-      ? current_video.nextElementSibling.nextElementSibling
+  if (next_video) {
+    let playlist_next = next_video.nextElementSibling
+      ? next_video.nextElementSibling
       : current_video.parentElement.firstElementChild;
 
     document.getElementById(
@@ -239,8 +288,37 @@ function playNextVideo() {
       "yt-next-time"
     ).textContent = playlist_next.getElementsByClassName("video-duration")[0].textContent;
   }
+}
 
-  document.getElementById("yt-control-skip-next").classList.remove("d-none");
+function movePlaylistItem(from, to) {
+  let parent_elem = document.getElementById("playlist-videos");
+  let pl_childs = parent_elem.children;
+
+  if (from > pl_childs.length || to > pl_childs.length) return;
+
+  let from_child = pl_childs[from],
+    to_child = pl_childs[to];
+
+  if (to_child === pl_childs.length - 1) parent_elem.appendChild(from_child);
+  else parent_elem.insertBefore(from_child, to_child);
+}
+
+function removePlaylistItem(idx) {
+  let pl_childs = document.getElementById("playlist-videos").children;
+  if (pl_childs.length === 1) {
+    updateCurrentVideoDetails(player, true);
+    player.loadVideoById("");
+    player.getIframe().classList.add("d-none");
+    document.getElementById("player-placeholder").classList.remove("d-none");
+  } else if (pl_childs[idx].classList.contains("active-child")) {
+    playNextVideo();
+  }
+
+  document.getElementById("playlist-header-num").textContent = Math.max(
+    0,
+    parseInt(document.getElementById("playlist-header-num").textContent) - 1
+  );
+  pl_childs[idx].remove();
 }
 
 async function updateCurrentVideoDetails(target_player, clean = false) {
@@ -263,6 +341,9 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
   } else {
     author_link.classList.add("d-none");
   }
+
+  if (clean) document.getElementById("yt-control-skip-next").classList.add("d-none");
+  else document.getElementById("yt-control-skip-next").classList.remove("d-none");
 
   let duration = target_player.getDuration();
   document.getElementById("yt-playing-time").textContent = get_duration_string(duration);
