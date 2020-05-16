@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   });
   // TODO
   // on initial load, get current youtube song and timing, and playlist (by some kind of direct handshake from host)
-  // do the same when yt-control-sync is checked
+  // do the same when yt-control-sync is changed to checked
   // do the same on socket.on("reconnect", function(attemptNumber){}) // this also fires on socket.on("connect")
 
   let yt_playlist_add = document.getElementById("yt-playlist-add");

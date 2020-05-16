@@ -19,7 +19,10 @@
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "wstart": "set NODE_ENV=production&&node ./bin/www",
-    "wdev": "set NODE_ENV=development&&nodemon ./bin/www"
+    "wdev": "set NODE_ENV=development&&nodemon ./bin/www",
+    "restart": "pm2 startOrRestart ecosystem.config.js",
+    "deploy_setup": "pm2 deploy production setup",
+    "deploy": "pm2 deploy ecosystem.config.js production --force"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
