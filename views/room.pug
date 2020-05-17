@@ -171,7 +171,7 @@ block content
                         span(aria-hidden='true') ×
                 .modal-body
                     - let room_url = "https://" + DOMAIN_NAME + "/room/" + RoomId
-                    - let qr_url = "https://chart.googleapis.com/chart?cht=qr&chs=512x512&chl=" + room_url + "chld=H"
+                    - let qr_url = "https://chart.googleapis.com/chart?cht=qr&chs=512x512&chl=" + room_url + "&chld=H"
                     label(for="qr_room_url") Invite your friends using the url below
                     .input-group
                         input#qr_room_url.form-control(type="text" value=room_url autofocus readonly)
