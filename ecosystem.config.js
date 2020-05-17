@@ -15,6 +15,7 @@ module.exports = {
       user: "ubuntu",
       host: "ec2-13-115-214-1.ap-northeast-1.compute.amazonaws.com",
       key: "../_deployment/ec2_umu.to.pem",
+      ssh_options: "ForwardAgent=yes",
       ref: "origin/release",
       repo: "git@github.com:umutto/buddy-19.git",
       path: "/home/ubuntu/projects/buddy-19",
