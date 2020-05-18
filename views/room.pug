@@ -17,10 +17,10 @@ block metas
         link(rel='stylesheet', href='/stylesheets/youtube.css')
         script(src='/templates/playlist_video.js')
         script(src='/javascripts/youtube_controls.js')
-    else if Room.Type === 2
-        script(src='/javascripts/sketch_controls.js')
-    else if Room.Type === 3
-        script(src='/javascripts/quiz_controls.js')
+    //- else if Room.Type === 2
+    //-     script(src='/javascripts/sketch_controls.js')
+    //- else if Room.Type === 3
+    //-     script(src='/javascripts/quiz_controls.js')
 
     if Room.Host === UserAliasCookie
         script(src='/javascripts/host.js')
@@ -67,10 +67,10 @@ block content
             #play-area-wrapper.col.px-1
                 if Room.Type === 1
                     include rooms/youtube_area
-                else if Room.Type === 2
-                    include rooms/sketch_area
-                else if Room.Type === 3
-                    include rooms/quiz_area
+                //- else if Room.Type === 2
+                //-     include rooms/sketch_area
+                //- else if Room.Type === 3
+                //-     include rooms/quiz_area
                 else
                     .h-100.d-flex.justify-content-center.align-items-center.text-center
                         h1.bg-light.m-3.p-3.text-danger This functionality is not implemented yet~

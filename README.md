@@ -40,8 +40,8 @@ This just a fun project that I've started doing to practice my node backend and 
 - Check and create if db file does not exists (using buddy19.db.sql)
   - Encrypt/decrypt room passwords (bcrypt)
 - Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
-- Sketch room.
 - Youtube room.
+- Sketch room.
 - User & room histories.
 - Participant list interactions (muting, removing, reporting etc..)
 - Public servers and room listings.
@@ -57,7 +57,7 @@ This just a fun project that I've started doing to practice my node backend and 
 #### Future updates
 
 - Add a voting option, for selecting the best answers (this functionality can open up for games like that are in JackBox)
-- Games like Dixit, Cards against humanity etc... (as long as there are no copyright issues, and a simple implementation is possible)
+- Games like Dixit, werewolf game, Cards against humanity etc... (as long as there are no copyright issues, and a simple implementation is possible)
 - Guess the song game (playing youtube music in the background and trying to guess the song title or the artist)
 
 ## About usage data

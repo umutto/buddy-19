@@ -126,13 +126,13 @@ function onPlayerStateChange(event) {
 
   let recv_command = command_queue.shift();
 
-  console.log(
-    Object.entries(YT.PlayerState).filter((e) => e[1] === event.data)[0][0] +
-      " - " +
-      recv_command +
-      " - " +
-      event.target.getCurrentTime()
-  );
+  // console.log(
+  //   Object.entries(YT.PlayerState).filter((e) => e[1] === event.data)[0][0] +
+  //     " - " +
+  //     recv_command +
+  //     " - " +
+  //     event.target.getCurrentTime()
+  // );
 
   if (event.data === YT.PlayerState.CUED) {
     hidePlaceholderMessage();
