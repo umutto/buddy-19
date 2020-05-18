@@ -299,6 +299,8 @@ function update_chat_title() {
 }
 
 function update_participant_list_add(user) {
+  if (user.Id === c_user_alias) return;
+
   let EnterDate = new Date(user.EnterDate).toTimeString().substr(0, 5);
 
   let user_row = htmlToElement(

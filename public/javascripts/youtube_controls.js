@@ -146,8 +146,6 @@ function onPlayerStateChange(event) {
         Event: event,
       });
   } else if (event.data === YT.PlayerState.PAUSED) {
-    updateCurrentVideoDetails(event.target);
-
     if (!recv_command || recv_command !== "pauseVideo")
       emit_message(socket, messageType.roomControl, {
         Command: "pauseVideo",
@@ -306,10 +304,11 @@ function movePlaylistItem(from, to) {
 function removePlaylistItem(idx) {
   let pl_childs = document.getElementById("playlist-videos").children;
   if (pl_childs.length === 1) {
-    updateCurrentVideoDetails(player, true);
     player.loadVideoById("");
     player.getIframe().classList.add("d-none");
     document.getElementById("player-placeholder").classList.remove("d-none");
+
+    updateCurrentVideoDetails(player, true);
   } else if (pl_childs[idx].classList.contains("active-child")) {
     playNextVideo();
   }
@@ -328,9 +327,10 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
 
   document.getElementById("yt-playing-title").textContent = video_data.title;
 
+  let video_url = target_player.getVideoUrl();
   document
     .querySelectorAll("a.yt-playing-video-link")
-    .forEach((a) => (a.href = target_player.getVideoUrl()));
+    .forEach((a) => (a.href = video_url ? target_player.getVideoUrl() : "#"));
 
   let author_elem = document.getElementById("yt-playing-author");
   let author_link = document.getElementById("yt-playing-author-link");
@@ -346,7 +346,10 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
   else document.getElementById("yt-control-skip-next").classList.remove("d-none");
 
   let duration = target_player.getDuration();
-  document.getElementById("yt-playing-time").textContent = get_duration_string(duration);
+  if (duration)
+    document.getElementById("yt-playing-time").textContent = get_duration_string(
+      duration
+    );
 
   document.getElementById("yt-playing-thumbnail").src = video_data.video_id
     ? `https://img.youtube.com/vi/${video_data.video_id}/sddefault.jpg`

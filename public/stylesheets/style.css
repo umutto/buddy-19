@@ -131,23 +131,23 @@ nav.navbar {
   cursor: pointer;
 }
 
+/* Loading overlay */
+
 #loading-overlay {
   height: 100%;
   width: 100%;
   position: fixed;
   z-index: 10001;
-  top: 0;
-  left: 0;
   overflow-x: hidden;
-  background: #fff6;
+  background: #fff7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .loading-overlay-content {
-  position: relative;
-  top: 25%;
-  width: 100%;
-  text-align: center;
-  margin-top: 30px;
+  margin-bottom: 10%;
 }
 
 #loading-overlay .spinner-border {
@@ -155,10 +155,7 @@ nav.navbar {
   height: 10em !important;
 }
 
-#loading-overlay .spinner-text {
-  margin-top: auto;
-  margin-bottom: auto;
-}
+/* Loading overlay */
 
 #toast-wrapper {
   z-index: 1060;

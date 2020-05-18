@@ -20,8 +20,9 @@ function loading_overlay(display, text = "Loading...") {
 
   overlay_text.innerHTML = text;
 
-  if (overlay.style.display === "none" && display) overlay.style.display = "block";
-  else if (overlay.style.display === "block" && !display) overlay.style.display = "none";
+  if (overlay.classList.contains("d-none") && display) overlay.classList.remove("d-none");
+  else if (!overlay.classList.contains("d-none") && !display)
+    overlay.classList.add("d-none");
 }
 
 function pad(str, max) {
