@@ -1,16 +1,11 @@
 var socket_io = require("socket.io");
 var sqliteController = require("../models/sqlite");
 
-var sanitizeHtml = require("sanitize-html");
-
-const messageType = {
-  userConnected: 0,
-  userDisconnected: 1,
-  userChatMessage: 2,
-  userChatReaction: 3,
-  userDetails: 4,
-  roomControl: 5,
-};
+var messageType = require("../lib/MessageType");
+var YoutubeRoom = require("../lib/YoutubeRoom");
+var QuizRoom = require("../lib/QuizRoom");
+var SketchRoom = require("../lib/SketchRoom");
+var CustomRoom = require("../lib/CustomRoom");
 
 var room_sessions = {};
 
@@ -44,14 +39,13 @@ const init = (server) => {
       `(${user_details.Id}) has established a connection using socket (${socket.id}).`
     );
 
-    let room_details = null;
-
     socket.on("join", async function (room, ack = () => {}) {
       console.log(`(${user_details.Id}) is attempting to join room (${room})`);
 
       try {
-        room_details = await sqliteController.get_room_details(room);
+        let room_details = await sqliteController.get_room_details(room);
         room_details.Settings = JSON.parse(room_details.Settings);
+
         if (!room_details) {
           ack({
             status: 404,
@@ -78,19 +72,23 @@ const init = (server) => {
           });
 
           // update server room sessions
-          if (!Object.keys(room_sessions).includes(room_details.PublicUrl)) {
-            room_sessions[room_details.PublicUrl] = room_details;
-            room_sessions[room_details.PublicUrl].Members = [];
+          if (!Object.keys(room_sessions).includes(room)) {
+            if (room_details.Type === 1)
+              room_sessions[room] = new YoutubeRoom(room_details);
+            else if (room_details.Type === 2)
+              room_sessions[room] = new SketchRoom(room_details);
+            else if (room_details.Type === 3)
+              room_sessions[room] = new QuizRoom(room_details);
+            else if (room_details.Type === 4)
+              room_sessions[room] = new CustomRoom(room_details);
           }
           socket.emit(
             "join_echo",
-            room_sessions[room_details.PublicUrl].Members.filter(
-              (u) => u.Id !== user_details.Id
-            ).map((u) => {
-              return { Id: u.Id, Name: u.Name, Avatar: u.Avatar, EnterDate: u.EnterDate };
-            })
+            room_sessions[room]
+              .getMembersPublicValues()
+              .filter((u) => u.Id !== user_details.Id)
           );
-          room_sessions[room_details.PublicUrl].Members.push(user_details);
+          room_sessions[room].addMember(user_details);
         }
       } catch (error) {
         console.log(error);
@@ -102,16 +100,9 @@ const init = (server) => {
       }
 
       socket.on("message", function (message_type, context, ack = () => {}) {
-        if (context.ChatMessage)
-          context.ChatMessage.Message = sanitizeHtml(context.ChatMessage.Message);
-
-        let context_echo = {
-          User: user_details,
-          ...context,
-          TimeReceived: new Date().toJSON(),
-        };
-        socket.to(room).emit("message_echo", message_type, context_echo);
-        ack({ status: 200, message: context_echo });
+        let echo = room_sessions[room].onMessage(user_details, message_type, context);
+        socket.to(room).emit("message_echo", message_type, echo);
+        ack({ status: 200, message: echo });
       });
 
       socket.on("user-details", async function (context, ack = () => {}) {
@@ -125,24 +116,13 @@ const init = (server) => {
         ack({ status: 200, message: context_echo });
 
         // update server room sessions
-        room_sessions[room_details.PublicUrl].Members[
-          room_sessions[room_details.PublicUrl].Members.findIndex(
-            (u) => u.Id === user_details.Id
-          )
-        ] = user_details;
+        room_sessions[room].updateMember(user_details.Id, user_details);
       });
     });
 
     socket.on("disconnecting", function (reason) {
       let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
       rooms.forEach(function (room) {
-        io.sockets.in(room).clients((error, clients) => {
-          if (error) throw error;
-          if (clients.length === 0) {
-            socketController.set_room_active(room, false);
-            console.log(`All users have disconnected from room (${room}), deactivating.`);
-          }
-        });
         socket.to(room).emit("message_echo", messageType.userDisconnected, {
           User: user_details,
           ChatMessage: { Message: `${user_details.Name} has left the room.` },
@@ -151,12 +131,12 @@ const init = (server) => {
         });
 
         // update server room sessions
-        let del_index = room_sessions[room_details.PublicUrl].Members.findIndex(
-          (u) => u.Id === user_details.Id
-        );
-        room_sessions[room_details.PublicUrl].Members.splice(del_index, 1);
-        if (room_sessions[room_details.PublicUrl].Members.length === 0)
-          delete room_sessions[room_details.PublicUrl];
+        let n = room_sessions[room].removeMember(user_details.Id);
+        if (n === 0) delete room_sessions[room];
+
+        // deactivate room in db
+        //     socketController.set_room_active(room, false);
+        //     console.log(`All users have disconnected from room (${room}), deactivating.`);
       });
 
       console.log(
