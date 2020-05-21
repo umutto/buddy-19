@@ -16,9 +16,9 @@ tr.participant-row(data-userid=Participant.Id)
         if participant_status === 2
             span.status-badge.badge(class="badge-danger" data-sessions=1) Banned
     td.border-top-0.align-middle.pr-0
-        button.btn-user-unmute.btn-info.rounded-10.mb-1.mr-md-1(type="button" alt="Unmute" class=(participant_muted ? "d-inline-block" : "d-none"))
+        button.btn-user-unmute.btn-info.rounded-10.mb-1.mr-md-1(type="button" title="Unmute" class=(participant_muted ? "d-inline-block" : "d-none"))
             span.material-icons.align-middle.p-1 volume_off
-        button.btn-user-mute.btn-info.rounded-10.mb-1.mr-md-1(type="button" alt="Mute" class=(participant_muted ? "d-none" : "d-inline-block"))
+        button.btn-user-mute.btn-info.rounded-10.mb-1.mr-md-1(type="button" title="Mute" class=(participant_muted ? "d-none" : "d-inline-block"))
             span.material-icons.align-middle.p-1 volume_up
-        button.btn-user-remove.d-inline-block.btn-danger.rounded-10(type="button" alt="Remove Participant")
+        button.btn-user-remove.d-inline-block.btn-danger.rounded-10(type="button" title="Remove Participant")
             span.material-icons.align-middle.p-1 remove_circle_outline

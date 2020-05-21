@@ -55,22 +55,6 @@ const init = (server) => {
           socket.join(room);
           await update_user_details(user_details, room);
 
-          ack({
-            status: 200,
-            message: room,
-            context: {
-              User: user_details,
-              ChatMessage: { Message: `You have joined the ${room_details.Name} room!` },
-              TimeReceived: new Date().toJSON(),
-            },
-          });
-          socket.to(room).emit("message_echo", messageType.userConnected, {
-            User: user_details,
-            ChatMessage: { Message: `${user_details.Name} has joined the room!` },
-            TimeReceived: new Date().toJSON(),
-            EnterDate: user_details.EnterDate,
-          });
-
           // update server room sessions
           if (!Object.keys(room_sessions).includes(room)) {
             if (room_details.Type === 1)
@@ -82,12 +66,21 @@ const init = (server) => {
             else if (room_details.Type === 4)
               room_sessions[room] = new CustomRoom(room_details);
           }
-          socket.emit(
-            "join_echo",
-            room_sessions[room]
-              .getMembersPublicValues()
-              .filter((u) => u.Id !== user_details.Id)
+
+          let { user_context, room_context } = room_sessions[room].onConnect(
+            user_details
           );
+
+          // announce user to room
+          socket.to(room).emit("message_echo", messageType.userConnected, room_context);
+
+          // send an echo to callback
+          ack({
+            status: 200,
+            message: room,
+            context: user_context,
+          });
+
           room_sessions[room].addMember(user_details);
         }
       } catch (error) {
@@ -107,31 +100,27 @@ const init = (server) => {
 
       socket.on("user-details", async function (context, ack = () => {}) {
         await update_user_details(user_details, room);
-        let context_echo = {
-          User: user_details,
-          ...{ Name: context.Name, Avatar: context.Avatar },
-          TimeReceived: new Date().toJSON(),
-        };
-        socket.to(room).emit("message_echo", messageType.userDetails, context_echo);
-        ack({ status: 200, message: context_echo });
 
         // update server room sessions
-        room_sessions[room].updateMember(user_details.Id, user_details);
+        let context_echo = room_sessions[room].updateMember(
+          user_details.Id,
+          user_details
+        );
+
+        socket.to(room).emit("message_echo", messageType.userDetails, context_echo);
+        ack({ status: 200, message: context_echo });
       });
     });
 
     socket.on("disconnecting", function (reason) {
       let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
       rooms.forEach(function (room) {
-        socket.to(room).emit("message_echo", messageType.userDisconnected, {
-          User: user_details,
-          ChatMessage: { Message: `${user_details.Name} has left the room.` },
-          TimeReceived: new Date().toJSON(),
-          Reason: reason,
-        });
-
         // update server room sessions
-        let n = room_sessions[room].removeMember(user_details.Id);
+        let context_echo = room_sessions[room].removeMember(user_details.Id, reason);
+
+        socket.to(room).emit("message_echo", messageType.userDisconnected, context_echo);
+
+        let n = room_sessions[room].getMemberCount;
         if (n === 0) delete room_sessions[room];
 
         // deactivate room in db

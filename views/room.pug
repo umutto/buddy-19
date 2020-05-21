@@ -156,10 +156,10 @@ block content
                         .row.mr-md-0
                             label.col-md-6(for="roomVolume") Volume:
                             .d-flex.align-items-center.w-100
-                                a#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Mute")
+                                button#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(type="button" title="Mute")
                                     span.material-icons volume_mute
                                 input#roomVolume.flex-fill.custom-range(type="range" value=70)
-                                a#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Full")
+                                button#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(type="button" title="Full")
                                     span.material-icons volume_up
 
     #qr-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='qr-modal-label', aria-hidden='true')

@@ -35,15 +35,12 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   socket.emit("join", room, function (response) {
     if (response.status === 200) {
       append_to_chat(messageType.userConnected, response.context);
+
+      response.context.Members.forEach((u) => update_participant_list_add(u));
       room = response.message;
     } else {
       create_toast(response.status, response.message, "red", 2000).toast("show");
     }
-  });
-
-  socket.on("join_echo", function (user_list, ack = function () {}) {
-    user_list.forEach((u) => update_participant_list_add(u));
-    ack({ Code: 200, Message: c_user_alias });
   });
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
@@ -356,6 +353,7 @@ function update_participant_list_remove(user, reason = "transport close") {
         status_badge.className = "status-badge badge badge-danger";
         status_badge.textContent = "Banned";
       }
+      status_badge.title = reason;
       sortTable(
         document.getElementById("participant-table").getElementsByTagName("table")[0]
       );
