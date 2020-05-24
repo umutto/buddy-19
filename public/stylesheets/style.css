@@ -42,9 +42,12 @@ a,
 .btn-link {
   text-decoration: none;
 }
-a:hover,
-.btn-link:hover {
+a:hover {
   text-decoration: underline;
+}
+a:focus,
+.btn-link:focus {
+  text-decoration: none;
 }
 
 nav.navbar {
