@@ -4,7 +4,8 @@ const messageType = Object.freeze({
   userChatMessage: 2,
   userChatReaction: 3,
   userDetails: 4,
-  roomControl: 5,
+  roomSettings: 5,
+  roomControl: 6,
 });
 
 var socket = null;
@@ -33,6 +34,8 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
   let room = document.getElementById("main-wrapper").dataset.room;
   socket.emit("join", room, function (response) {
+    document.dispatchEvent(new CustomEvent("roomJoin", { detail: response }));
+
     if (response.status === 200) {
       append_to_chat(messageType.userConnected, response.context);
 

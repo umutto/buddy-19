@@ -1,4 +1,5 @@
 var command_queue = [];
+var player_loaded = false;
 
 window.addEventListener("DOMContentLoaded", function (evt) {
   loading_overlay(true, "Loading youtube embedded api...");
@@ -8,14 +9,25 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   var firstScriptTag = document.getElementsByTagName("script")[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  socket.on("room_echo", function (context, ack = function () {}) {
-    context.Playlist.forEach((v) => {
-      addToPlaylistByData(v);
-    });
-    let play_diff = (new Date() - new Date(context.TimeSent)) / 100;
-    player.seekTo(context.CurrentTime + play_diff);
-    player.playVideo();
-    ack();
+  document.addEventListener("roomJoin", function (response) {
+    let playlist = response.detail.context.Playlist;
+    let current_idx = response.detail.context.CurrentIndex;
+
+    let player_load = null;
+    player_load = setInterval(() => {
+      if (player_loaded) {
+        playlist.forEach((v) => {
+          addToPlaylistByData(v);
+        });
+
+        // TODO: make current_idx active video
+        // seekTo some the same video time with difference (probably seekto time is best got from host by some other message and not here)
+        //   let play_diff = (new Date() - new Date(context.TimeSent)) / 100;
+        //   player.seekTo(context.CurrentTime + play_diff);
+        //   player.playVideo();
+        clearInterval(player_load);
+      }
+    }, 500);
   });
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
@@ -57,7 +69,14 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   document
     .getElementById("yt-control-skip-next")
     .addEventListener("click", function (evt) {
-      playNextVideo();
+      let next_video_id = prepNextVideo();
+      if (next_video_id) loadAndPlayNext(player, next_video_id);
+    });
+
+  document
+    .getElementById("yt-control-autoplay")
+    .addEventListener("change", function (evt) {
+      updateCurrentVideoDetails(player);
     });
 
   document.getElementById("playlist-videos").addEventListener("click", function (evt) {
@@ -66,7 +85,16 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
         ).indexOf(evt.target.closest("[data-video]"));
-        if (from > 0) movePlaylistItem(from, from - 1);
+        if (from > 0) {
+          emit_message(socket, messageType.roomControl, {
+            Command: "movePlaylistItem",
+            FromIndex: from,
+            ToIndex: from - 1,
+            VideoId: evt.target.closest("[data-video]").dataset.video,
+          });
+
+          movePlaylistItem(from, from - 1);
+        }
       } else if (evt.target.classList.contains("btn-playlist-down")) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
@@ -74,12 +102,27 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         if (
           from !== -1 &&
           from + 1 < document.getElementById("playlist-videos").children.length
-        )
+        ) {
+          emit_message(socket, messageType.roomControl, {
+            Command: "movePlaylistItem",
+            FromIndex: from + 1,
+            ToIndex: from,
+            VideoId: evt.target.closest("[data-video]").dataset.video,
+          });
+
           movePlaylistItem(from + 1, from);
+        }
       } else if (evt.target.classList.contains("btn-playlist-remove")) {
         let remove_idx = Array.from(
           document.getElementById("playlist-videos").children
         ).indexOf(evt.target.closest("[data-video]"));
+
+        emit_message(socket, messageType.roomControl, {
+          Command: "removePlaylistItem",
+          Index: remove_idx,
+          VideoId: evt.target.closest("[data-video]").dataset.video,
+        });
+
         removePlaylistItem(remove_idx);
       }
     }
@@ -99,6 +142,7 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function (event) {
         loading_overlay(false);
+        player_loaded = true;
       },
       onStateChange: onPlayerStateChange,
     },
@@ -126,13 +170,11 @@ function onPlayerStateChange(event) {
 
   let recv_command = command_queue.shift();
 
-  // console.log(
-  //   Object.entries(YT.PlayerState).filter((e) => e[1] === event.data)[0][0] +
-  //     " - " +
-  //     recv_command +
-  //     " - " +
-  //     event.target.getCurrentTime()
-  // );
+  let current_id = event.target.getVideoData().video_id;
+  let current_time = event.target.getCurrentTime();
+  let current_pl_idx = Array.from(
+    document.getElementById("playlist-videos").children
+  ).indexOf(document.querySelector("#playlist-videos li.active-child"));
 
   if (event.data === YT.PlayerState.CUED) {
     hidePlaceholderMessage();
@@ -142,20 +184,26 @@ function onPlayerStateChange(event) {
     if (!recv_command || recv_command !== "playVideo")
       emit_message(socket, messageType.roomControl, {
         Command: "playVideo",
-        Seconds: event.target.getCurrentTime(),
+        Seconds: current_time,
+        VideoId: current_id,
+        Index: current_pl_idx,
         Event: event,
       });
   } else if (event.data === YT.PlayerState.PAUSED) {
     if (!recv_command || recv_command !== "pauseVideo")
       emit_message(socket, messageType.roomControl, {
         Command: "pauseVideo",
+        Seconds: current_time,
+        VideoId: current_id,
+        Index: current_pl_idx,
         Event: event,
       });
   } else if (
     event.data === YT.PlayerState.ENDED &&
     document.getElementById("yt-control-autoplay").checked
   ) {
-    playNextVideo();
+    let next_video_id = prepNextVideo();
+    if (next_video_id) loadAndPlayNext(player, next_video_id);
   }
 }
 function onLoaderStateChange(event) {
@@ -164,9 +212,9 @@ function onLoaderStateChange(event) {
 
 function controlWrapper(context) {
   if (context.Command === "playVideo") {
+    player.playVideo();
     let play_diff = (new Date() - new Date(context.TimeSent)) / 100;
     player.seekTo(context.Seconds + play_diff);
-    player.playVideo();
   } else if (context.Command === "pauseVideo") {
     player.pauseVideo();
   } else if (context.Command === "addToPlaylist") {
@@ -183,10 +231,10 @@ function hidePlaceholderMessage() {
   }
 }
 
-function loadAndPlay(player, video_id, play = false) {
+function loadAndPlayNext(player, video_id, play = null) {
+  play = play !== null ? play : document.getElementById("yt-control-autoplay").checked;
   player.cueVideoById({ videoId: video_id });
   if (play) player.playVideo();
-  updateCurrentVideoDetails(player);
 }
 
 function addToPlaylistByData(video_data, cb = function () {}) {
@@ -209,15 +257,12 @@ function addToPlaylistByData(video_data, cb = function () {}) {
     let pl_video = playlistVideoTemplate({ is_active: pl_length === 0, video_data });
     document.getElementById("playlist-videos").insertAdjacentHTML("beforeend", pl_video);
 
-    if (pl_length === 0) playNextVideo();
-    else if (pl_length === 1) {
-      document.getElementById("next-wrapper").classList.remove("d-none");
-      document.getElementById("yt-next-title").textContent = document
-        .getElementById("playlist-videos")
-        .lastChild.getElementsByClassName("video-title")[0].textContent;
-      document.getElementById("yt-next-time").textContent = document
-        .getElementById("playlist-videos")
-        .lastChild.getElementsByClassName("video-duration")[0].textContent;
+    if (pl_length === 0) {
+      let next_video_id = prepNextVideo();
+      if (next_video_id) loadAndPlayNext(player, next_video_id, false);
+      updateCurrentVideoDetails(loader);
+    } else {
+      updateCurrentVideoDetails(player);
     }
     document.getElementById("playlist-header-num").textContent =
       parseInt(document.getElementById("playlist-header-num").textContent) + 1;
@@ -238,7 +283,7 @@ function addToPlaylistByData(video_data, cb = function () {}) {
   }
 }
 
-function playNextVideo(idx = null) {
+function prepNextVideo(idx = null) {
   let pl_childs = document.getElementById("playlist-videos").children;
   if (pl_childs.length === 0)
     return create_toast(
@@ -246,7 +291,7 @@ function playNextVideo(idx = null) {
       "There are no videos on the playlist",
       "red",
       2500
-    );
+    ).toast("show");
 
   let current_video = document.querySelector("#playlist-videos li.active-child");
 
@@ -269,23 +314,10 @@ function playNextVideo(idx = null) {
     next_video = current_video.parentElement.firstElementChild;
   }
 
-  loadAndPlay(player, next_video.dataset.video, true);
-
   current_video.classList.remove("active-child");
   next_video.classList.add("active-child");
 
-  if (next_video) {
-    let playlist_next = next_video.nextElementSibling
-      ? next_video.nextElementSibling
-      : current_video.parentElement.firstElementChild;
-
-    document.getElementById(
-      "yt-next-title"
-    ).textContent = playlist_next.getElementsByClassName("video-title")[0].textContent;
-    document.getElementById(
-      "yt-next-time"
-    ).textContent = playlist_next.getElementsByClassName("video-duration")[0].textContent;
-  }
+  return next_video ? next_video.dataset.video : null;
 }
 
 function movePlaylistItem(from, to) {
@@ -299,18 +331,22 @@ function movePlaylistItem(from, to) {
 
   if (to_child === pl_childs.length - 1) parent_elem.appendChild(from_child);
   else parent_elem.insertBefore(from_child, to_child);
+
+  updateCurrentVideoDetails(player);
 }
 
 function removePlaylistItem(idx) {
+  let _clean = false;
   let pl_childs = document.getElementById("playlist-videos").children;
+
   if (pl_childs.length === 1) {
     player.loadVideoById("");
     player.getIframe().classList.add("d-none");
     document.getElementById("player-placeholder").classList.remove("d-none");
-
-    updateCurrentVideoDetails(player, true);
+    _clean = true;
   } else if (pl_childs[idx].classList.contains("active-child")) {
-    playNextVideo();
+    let next_video_id = prepNextVideo();
+    if (next_video_id) loadAndPlayNext(player, next_video_id);
   }
 
   document.getElementById("playlist-header-num").textContent = Math.max(
@@ -318,12 +354,17 @@ function removePlaylistItem(idx) {
     parseInt(document.getElementById("playlist-header-num").textContent) - 1
   );
   pl_childs[idx].remove();
+
+  updateCurrentVideoDetails(player, _clean);
 }
 
 async function updateCurrentVideoDetails(target_player, clean = false) {
-  let video_data = !clean ? target_player.getVideoData() : { title: "", video_id: "" };
+  // TODO: simplify this, just copy and paste from playlist item, and add more details to playlist items (like url and author)
+  let video_data = !clean
+    ? target_player.getVideoData()
+    : { title: "", video_id: "", author: "" };
 
-  if (!video_data) return;
+  if (!video_data || target_player.getPlayerState() === YT.PlayerState.CUED) return;
 
   document.getElementById("yt-playing-title").textContent = video_data.title;
 
@@ -355,6 +396,33 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
     ? `https://img.youtube.com/vi/${video_data.video_id}/sddefault.jpg`
     : "/images/logo.png";
   document.getElementById("yt-playing-thumbnail").alt = video_data.title;
+
+  if (!clean) {
+    let pl_childs = document.getElementById("playlist-videos");
+    let current_video = pl_childs.querySelector("li.active-child");
+
+    let next_video =
+      current_video.nextElementSibling ||
+      (current_video === pl_childs.lastElementChild &&
+      pl_childs.length != 1 &&
+      document.getElementById("yt-control-autoplay").checked
+        ? pl_childs.firstElementChild
+        : null);
+
+    if (next_video) {
+      document.getElementById("next-wrapper").classList.remove("d-none");
+      document.getElementById(
+        "yt-next-title"
+      ).textContent = next_video.getElementsByClassName("video-title")[0].textContent;
+      document.getElementById(
+        "yt-next-time"
+      ).textContent = next_video.getElementsByClassName("video-duration")[0].textContent;
+    }
+  } else {
+    document.getElementById("next-wrapper").classList.add("d-none");
+    document.getElementById("yt-next-title").textContent = "";
+    document.getElementById("yt-next-time").textContent = "";
+  }
 }
 
 function get_duration_string(duration) {

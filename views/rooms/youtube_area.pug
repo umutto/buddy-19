@@ -37,7 +37,7 @@
                             label.check-emphasize.p-1.mr-1(for="yt-control-sync" title="Sync with the host")
                                 span.material-icons.d-flex.align-items-center.ms-16.sync-checked-icon link
                                 span.material-icons.d-flex.align-items-center.ms-16.sync-unchecked-icon link_off
-                            input#yt-control-autoplay.d-none(type="checkbox" checked)
+                            input#yt-control-autoplay.d-none(type="checkbox")
                             label.check-emphasize.p-1.mr-1(for="yt-control-autoplay" title="Autoplay next video")
                                 span.material-icons.d-flex.align-items-center.ms-16 repeat
                             input#yt-control-shuffle.d-none(type="checkbox")
@@ -45,7 +45,7 @@
                                 span.material-icons.d-flex.align-items-center.ms-16 shuffle
                             .flex-fill.pl-3
                                 span#playlist-header-num 0
-                                span.ml-1 songs in playlist
+                                span.ml-1 song(s) in playlist
                             button.close.text-dark(type='button', data-toggle="collapse" data-target="#playlist-collapse" aria-expanded="true" aria-controls="playlist-collapse")
                                 span(aria-hidden='true') ×
                 ul#playlist-videos.list-group.list-group-flush
