@@ -43,7 +43,6 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   // TODO
   // on initial load, get current youtube song and timing, and playlist (by some kind of direct handshake from host)
   // do the same when yt-control-sync is changed to checked
-  // do the same on socket.on("reconnect", function(attemptNumber){}) // this also fires on socket.on("connect")
 
   let yt_playlist_add = document.getElementById("yt-playlist-add");
   let yt_input = document.getElementById("yt-playlist-input");
@@ -84,13 +83,13 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       if (evt.target.classList.contains("btn-playlist-up")) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
+        ).indexOf(evt.target.closest("playlist-item"));
         if (from > 0) {
           emit_message(socket, messageType.roomControl, {
             Command: "movePlaylistItem",
             FromIndex: from,
             ToIndex: from - 1,
-            VideoId: evt.target.closest("[data-video]").dataset.video,
+            VideoId: evt.target.closest(".playlist-item").dataset.videoid,
           });
 
           movePlaylistItem(from, from - 1);
@@ -98,7 +97,7 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       } else if (evt.target.classList.contains("btn-playlist-down")) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
+        ).indexOf(evt.target.closest("playlist-item"));
         if (
           from !== -1 &&
           from + 1 < document.getElementById("playlist-videos").children.length
@@ -107,7 +106,7 @@ window.addEventListener("DOMContentLoaded", function (evt) {
             Command: "movePlaylistItem",
             FromIndex: from + 1,
             ToIndex: from,
-            VideoId: evt.target.closest("[data-video]").dataset.video,
+            VideoId: evt.target.closest("playlist-item").dataset.videoid,
           });
 
           movePlaylistItem(from + 1, from);
@@ -115,12 +114,12 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       } else if (evt.target.classList.contains("btn-playlist-remove")) {
         let remove_idx = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
+        ).indexOf(evt.target.closest("playlist-item"));
 
         emit_message(socket, messageType.roomControl, {
           Command: "removePlaylistItem",
           Index: remove_idx,
-          VideoId: evt.target.closest("[data-video]").dataset.video,
+          VideoId: evt.target.closest("playlist-item").dataset.videoid,
         });
 
         removePlaylistItem(remove_idx);
@@ -317,7 +316,7 @@ function prepNextVideo(idx = null) {
   current_video.classList.remove("active-child");
   next_video.classList.add("active-child");
 
-  return next_video ? next_video.dataset.video : null;
+  return next_video ? next_video.dataset.videoid : null;
 }
 
 function movePlaylistItem(from, to) {
@@ -360,6 +359,7 @@ function removePlaylistItem(idx) {
 
 async function updateCurrentVideoDetails(target_player, clean = false) {
   // TODO: simplify this, just copy and paste from playlist item, and add more details to playlist items (like url and author)
+  // remove target_player argument and get everything from the child-active and dom
   let video_data = !clean
     ? target_player.getVideoData()
     : { title: "", video_id: "", author: "" };

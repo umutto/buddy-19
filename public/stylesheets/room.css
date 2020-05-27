@@ -1,4 +1,4 @@
-.room-header {
+#room-header {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-top: 0.3125rem;
@@ -8,7 +8,7 @@
   line-height: inherit;
 }
 @media only screen and (min-width: 576px) {
-  .room-header {
+  #room-header {
     max-width: 45vw;
     white-space: nowrap;
   }

@@ -15,7 +15,7 @@
   },
   "homepage": "https://buddy.umu.to",
   "scripts": {
-    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/users/chat_message.pug && pug --client --name-after-file --no-debug -o public/templates/ views/users/list_user.pug && pug --client --name-after-file --no-debug -o public/templates/ views/rooms/playlist_video.pug",
+    "wtemplate": "pug --client --name-after-file --no-debug -o public/templates/ views/users/chat_message.pug && pug --client --name-after-file --no-debug -o public/templates/ views/users/list_user.pug && pug --client --name-after-file --no-debug -o public/templates/ views/rooms/modules/playlist_video.pug",
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "wstart": "set NODE_ENV=production&&node ./bin/www",

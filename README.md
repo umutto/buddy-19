@@ -41,6 +41,7 @@ This just a fun project that I've started doing to practice my node backend and 
   - Encrypt/decrypt room passwords (bcrypt)
 - Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
 - Youtube room.
+  - Use [https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API](clipboard API) to check for youtube video urls.
 - Sketch room.
 - User & room histories.
 - Participant list interactions (muting, removing, reporting etc..)

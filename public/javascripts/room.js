@@ -4,7 +4,7 @@ const messageType = Object.freeze({
   userChatMessage: 2,
   userChatReaction: 3,
   userDetails: 4,
-  roomSettings: 5,
+  roomDetails: 5,
   roomControl: 6,
 });
 
@@ -56,7 +56,9 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         2000
       ).toast("show");
 
-    if (message_type === messageType.userDetails) {
+    if (message_type === messageType.roomDetails) {
+      update_room_details(context);
+    } else if (message_type === messageType.userDetails) {
       update_user_details(context.User.Id, context.User.Name, context.User.Avatar);
     } else if (message_type === messageType.userConnected) {
       update_participant_list_add(context.User);
@@ -84,11 +86,17 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         if (data.status === 200) {
           c_user_name = data.message.User.Name;
           c_user_avatar = data.message.User.Avatar;
-          socket.emit("user-details", {
-            Name: c_user_name,
-            Avatar: c_user_avatar,
-          });
           update_user_details(c_user_alias, c_user_name, c_user_avatar);
+          socket.emit(
+            "user-details",
+            {
+              Name: c_user_name,
+              Avatar: c_user_avatar,
+            },
+            function (context) {
+              append_to_chat(messageType.userDetails, context.message);
+            }
+          );
         } else create_toast(data.status, data.message, "red", 2000).toast("show");
         $("#profile-modal").modal("hide");
       })
@@ -99,6 +107,38 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         loading_overlay(false);
       });
   });
+
+  let settings_form = document.getElementById("room-settings-form");
+  if (settings_form) {
+    settings_form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      loading_overlay(true, "Updating room settings...");
+
+      var formData = new FormData(this);
+      formData.append("roomId", c_room_id);
+
+      fetch(this.action, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 200) {
+            update_room_details(data.message);
+            socket.emit("room-details", data.message, function (context) {
+              append_to_chat(messageType.roomDetails, context.message);
+            });
+          } else create_toast(data.status, data.message, "red", 2000).toast("show");
+        })
+        .catch((error) => {
+          create_toast("An error has occured", error, "red", 2000).toast("show");
+        })
+        .finally(function () {
+          loading_overlay(false);
+        });
+    });
+  }
 
   let chat_input = document.getElementById("chat-input");
   let chat_input_btn = document.getElementById("btn-chat-send");
@@ -244,6 +284,21 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
       top: document.getElementById("chat-display").scrollHeight,
       behavior: "smooth",
     });
+}
+
+function update_room_details(settings) {
+  if (settings.RoomTheme) {
+    let old_bg = document.body.className.split(" ").filter((c) => c.startsWith("bg-"))[0];
+    if (old_bg === document.body.dataset.themedef) {
+      document.body.classList.remove(old_bg);
+      document.body.classList.add(settings.RoomTheme);
+    }
+    document.body.dataset.themedef = settings.RoomTheme;
+  }
+
+  if (settings.RoomName) {
+    document.getElementById("room-header").textContent = settings.RoomName;
+  }
 }
 
 function update_user_details(uuid, name, avatar) {

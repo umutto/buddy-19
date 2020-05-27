@@ -40,14 +40,17 @@ input[type="checkbox"] + label:hover {
 /* TODO: update bootstrap.min.css for this */
 a,
 .btn-link {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 a:hover {
-  text-decoration: underline;
+  text-decoration: underline !important;
+}
+.btn-link:focus {
+  text-decoration: none !important;
 }
 a:focus,
 .btn-link:focus {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 nav.navbar {
@@ -98,6 +101,10 @@ nav.navbar {
 }
 .p-nowrap {
   white-space: nowrap;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .rounded-10 {

@@ -5,6 +5,18 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   $(".modal").on("shown.bs.modal", function (e) {
     $("[autofocus]", e.target).focus();
   });
+
+  Array.from(document.getElementsByClassName("toggle-password")).forEach(function (elem) {
+    elem.addEventListener("click", function (e) {
+      if (e.target.firstElementChild.textContent === "visibility") {
+        e.target.parentElement.querySelector("input[type='password']").type = "text";
+        e.target.firstElementChild.textContent = "visibility_off";
+      } else {
+        e.target.parentElement.querySelector("input[type='text']").type = "password";
+        e.target.firstElementChild.textContent = "visibility";
+      }
+    });
+  });
 });
 
 function copy_to_clipboard(elem) {

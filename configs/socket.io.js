@@ -102,13 +102,30 @@ const init = (server) => {
         await update_user_details(user_details, room);
 
         // update server room sessions
-        let context_echo = room_sessions[room].updateMember(
+        let { user_context, room_context } = room_sessions[room].updateMember(
           user_details.Id,
           user_details
         );
 
-        socket.to(room).emit("message_echo", messageType.userDetails, context_echo);
-        ack({ status: 200, message: context_echo });
+        socket.to(room).emit("message_echo", messageType.userDetails, room_context);
+        ack({ status: 200, message: user_context });
+      });
+
+      socket.on("room-details", async function (context, ack = () => {}) {
+        if (user_details.Id === room_sessions[room].Host) {
+          // update server room sessions
+          let { user_context, room_context } = room_sessions[room].editRoomDetails(
+            user_details,
+            context
+          );
+
+          socket.to(room).emit("message_echo", messageType.roomDetails, room_context);
+          ack({ status: 200, message: user_context });
+        } else
+          ack({
+            status: 403,
+            message: "You are not allowed to change the settings.",
+          });
       });
     });
 
