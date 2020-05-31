@@ -6,6 +6,7 @@ const messageType = Object.freeze({
   userDetails: 4,
   roomDetails: 5,
   roomControl: 6,
+  syncRequest: 7,
 });
 
 var socket = null;

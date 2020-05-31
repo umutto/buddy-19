@@ -93,9 +93,13 @@ const init = (server) => {
       }
 
       socket.on("message", function (message_type, context, ack = () => {}) {
-        let echo = room_sessions[room].onMessage(user_details, message_type, context);
-        socket.to(room).emit("message_echo", message_type, echo);
-        ack({ status: 200, message: echo });
+        let { user_context, room_context } = room_sessions[room].onMessage(
+          user_details,
+          message_type,
+          context
+        );
+        socket.to(room).emit("message_echo", message_type, room_context);
+        ack({ status: 200, message: user_context });
       });
 
       socket.on("user-details", async function (context, ack = () => {}) {
@@ -133,9 +137,12 @@ const init = (server) => {
       let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
       rooms.forEach(function (room) {
         // update server room sessions
-        let context_echo = room_sessions[room].removeMember(user_details.Id, reason);
+        let { user_context, room_context } = room_sessions[room].removeMember(
+          user_details.Id,
+          reason
+        );
 
-        socket.to(room).emit("message_echo", messageType.userDisconnected, context_echo);
+        socket.to(room).emit("message_echo", messageType.userDisconnected, room_context);
 
         let n = room_sessions[room].getMemberCount;
         if (n === 0) delete room_sessions[room];
