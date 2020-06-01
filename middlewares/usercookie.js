@@ -16,18 +16,13 @@ module.exports = async (req, res, next) => {
         req.protocol + "://" + req.get("host") + req.originalUrl
       }.`
     );
-    req.UserClient = {
-      UUID: res.locals.UserAliasCookie,
-      CreationDate: null,
-      LastSeenDate: null,
-      Avatar: null,
-      RoomMembership: [],
-    };
-  } else {
-    req.UserClient = await sqliteController.get_user_details(user_alias);
-    req.UserClient.RoomMembership = JSON.parse(req.UserClient.RoomMembership);
   }
+
   await sqliteController.create_user(user_alias);
+
+  req.UserClient = await sqliteController.get_user_details(user_alias);
+  req.UserClient.RoomMembership = JSON.parse(req.UserClient.RoomMembership);
+
   res.locals.UserAliasCookie = user_alias;
   next();
 };
