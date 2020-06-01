@@ -4,6 +4,7 @@ body {
   height: 100%;
 
   scroll-behavior: smooth;
+  letter-spacing: 0.32px;
 }
 
 /* TODO: Change below in bootstrap.min.css */
@@ -40,11 +41,17 @@ input[type="checkbox"] + label:hover {
 /* TODO: update bootstrap.min.css for this */
 a,
 .btn-link {
-  text-decoration: none;
+  text-decoration: none !important;
 }
-a:hover,
-.btn-link:hover {
-  text-decoration: underline;
+a:hover {
+  text-decoration: underline !important;
+}
+.btn-link:focus {
+  text-decoration: none !important;
+}
+a:focus,
+.btn-link:focus {
+  text-decoration: none !important;
 }
 
 nav.navbar {
@@ -97,6 +104,10 @@ nav.navbar {
   white-space: nowrap;
 }
 
+.z-10 {
+  z-index: 10;
+}
+
 .rounded-10 {
   border-radius: 10px !important;
 }
@@ -131,23 +142,23 @@ nav.navbar {
   cursor: pointer;
 }
 
+/* Loading overlay */
+
 #loading-overlay {
   height: 100%;
   width: 100%;
   position: fixed;
   z-index: 10001;
-  top: 0;
-  left: 0;
   overflow-x: hidden;
-  background: #fff6;
+  background: #fff7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .loading-overlay-content {
-  position: relative;
-  top: 25%;
-  width: 100%;
-  text-align: center;
-  margin-top: 30px;
+  margin-bottom: 10%;
 }
 
 #loading-overlay .spinner-border {
@@ -155,10 +166,7 @@ nav.navbar {
   height: 10em !important;
 }
 
-#loading-overlay .spinner-text {
-  margin-top: auto;
-  margin-bottom: auto;
-}
+/* Loading overlay */
 
 #toast-wrapper {
   z-index: 1060;
@@ -195,6 +203,8 @@ nav.navbar {
 
 .bg-jumbotron {
   background: linear-gradient(140deg, #e3e81d1a, #43f6ff52);
+  background-color: #b9f3ff59;
+  box-shadow: 0 0 5px 5px #d8d8d830;
 }
 
 .bg-rainbow {
@@ -307,6 +317,7 @@ nav.navbar {
 
 .bg-gplay {
   background-image: url(/images/patterns/gplaypattern.png);
+  background-color: #1fa7ff;
 }
 
 .bg-canadian {

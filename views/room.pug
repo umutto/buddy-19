@@ -22,9 +22,6 @@ block metas
     //- else if Room.Type === 3
     //-     script(src='/javascripts/quiz_controls.js')
 
-    if Room.Host === UserAliasCookie
-        script(src='/javascripts/host.js')
-
     script.
         var c_user_name = !{typeof User !== 'undefined' && User.Name !== 'undefined' ? JSON.stringify(User.Name) : `null`}
         var c_user_avatar = !{typeof User !== 'undefined' && User.Avatar !== 'undefined' ? JSON.stringify(User.Avatar) : `null`}
@@ -39,7 +36,7 @@ block content
             span.material-icons.ms-48 menu
         #navbar-content.collapse.navbar-collapse
             a(href="https://" + DOMAIN_NAME + "/room/" + RoomId)
-                .room-header #{Room.Name}
+                #room-header #{Room.Name}
             ul.navbar-nav.ml-auto
                 li.nav-item.dropdown
                     a#navbar-dropdown-link.nav-link.d-none.d-sm-block(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -145,21 +142,32 @@ block content
                     button.close.text-dark(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') ×
                 .modal-body
-                    //- TODO:
-                    //- Add a form here with ajax backend for host settings
-                    //- if Room.Host === UserAliasCookie
-                                        .form-group.col-md.pl-3.pl-sm-5
-                        button.btn.btn-primary(type="submit") Save changes
-                        button.btn.btn-secondary(type="button" data-dismiss="modal") Close
                     .container
-                        include room_theme_select
+                        if Room.Host === UserAliasCookie
+                            .row.mr-md-0.border-bottom.mb-2.pb-3
+                                h4 Host Settings:
+                                form#room-settings-form(method="POST" action="/edit-room")
+                                    .form-group.row
+                                        label.col-md-2.col-form-label(for="editName") Name:
+                                        .col-md-10
+                                            input#editName.form-control(type="text" name="editName" placeholder="My amazing room!" maxlength="20" autocomplete="off" value=Room.Name)
+                                    .form-group.row
+                                        label.col-md-2.col-form-label(for="editPassword") Password:
+                                        .col-md-10
+                                            input#editPassword.form-control(type="password" name="editPassword" placeholder="My amazing room!" maxlength="20" autocomplete="off" value=Room.Password)
+                                            button.btn.btn-link.toggle-password.p-0.d-flex.align-items-center.float-right.position-relative.border-none(type="button" style="margin-top:-32px; margin-right: 5px;")
+                                                span.material-icons.z-10 visibility
+                                    include room_theme_select
+                                    button.btn.btn-lg.btn-primary.btn-block(type="submit") Save changes
+                        else
+                            include room_theme_select
                         .row.mr-md-0
                             label.col-md-6(for="roomVolume") Volume:
                             .d-flex.align-items-center.w-100
-                                a#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Mute")
+                                button#btnVolumeMute.btn.btn-lg.d-flex.align-items-center(type="button" title="Mute")
                                     span.material-icons volume_mute
                                 input#roomVolume.flex-fill.custom-range(type="range" value=70)
-                                a#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(href='#' type="button" alt="Full")
+                                button#btnVolumeAll.btn.btn-lg.d-flex.align-items-center(type="button" title="Full")
                                     span.material-icons volume_up
 
     #qr-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='qr-modal-label', aria-hidden='true')

@@ -1,4 +1,6 @@
 var command_queue = [];
+var player_loaded = false;
+var initial_seek = 0;
 
 window.addEventListener("DOMContentLoaded", function (evt) {
   loading_overlay(true, "Loading youtube embedded api...");
@@ -8,14 +10,19 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   var firstScriptTag = document.getElementsByTagName("script")[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  socket.on("room_echo", function (context, ack = function () {}) {
-    context.Playlist.forEach((v) => {
-      addToPlaylistByData(v);
-    });
-    let play_diff = (new Date() - new Date(context.TimeSent)) / 100;
-    player.seekTo(context.CurrentTime + play_diff);
-    player.playVideo();
-    ack();
+  document.addEventListener("roomJoin", function (response) {
+    let player_load = null;
+    player_load = setInterval(() => {
+      if (player_loaded) {
+        emit_message(socket, messageType.syncRequest, {}, function (data) {
+          if (data.status === 200) {
+            initPlaylistDetails(data.message);
+            syncWithServer(data.message);
+          }
+        });
+        clearInterval(player_load);
+      }
+    }, 500);
   });
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
@@ -23,15 +30,14 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       message_type === messageType.roomControl &&
       document.getElementById("yt-control-sync").checked
     ) {
-      command_queue.push(context.Command);
+      // console.log("===========================");
+      // console.log("Command Received: ", context.Command);
+      if (["playVideo", "pauseVideo"].includes(context.Command))
+        command_queue.push(context.Command);
       controlWrapper(context);
       ack();
     }
   });
-  // TODO
-  // on initial load, get current youtube song and timing, and playlist (by some kind of direct handshake from host)
-  // do the same when yt-control-sync is changed to checked
-  // do the same on socket.on("reconnect", function(attemptNumber){}) // this also fires on socket.on("connect")
 
   let yt_playlist_add = document.getElementById("yt-playlist-add");
   let yt_input = document.getElementById("yt-playlist-input");
@@ -57,7 +63,21 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   document
     .getElementById("yt-control-skip-next")
     .addEventListener("click", function (evt) {
-      playNextVideo();
+      let next_video_id = prepNextVideo();
+      if (next_video_id) {
+        loadAndPlayNext(player, next_video_id);
+
+        emit_message(socket, messageType.roomControl, {
+          Command: "skipNext",
+          VideoId: next_video_id,
+        });
+      }
+    });
+
+  document
+    .getElementById("yt-control-autoplay")
+    .addEventListener("change", function (evt) {
+      updateCurrentVideoDetails(player);
     });
 
   document.getElementById("playlist-videos").addEventListener("click", function (evt) {
@@ -65,30 +85,58 @@ window.addEventListener("DOMContentLoaded", function (evt) {
       if (evt.target.classList.contains("btn-playlist-up")) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
-        if (from > 0) movePlaylistItem(from, from - 1);
+        ).indexOf(evt.target.closest(".playlist-item"));
+        if (from > 0) {
+          emit_message(socket, messageType.roomControl, {
+            Command: "movePlaylistItem",
+            FromIndex: from,
+            ToIndex: from - 1,
+            FromId: evt.target.closest(".playlist-item").dataset.videoid,
+            ToId: evt.target.closest(".playlist-item").previousElementSibling.dataset
+              .videoid,
+          });
+
+          movePlaylistItem(from, from - 1);
+        }
       } else if (evt.target.classList.contains("btn-playlist-down")) {
         let from = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
+        ).indexOf(evt.target.closest(".playlist-item"));
         if (
           from !== -1 &&
           from + 1 < document.getElementById("playlist-videos").children.length
-        )
+        ) {
+          emit_message(socket, messageType.roomControl, {
+            Command: "movePlaylistItem",
+            FromIndex: from + 1,
+            ToIndex: from,
+            FromId: evt.target.closest(".playlist-item").nextElementSibling.dataset
+              .videoid,
+            ToId: evt.target.closest(".playlist-item").dataset.videoid,
+          });
+
           movePlaylistItem(from + 1, from);
+        }
       } else if (evt.target.classList.contains("btn-playlist-remove")) {
         let remove_idx = Array.from(
           document.getElementById("playlist-videos").children
-        ).indexOf(evt.target.closest("[data-video]"));
+        ).indexOf(evt.target.closest(".playlist-item"));
+
+        emit_message(socket, messageType.roomControl, {
+          Command: "removePlaylistItem",
+          Index: remove_idx,
+          VideoId: evt.target.closest(".playlist-item").dataset.videoid,
+        });
+
         removePlaylistItem(remove_idx);
       }
     }
   });
 });
 
-function emit_message(socket, message_type, context) {
+function emit_message(socket, message_type, context, ack = () => {}) {
   if (document.getElementById("yt-control-sync").checked)
-    socket.emit("message", message_type, { TimeSent: new Date(), ...context });
+    socket.emit("message", message_type, { TimeSent: new Date(), ...context }, ack);
 }
 
 var player, loader, loaderStateFunc;
@@ -99,6 +147,7 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function (event) {
         loading_overlay(false);
+        player_loaded = true;
       },
       onStateChange: onPlayerStateChange,
     },
@@ -114,8 +163,6 @@ function onYouTubeIframeAPIReady() {
   });
 }
 function onPlayerStateChange(event) {
-  // TODO: call the host function if exists which echoes same events to others
-  // (in case it's not set as free, do all this work in serverside, pass the appropriate functions on initial handshake)
   const tracked_events = [
     YT.PlayerState.CUED,
     YT.PlayerState.PLAYING,
@@ -124,42 +171,60 @@ function onPlayerStateChange(event) {
   ];
   if (!tracked_events.includes(event.data)) return;
 
-  let recv_command = command_queue.shift();
+  let recv_command = [YT.PlayerState.PLAYING, YT.PlayerState.PAUSED].includes(event.data)
+    ? command_queue.shift()
+    : null;
 
-  // console.log(
-  //   Object.entries(YT.PlayerState).filter((e) => e[1] === event.data)[0][0] +
-  //     " - " +
-  //     recv_command +
-  //     " - " +
-  //     event.target.getCurrentTime()
-  // );
+  let current_id = event.target.getVideoData().video_id;
+  let current_time = event.target.getCurrentTime();
+  let current_pl_idx = Array.from(
+    document.getElementById("playlist-videos").children
+  ).indexOf(document.querySelector("#playlist-videos li.active-child"));
 
   if (event.data === YT.PlayerState.CUED) {
     hidePlaceholderMessage();
   } else if (event.data === YT.PlayerState.PLAYING) {
     updateCurrentVideoDetails(event.target);
 
-    if (!recv_command || recv_command !== "playVideo")
+    if (initial_seek) {
+      if (
+        player.getCurrentTime() - 1 < initial_seek &&
+        initial_seek < player.getCurrentTime() + 1
+      )
+        initial_seek = 0;
+      else player.seekTo(initial_seek);
+    } else if (!recv_command || recv_command !== "playVideo")
       emit_message(socket, messageType.roomControl, {
         Command: "playVideo",
-        Seconds: event.target.getCurrentTime(),
-        Event: event,
+        Seconds: current_time,
+        VideoId: current_id,
+        Index: current_pl_idx,
+        Event: event.data,
       });
   } else if (event.data === YT.PlayerState.PAUSED) {
-    updateCurrentVideoDetails(event.target);
-
     if (!recv_command || recv_command !== "pauseVideo")
       emit_message(socket, messageType.roomControl, {
         Command: "pauseVideo",
-        Event: event,
+        Seconds: current_time,
+        VideoId: current_id,
+        Index: current_pl_idx,
+        Event: event.data,
       });
   } else if (
     event.data === YT.PlayerState.ENDED &&
     document.getElementById("yt-control-autoplay").checked
   ) {
-    playNextVideo();
+    let next_video_id = prepNextVideo();
+    if (next_video_id) loadAndPlayNext(player, next_video_id);
   }
+
+  // console.log("---------------------------");
+  // console.log(
+  //   Object.keys(YT.PlayerState).find((key) => YT.PlayerState[key] === event.data)
+  // );
+  // console.log("Command queue: ", command_queue);
 }
+
 function onLoaderStateChange(event) {
   if (loaderStateFunc) loaderStateFunc(event);
 }
@@ -173,8 +238,11 @@ function controlWrapper(context) {
     player.pauseVideo();
   } else if (context.Command === "addToPlaylist") {
     addToPlaylistByData(context.VideoData);
-  } else if (context.Command === "loadFromPlaylist") {
-    console.log(context);
+  } else if (context.Command === "removePlaylistItem") {
+    removePlaylistItem(context.Index);
+  } else if (context.Command === "skipNext") {
+    let next_video_id = prepNextVideo();
+    if (next_video_id) loadAndPlayNext(player, next_video_id);
   }
 }
 
@@ -185,10 +253,39 @@ function hidePlaceholderMessage() {
   }
 }
 
-function loadAndPlay(player, video_id, play = false) {
+function initPlaylistDetails(context) {
+  let playlist = context.Playlist;
+  if (!playlist || playlist.length === 0) return clearPlaylist();
+
+  playlist.forEach((v) => {
+    addToPlaylistByData(v);
+  });
+}
+
+function syncWithServer(context) {
+  if (
+    context.CurrentIndex === -1 ||
+    document.getElementById("playlist-videos").children.length === 0
+  )
+    return;
+
+  let next_video_id = prepNextVideo(context.CurrentIndex);
+  if (next_video_id) {
+    loadAndPlayNext(player, next_video_id, false);
+    updateCurrentVideoDetails(player);
+
+    if (context.CurrentState === 1) {
+      command_queue.push("playVideo");
+      initial_seek = (new Date() - new Date(context.CurrentSeconds)) / 1000;
+      player.playVideo();
+    }
+  }
+}
+
+function loadAndPlayNext(player, video_id, play = null) {
+  play = play !== null ? play : document.getElementById("yt-control-autoplay").checked;
   player.cueVideoById({ videoId: video_id });
   if (play) player.playVideo();
-  updateCurrentVideoDetails(player);
 }
 
 function addToPlaylistByData(video_data, cb = function () {}) {
@@ -211,15 +308,12 @@ function addToPlaylistByData(video_data, cb = function () {}) {
     let pl_video = playlistVideoTemplate({ is_active: pl_length === 0, video_data });
     document.getElementById("playlist-videos").insertAdjacentHTML("beforeend", pl_video);
 
-    if (pl_length === 0) playNextVideo();
-    else if (pl_length === 1) {
-      document.getElementById("next-wrapper").classList.remove("d-none");
-      document.getElementById("yt-next-title").textContent = document
-        .getElementById("playlist-videos")
-        .lastChild.getElementsByClassName("video-title")[0].textContent;
-      document.getElementById("yt-next-time").textContent = document
-        .getElementById("playlist-videos")
-        .lastChild.getElementsByClassName("video-duration")[0].textContent;
+    if (pl_length === 0) {
+      let next_video_id = prepNextVideo();
+      if (next_video_id) loadAndPlayNext(player, next_video_id, false);
+      updateCurrentVideoDetails(loader);
+    } else {
+      updateCurrentVideoDetails(player);
     }
     document.getElementById("playlist-header-num").textContent =
       parseInt(document.getElementById("playlist-header-num").textContent) + 1;
@@ -231,7 +325,8 @@ function addToPlaylistByData(video_data, cb = function () {}) {
         event.target.stopVideo();
 
         let _video_data = event.target.getVideoData();
-        _video_data.duration = get_duration_string(event.target.getDuration());
+        _video_data.duration = event.target.getDuration();
+        _video_data.duration_text = get_duration_string(event.target.getDuration());
         _video_data.video_url = event.target.getVideoUrl();
         addToPlaylistByData(_video_data, cb);
       }
@@ -240,7 +335,7 @@ function addToPlaylistByData(video_data, cb = function () {}) {
   }
 }
 
-function playNextVideo(idx = null) {
+function prepNextVideo(idx = null) {
   let pl_childs = document.getElementById("playlist-videos").children;
   if (pl_childs.length === 0)
     return create_toast(
@@ -248,7 +343,7 @@ function playNextVideo(idx = null) {
       "There are no videos on the playlist",
       "red",
       2500
-    );
+    ).toast("show");
 
   let current_video = document.querySelector("#playlist-videos li.active-child");
 
@@ -271,23 +366,10 @@ function playNextVideo(idx = null) {
     next_video = current_video.parentElement.firstElementChild;
   }
 
-  loadAndPlay(player, next_video.dataset.video, true);
-
-  current_video.classList.remove("active-child");
+  if (current_video) current_video.classList.remove("active-child");
   next_video.classList.add("active-child");
 
-  if (next_video) {
-    let playlist_next = next_video.nextElementSibling
-      ? next_video.nextElementSibling
-      : current_video.parentElement.firstElementChild;
-
-    document.getElementById(
-      "yt-next-title"
-    ).textContent = playlist_next.getElementsByClassName("video-title")[0].textContent;
-    document.getElementById(
-      "yt-next-time"
-    ).textContent = playlist_next.getElementsByClassName("video-duration")[0].textContent;
-  }
+  return next_video ? next_video.dataset.videoid : null;
 }
 
 function movePlaylistItem(from, to) {
@@ -301,17 +383,29 @@ function movePlaylistItem(from, to) {
 
   if (to_child === pl_childs.length - 1) parent_elem.appendChild(from_child);
   else parent_elem.insertBefore(from_child, to_child);
+
+  updateCurrentVideoDetails(player);
+}
+
+function clearPlaylist() {
+  let n_childs = document.getElementById("playlist-videos").children.length;
+  for (--n_childs; n_childs >= 0; n_childs--) removePlaylistItem(n_childs);
 }
 
 function removePlaylistItem(idx) {
+  let _clean = false;
   let pl_childs = document.getElementById("playlist-videos").children;
-  if (pl_childs.length === 1) {
-    updateCurrentVideoDetails(player, true);
+
+  if (pl_childs.length === 0) {
+    return;
+  } else if (pl_childs.length === 1) {
     player.loadVideoById("");
     player.getIframe().classList.add("d-none");
     document.getElementById("player-placeholder").classList.remove("d-none");
+    _clean = true;
   } else if (pl_childs[idx].classList.contains("active-child")) {
-    playNextVideo();
+    let next_video_id = prepNextVideo();
+    if (next_video_id) loadAndPlayNext(player, next_video_id);
   }
 
   document.getElementById("playlist-header-num").textContent = Math.max(
@@ -319,18 +413,37 @@ function removePlaylistItem(idx) {
     parseInt(document.getElementById("playlist-header-num").textContent) - 1
   );
   pl_childs[idx].remove();
+
+  updateCurrentVideoDetails(player, _clean);
 }
 
 async function updateCurrentVideoDetails(target_player, clean = false) {
-  let video_data = !clean ? target_player.getVideoData() : { title: "", video_id: "" };
+  let active_child = document.querySelector(
+    "#playlist-videos .playlist-item.active-child"
+  );
+  let video_data = !clean
+    ? active_child
+      ? {
+          title: active_child.dataset.videotitle,
+          video_id: active_child.dataset.videoid,
+          author: active_child.dataset.videoauthor,
+          duration: active_child.dataset.videoduration,
+        }
+      : target_player.getVideoData()
+    : { title: "", video_id: "", author: "", duration: "" };
 
   if (!video_data) return;
 
   document.getElementById("yt-playing-title").textContent = video_data.title;
 
+  let video_url =
+    target_player.getVideoUrl() &&
+    target_player.getVideoUrl().endsWith("www.youtube.com/watch")
+      ? `https://www.youtube.com/watch?v=${video_data.video_id}`
+      : target_player.getVideoUrl();
   document
     .querySelectorAll("a.yt-playing-video-link")
-    .forEach((a) => (a.href = target_player.getVideoUrl()));
+    .forEach((a) => (a.href = video_url ? video_url : "#"));
 
   let author_elem = document.getElementById("yt-playing-author");
   let author_link = document.getElementById("yt-playing-author-link");
@@ -345,13 +458,43 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
   if (clean) document.getElementById("yt-control-skip-next").classList.add("d-none");
   else document.getElementById("yt-control-skip-next").classList.remove("d-none");
 
-  let duration = target_player.getDuration();
-  document.getElementById("yt-playing-time").textContent = get_duration_string(duration);
+  let duration = target_player.getDuration() || parseFloat(video_data.duration);
+  if (duration)
+    document.getElementById("yt-playing-time").textContent = get_duration_string(
+      duration
+    );
 
   document.getElementById("yt-playing-thumbnail").src = video_data.video_id
     ? `https://img.youtube.com/vi/${video_data.video_id}/sddefault.jpg`
     : "/images/logo.png";
   document.getElementById("yt-playing-thumbnail").alt = video_data.title;
+
+  if (!clean) {
+    let pl_childs = document.getElementById("playlist-videos");
+    let current_video = pl_childs.querySelector("li.active-child");
+
+    let next_video =
+      current_video.nextElementSibling ||
+      (current_video === pl_childs.lastElementChild &&
+      pl_childs.length != 1 &&
+      document.getElementById("yt-control-autoplay").checked
+        ? pl_childs.firstElementChild
+        : null);
+
+    if (next_video) {
+      document.getElementById("next-wrapper").classList.remove("d-none");
+      document.getElementById(
+        "yt-next-title"
+      ).textContent = next_video.getElementsByClassName("video-title")[0].textContent;
+      document.getElementById(
+        "yt-next-time"
+      ).textContent = next_video.getElementsByClassName("video-duration")[0].textContent;
+    }
+  } else {
+    document.getElementById("next-wrapper").classList.add("d-none");
+    document.getElementById("yt-next-title").textContent = "";
+    document.getElementById("yt-next-time").textContent = "";
+  }
 }
 
 function get_duration_string(duration) {

@@ -33,20 +33,22 @@ In all rooms, hosts can set a background theme, users can chat and interact with
 
 ### Background
 
-This just a fun project that I've started doing to practice my node backend and play with socket.io during the self-quarantine. It is hastily made, and just a side project that I don't intend to make money or anything. So do what you want with it, but bear in mind I'm currently the sole developer and hosting it with my own funds, so I opted out for the cheap and quick ways, anything and everything can broke. If you want to help feel free to send a pull request or open up an issue.
+This just a fun project that I've started doing to practice my node backend and play with socket.io during the self-quarantine. It is hastily made, and just a side project that I don't intend to make money or anything. So do what you want with it, but bear in mind I'm currently the sole developer and hosting it with my own funds (without any monetary income from this project), so I opted out for the cheap and quick ways, anything and everything can broke. If you want to help feel free to send a pull request or open up an issue.
 
 ### TODO
 
 - Check and create if db file does not exists (using buddy19.db.sql)
-  - Encrypt/decrypt room passwords (bcrypt)
-- Create a header on layout (for logo and return to main page) and a footer (for terms, contact and attributions).
+- Encrypt/decrypt room passwords (bcrypt)
+- Onboarding modal in create.pug (displays details about creating a room).
+- Onboarding modal in room.pug (displays tutorial/info related to current room type).
 - Youtube room.
+  - Use [https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API](clipboard API) to check for youtube video urls.
 - Sketch room.
 - User & room histories.
 - Participant list interactions (muting, removing, reporting etc..)
 - Public servers and room listings.
 - Migrate to vanilla javascript solution, (get rid of jQuery) once bootstrap 5.0 supports vanilla.
-- Consistent user socket.io connection (identify a reconnecting or already online user, and act accordingly. Probably required to decently let users join multiple rooms. Could be simply attaching c_user_alias to socket and db)
+- Consistent user socket.io connection (mostly testing -like attending multiple different rooms etc...- and remembering user preferences, avatar, name etc...)
 - Add user reactions on chat (something like these [https://youtu.be/ffnqLIrM3n8](https://youtu.be/ffnqLIrM3n8) but obviously royalty free)
 - Add an emoji picker on chat.
 - Get a good Chrome Lighthouse score.
@@ -62,7 +64,7 @@ This just a fun project that I've started doing to practice my node backend and 
 
 ## About usage data
 
-- This app uses google analytics with anonymized user ID's to measure usage data. Nothing you enter (be it usernames, quizzes, messages, answers etc.. ) is sent and used by us or a third party.
+- This app uses google analytics with anonymized user ID's to measure usage data. Nothing you enter (be it usernames, quizzes, messages, answers etc.. ) is sent and used by this project or a third party.
 
 ## Attributions
 

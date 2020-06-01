@@ -4,7 +4,9 @@ const messageType = Object.freeze({
   userChatMessage: 2,
   userChatReaction: 3,
   userDetails: 4,
-  roomControl: 5,
+  roomDetails: 5,
+  roomControl: 6,
+  syncRequest: 7,
 });
 
 var socket = null;
@@ -33,17 +35,16 @@ window.addEventListener("DOMContentLoaded", function (evt) {
 
   let room = document.getElementById("main-wrapper").dataset.room;
   socket.emit("join", room, function (response) {
+    document.dispatchEvent(new CustomEvent("roomJoin", { detail: response }));
+
     if (response.status === 200) {
       append_to_chat(messageType.userConnected, response.context);
+
+      response.context.Members.forEach((u) => update_participant_list_add(u));
       room = response.message;
     } else {
       create_toast(response.status, response.message, "red", 2000).toast("show");
     }
-  });
-
-  socket.on("join_echo", function (user_list, ack = function () {}) {
-    user_list.forEach((u) => update_participant_list_add(u));
-    ack({ Code: 200, Message: c_user_alias });
   });
 
   socket.on("message_echo", function (message_type, context, ack = function () {}) {
@@ -56,7 +57,9 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         2000
       ).toast("show");
 
-    if (message_type === messageType.userDetails) {
+    if (message_type === messageType.roomDetails) {
+      update_room_details(context);
+    } else if (message_type === messageType.userDetails) {
       update_user_details(context.User.Id, context.User.Name, context.User.Avatar);
     } else if (message_type === messageType.userConnected) {
       update_participant_list_add(context.User);
@@ -84,11 +87,17 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         if (data.status === 200) {
           c_user_name = data.message.User.Name;
           c_user_avatar = data.message.User.Avatar;
-          socket.emit("user-details", {
-            Name: c_user_name,
-            Avatar: c_user_avatar,
-          });
           update_user_details(c_user_alias, c_user_name, c_user_avatar);
+          socket.emit(
+            "user-details",
+            {
+              Name: c_user_name,
+              Avatar: c_user_avatar,
+            },
+            function (context) {
+              append_to_chat(messageType.userDetails, context.message);
+            }
+          );
         } else create_toast(data.status, data.message, "red", 2000).toast("show");
         $("#profile-modal").modal("hide");
       })
@@ -99,6 +108,38 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         loading_overlay(false);
       });
   });
+
+  let settings_form = document.getElementById("room-settings-form");
+  if (settings_form) {
+    settings_form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      loading_overlay(true, "Updating room settings...");
+
+      var formData = new FormData(this);
+      formData.append("roomId", c_room_id);
+
+      fetch(this.action, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 200) {
+            update_room_details(data.message);
+            socket.emit("room-details", data.message, function (context) {
+              append_to_chat(messageType.roomDetails, context.message);
+            });
+          } else create_toast(data.status, data.message, "red", 2000).toast("show");
+        })
+        .catch((error) => {
+          create_toast("An error has occured", error, "red", 2000).toast("show");
+        })
+        .finally(function () {
+          loading_overlay(false);
+        });
+    });
+  }
 
   let chat_input = document.getElementById("chat-input");
   let chat_input_btn = document.getElementById("btn-chat-send");
@@ -246,6 +287,21 @@ function append_to_chat(message_type, context, scroll_to_bottom = "false") {
     });
 }
 
+function update_room_details(settings) {
+  if (settings.RoomTheme) {
+    let old_bg = document.body.className.split(" ").filter((c) => c.startsWith("bg-"))[0];
+    if (old_bg === document.body.dataset.themedef) {
+      document.body.classList.remove(old_bg);
+      document.body.classList.add(settings.RoomTheme);
+    }
+    document.body.dataset.themedef = settings.RoomTheme;
+  }
+
+  if (settings.RoomName) {
+    document.getElementById("room-header").textContent = settings.RoomName;
+  }
+}
+
 function update_user_details(uuid, name, avatar) {
   if (uuid === c_user_alias) {
     document.getElementById("userName").value = name;
@@ -299,6 +355,8 @@ function update_chat_title() {
 }
 
 function update_participant_list_add(user) {
+  if (user.Id === c_user_alias) return;
+
   let EnterDate = new Date(user.EnterDate).toTimeString().substr(0, 5);
 
   let user_row = htmlToElement(
@@ -354,6 +412,7 @@ function update_participant_list_remove(user, reason = "transport close") {
         status_badge.className = "status-badge badge badge-danger";
         status_badge.textContent = "Banned";
       }
+      status_badge.title = reason;
       sortTable(
         document.getElementById("participant-table").getElementsByTagName("table")[0]
       );
