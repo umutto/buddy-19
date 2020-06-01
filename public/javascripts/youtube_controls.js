@@ -418,10 +418,6 @@ function removePlaylistItem(idx) {
 }
 
 async function updateCurrentVideoDetails(target_player, clean = false) {
-  // TODO: simplify this, just copy and paste from playlist item, and add more details to playlist items (like url and author)
-  // remove target_player argument and get everything from the child-active and dom
-  // .playlist-item
-  // data-videoid=video_data.video_id data-videoauthor=video_data.author data-videotitle=video_data.title
   let active_child = document.querySelector(
     "#playlist-videos .playlist-item.active-child"
   );
