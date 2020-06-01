@@ -22,7 +22,8 @@ const get_user_details = (uuid) => {
                                                'CreationDate', room.CreationDate,
                                                'MembershipDate', room_member.EnterDate,
                                                'UserName', room_member.UserName,
-                                               'UserAvatar', room_member.UserAvatar)) AS RoomMembership
+                                               'UserAvatar', room_member.UserAvatar,
+                                               'UserRole', room_member.UserRole)) AS RoomMembership
                 FROM user
                   LEFT JOIN room_member
                     ON user.UUID = room_member.UserId
@@ -102,11 +103,11 @@ const get_all_rooms = () => {
   });
 };
 
-const add_room_member = (uuid, room_id, name, avatar) => {
+const add_room_member = (uuid, room_id, name, avatar, role) => {
   let query_update = `UPDATE user SET Name = COALESCE(?, Name), Avatar = COALESCE(?, Avatar) WHERE UUID = ?`;
   let params_update = [name, avatar, uuid];
-  let query_member = `INSERT INTO room_member (RoomId, UserId, UserName, UserAvatar) VALUES(?, ?, ?, ?)`;
-  let params_member = [room_id, uuid, name, avatar];
+  let query_member = `INSERT INTO room_member (RoomId, UserId, UserName, UserAvatar, UserRole) VALUES(?, ?, ?, ?)`;
+  let params_member = [room_id, uuid, name, avatar, role];
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       db.run(query_update, params_update, function (error) {
@@ -116,6 +117,17 @@ const add_room_member = (uuid, room_id, name, avatar) => {
         if (error) reject(error);
         else resolve({ lastID: this.lastID, changes: this.changes });
       });
+    });
+  });
+};
+
+const update_room_settings = async (room_url, name, password, theme) => {
+  let query = `UPDATE room SET Name = COALESCE(?, Name), Password = COALESCE(?, Password), Theme = COALESCE(?, Theme) WHERE PublicUrl = ?`;
+  let params = [name, password, theme, room_url];
+  return new Promise((resolve, reject) => {
+    db.run(query, params, function (error) {
+      if (error) reject(error);
+      else resolve({ lastID: this.lastID, changes: this.changes });
     });
   });
 };
@@ -163,6 +175,7 @@ module.exports = {
   create_new_room,
   get_all_rooms,
   add_room_member,
+  update_room_settings,
   set_room_active,
   get_room_details,
   clean_rooms,

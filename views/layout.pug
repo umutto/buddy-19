@@ -68,11 +68,11 @@ html(lang="en")
                             | Contact
 
 
-        #loading-overlay(style="display:block;")
+        #loading-overlay.d-none
             .loading-overlay-content
                 .spinner-border.text-secondary(role='status')
                     span.sr-only Processing...
-                h1#loading-text.spinner-text.text-secondary
+                h1#loading-text.spinner-text.text-secondary.mt-2
                     | Processing...
 
         #toast-wrapper.col-md-6(aria-live='polite', aria-atomic='true', style="position:fixed; bottom:3rem; right:0;")

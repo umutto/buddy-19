@@ -85,6 +85,10 @@ router.post("/create", async function (req, res, next) {
   }
 });
 
+router.get("/room", function (req, res, next) {
+  res.redirect("/create");
+});
+
 router.get("/room/:id", async function (req, res, next) {
   let room_id = req.params.id;
   let room_details = null;
@@ -118,6 +122,47 @@ router.get("/room/:id", async function (req, res, next) {
     RoomTheme: room_details.Theme,
     Room: room_details,
   });
+});
+
+router.post("/edit-room", async function (req, res, next) {
+  var form = formidable({ multiples: true });
+
+  try {
+    form.parse(req, async (err, fields, files) => {
+      let room_id = fields.roomId;
+      let editName = fields.editName;
+      let editPassword = fields.editPassword;
+      let editTheme = fields.roomTheme;
+
+      let current_room = req.UserClient.RoomMembership.filter(
+        (m) => m.Url === room_id
+      )[0];
+
+      if (current_room && current_room.UserRole > 1) {
+        await sqliteController.update_room_settings(
+          room_id,
+          editName,
+          editPassword,
+          editTheme
+        );
+        return res.status(200).send({
+          status: 200,
+          message: { RoomName: editName, RoomTheme: editTheme },
+        });
+      } else {
+        return res.status(403).send({
+          status: 403,
+          message: "You are not allowed to change the settings.",
+        });
+      }
+    });
+  } catch (error) {
+    res.status(500).send({
+      status: 500,
+      message: "Something went wrong, try again later.",
+      details: error,
+    });
+  }
 });
 
 router.get("/join/:id", async function (req, res, next) {
@@ -162,7 +207,8 @@ router.post("/join/:id", async function (req, res, next) {
           req.UserClient.Id,
           room_id,
           fields.userName,
-          fields.userAvatar
+          fields.userAvatar,
+          room_details.Host === req.UserClient.Id ? 10 : 1
         );
         if (room_details.Host === req.UserClient.Id)
           await sqliteController.set_room_active(room_id, true);

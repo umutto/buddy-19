@@ -5,6 +5,18 @@ window.addEventListener("DOMContentLoaded", function (evt) {
   $(".modal").on("shown.bs.modal", function (e) {
     $("[autofocus]", e.target).focus();
   });
+
+  Array.from(document.getElementsByClassName("toggle-password")).forEach(function (elem) {
+    elem.addEventListener("click", function (e) {
+      if (e.target.firstElementChild.textContent === "visibility") {
+        e.target.parentElement.querySelector("input[type='password']").type = "text";
+        e.target.firstElementChild.textContent = "visibility_off";
+      } else {
+        e.target.parentElement.querySelector("input[type='text']").type = "password";
+        e.target.firstElementChild.textContent = "visibility";
+      }
+    });
+  });
 });
 
 function copy_to_clipboard(elem) {
@@ -20,8 +32,9 @@ function loading_overlay(display, text = "Loading...") {
 
   overlay_text.innerHTML = text;
 
-  if (overlay.style.display === "none" && display) overlay.style.display = "block";
-  else if (overlay.style.display === "block" && !display) overlay.style.display = "none";
+  if (overlay.classList.contains("d-none") && display) overlay.classList.remove("d-none");
+  else if (!overlay.classList.contains("d-none") && !display)
+    overlay.classList.add("d-none");
 }
 
 function pad(str, max) {
