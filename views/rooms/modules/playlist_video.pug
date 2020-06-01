@@ -1,4 +1,4 @@
-li.playlist-item.list-group-item.px-1.px-md-3.d-flex.align-items-center(class=(is_active==true ? "active-child" : "") data-videoid=video_data.video_id data-videoauthor=video_data.author data-videotitle=video_data.title)
+li.playlist-item.list-group-item.px-1.px-md-3.d-flex.align-items-center(class=(is_active==true ? "active-child" : "") data-videoid=video_data.video_id data-videoauthor=video_data.author data-videotitle=video_data.title data-videoduration=video_data.duration)
     button.btn-playlist-down.btn.btn-link.px-0.mx-0(type="button" title="Move down")
         span.material-icons.align-middle.px-0.mx-0 arrow_downward
     button.btn-playlist-up.btn.btn-link.px-0.mx-0(type="button" title="Move up")
@@ -8,6 +8,6 @@ li.playlist-item.list-group-item.px-1.px-md-3.d-flex.align-items-center(class=(i
             span.video-title #{video_data.title}
             .d-flex.align-items-center.ml-auto
                 span.material-icons.ms-16.mr-1 access_time
-                span.video-duration #{video_data.duration}
+                span.video-duration #{video_data.duration_text}
     button.btn-playlist-remove.btn.btn-link(type="button" title="Remove from list")
         span.material-icons.align-middle.p-1 cancel

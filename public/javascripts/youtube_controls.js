@@ -91,7 +91,9 @@ window.addEventListener("DOMContentLoaded", function (evt) {
             Command: "movePlaylistItem",
             FromIndex: from,
             ToIndex: from - 1,
-            VideoId: evt.target.closest(".playlist-item").dataset.videoid,
+            FromId: evt.target.closest(".playlist-item").dataset.videoid,
+            ToId: evt.target.closest(".playlist-item").previousElementSibling.dataset
+              .videoid,
           });
 
           movePlaylistItem(from, from - 1);
@@ -108,7 +110,9 @@ window.addEventListener("DOMContentLoaded", function (evt) {
             Command: "movePlaylistItem",
             FromIndex: from + 1,
             ToIndex: from,
-            VideoId: evt.target.closest(".playlist-item").dataset.videoid,
+            FromId: evt.target.closest(".playlist-item").nextElementSibling.dataset
+              .videoid,
+            ToId: evt.target.closest(".playlist-item").dataset.videoid,
           });
 
           movePlaylistItem(from + 1, from);
@@ -268,6 +272,7 @@ function syncWithServer(context) {
   let next_video_id = prepNextVideo(context.CurrentIndex);
   if (next_video_id) {
     loadAndPlayNext(player, next_video_id, false);
+    updateCurrentVideoDetails(player);
 
     if (context.CurrentState === 1) {
       command_queue.push("playVideo");
@@ -320,7 +325,8 @@ function addToPlaylistByData(video_data, cb = function () {}) {
         event.target.stopVideo();
 
         let _video_data = event.target.getVideoData();
-        _video_data.duration = get_duration_string(event.target.getDuration());
+        _video_data.duration = event.target.getDuration();
+        _video_data.duration_text = get_duration_string(event.target.getDuration());
         _video_data.video_url = event.target.getVideoUrl();
         addToPlaylistByData(_video_data, cb);
       }
@@ -414,18 +420,34 @@ function removePlaylistItem(idx) {
 async function updateCurrentVideoDetails(target_player, clean = false) {
   // TODO: simplify this, just copy and paste from playlist item, and add more details to playlist items (like url and author)
   // remove target_player argument and get everything from the child-active and dom
+  // .playlist-item
+  // data-videoid=video_data.video_id data-videoauthor=video_data.author data-videotitle=video_data.title
+  let active_child = document.querySelector(
+    "#playlist-videos .playlist-item.active-child"
+  );
   let video_data = !clean
-    ? target_player.getVideoData()
-    : { title: "", video_id: "", author: "" };
+    ? active_child
+      ? {
+          title: active_child.dataset.videotitle,
+          video_id: active_child.dataset.videoid,
+          author: active_child.dataset.videoauthor,
+          duration: active_child.dataset.videoduration,
+        }
+      : target_player.getVideoData()
+    : { title: "", video_id: "", author: "", duration: "" };
 
-  if (!video_data || target_player.getPlayerState() === YT.PlayerState.CUED) return;
+  if (!video_data) return;
 
   document.getElementById("yt-playing-title").textContent = video_data.title;
 
-  let video_url = target_player.getVideoUrl();
+  let video_url =
+    target_player.getVideoUrl() &&
+    target_player.getVideoUrl().endsWith("www.youtube.com/watch")
+      ? `https://www.youtube.com/watch?v=${video_data.video_id}`
+      : target_player.getVideoUrl();
   document
     .querySelectorAll("a.yt-playing-video-link")
-    .forEach((a) => (a.href = video_url ? target_player.getVideoUrl() : "#"));
+    .forEach((a) => (a.href = video_url ? video_url : "#"));
 
   let author_elem = document.getElementById("yt-playing-author");
   let author_link = document.getElementById("yt-playing-author-link");
@@ -440,7 +462,7 @@ async function updateCurrentVideoDetails(target_player, clean = false) {
   if (clean) document.getElementById("yt-control-skip-next").classList.add("d-none");
   else document.getElementById("yt-control-skip-next").classList.remove("d-none");
 
-  let duration = target_player.getDuration();
+  let duration = target_player.getDuration() || parseFloat(video_data.duration);
   if (duration)
     document.getElementById("yt-playing-time").textContent = get_duration_string(
       duration
