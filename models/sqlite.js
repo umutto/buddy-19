@@ -106,7 +106,7 @@ const get_all_rooms = () => {
 const add_room_member = (uuid, room_id, name, avatar, role) => {
   let query_update = `UPDATE user SET Name = COALESCE(?, Name), Avatar = COALESCE(?, Avatar) WHERE UUID = ?`;
   let params_update = [name, avatar, uuid];
-  let query_member = `INSERT INTO room_member (RoomId, UserId, UserName, UserAvatar, UserRole) VALUES(?, ?, ?, ?)`;
+  let query_member = `INSERT INTO room_member (RoomId, UserId, UserName, UserAvatar, UserRole) VALUES(?, ?, ?, ?, ?)`;
   let params_member = [room_id, uuid, name, avatar, role];
   return new Promise((resolve, reject) => {
     db.serialize(() => {
