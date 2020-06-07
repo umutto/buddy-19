@@ -67,10 +67,21 @@ table td {
   right: 0.25rem;
 }
 
+.w-80 {
+  width: 80% !important;
+}
+
 .speech-bubble {
   position: relative;
-  background: #fff;
   border-radius: 0.4em;
+}
+
+.speech-bubble.sb-left {
+  background: #fff;
+}
+
+.speech-bubble.sb-right {
+  background: #d2fbe1;
 }
 
 .speech-bubble:after {
@@ -101,15 +112,12 @@ table td {
 }
 
 .chat-text {
-  animation: 1s ease-in-out new_message;
-  -webkit-animation: 1s ease-in-out new_message;
+  animation: 0.25s ease-in-out new_message;
+  -webkit-animation: 0.25s ease-in-out new_message;
 }
 @keyframes new_message {
   0% {
     background: rgb(255, 248, 151);
-  }
-  50% {
-    background: #fff;
   }
 }
 
