@@ -58,21 +58,16 @@ const init = (server) => {
           // update server room sessions
           if (!Object.keys(room_sessions).includes(room)) {
             if (room_details.Type === 1)
-              room_sessions[room] = new YoutubeRoom(room_details);
+              room_sessions[room] = new YoutubeRoom(io.of("/"), room_details);
             else if (room_details.Type === 2)
-              room_sessions[room] = new SketchRoom(room_details);
+              room_sessions[room] = new SketchRoom(io.of("/"), room_details);
             else if (room_details.Type === 3)
-              room_sessions[room] = new QuizRoom(room_details);
+              room_sessions[room] = new QuizRoom(io.of("/"), room_details);
             else if (room_details.Type === 4)
-              room_sessions[room] = new CustomRoom(room_details);
+              room_sessions[room] = new CustomRoom(io.of("/"), room_details);
           }
 
-          let { user_context, room_context } = room_sessions[room].onConnect(
-            user_details
-          );
-
-          // announce user to room
-          socket.to(room).emit("message_echo", messageType.userConnected, room_context);
+          let user_context = room_sessions[room].onConnect(user_details);
 
           // send an echo to callback
           ack({
@@ -80,8 +75,6 @@ const init = (server) => {
             message: room,
             context: user_context,
           });
-
-          room_sessions[room].addMember(user_details);
         }
       } catch (error) {
         console.log(error);
@@ -93,12 +86,12 @@ const init = (server) => {
       }
 
       socket.on("message", function (message_type, context, ack = () => {}) {
-        let { user_context, room_context } = room_sessions[room].onMessage(
+        let user_context = room_sessions[room].onMessage(
           user_details,
           message_type,
           context
         );
-        socket.to(room).emit("message_echo", message_type, room_context);
+
         ack({ status: 200, message: user_context });
       });
 
@@ -106,24 +99,19 @@ const init = (server) => {
         await update_user_details(user_details, room);
 
         // update server room sessions
-        let { user_context, room_context } = room_sessions[room].updateMember(
+        let user_context = room_sessions[room].updateMember(
           user_details.Id,
           user_details
         );
 
-        socket.to(room).emit("message_echo", messageType.userDetails, room_context);
         ack({ status: 200, message: user_context });
       });
 
       socket.on("room-details", async function (context, ack = () => {}) {
         if (user_details.Id === room_sessions[room].Host) {
           // update server room sessions
-          let { user_context, room_context } = room_sessions[room].editRoomDetails(
-            user_details,
-            context
-          );
+          let user_context = room_sessions[room].editRoomDetails(user_details, context);
 
-          socket.to(room).emit("message_echo", messageType.roomDetails, room_context);
           ack({ status: 200, message: user_context });
         } else
           ack({
@@ -137,19 +125,14 @@ const init = (server) => {
       let rooms = Object.keys(socket.rooms).filter((k) => k != socket.id);
       rooms.forEach(function (room) {
         // update server room sessions
-        let { user_context, room_context } = room_sessions[room].removeMember(
-          user_details.Id,
-          reason
-        );
-
-        socket.to(room).emit("message_echo", messageType.userDisconnected, room_context);
+        let user_context = room_sessions[room].removeMember(user_details.Id, reason);
 
         let n = room_sessions[room].getMemberCount;
         if (n === 0) delete room_sessions[room];
 
         // deactivate room in db
-        //     socketController.set_room_active(room, false);
-        //     console.log(`All users have disconnected from room (${room}), deactivating.`);
+        socketController.set_room_active(room, false);
+        console.log(`All users have disconnected from room (${room}), deactivating.`);
       });
 
       console.log(
