@@ -58,13 +58,13 @@ const init = (server) => {
           // update server room sessions
           if (!Object.keys(room_sessions).includes(room)) {
             if (room_details.Type === 1)
-              room_sessions[room] = new YoutubeRoom(io.of("/"), room_details);
+              room_sessions[room] = new YoutubeRoom(io, room_details);
             else if (room_details.Type === 2)
-              room_sessions[room] = new SketchRoom(io.of("/"), room_details);
+              room_sessions[room] = new SketchRoom(io, room_details);
             else if (room_details.Type === 3)
-              room_sessions[room] = new QuizRoom(io.of("/"), room_details);
+              room_sessions[room] = new QuizRoom(io, room_details);
             else if (room_details.Type === 4)
-              room_sessions[room] = new CustomRoom(io.of("/"), room_details);
+              room_sessions[room] = new CustomRoom(io, room_details);
           }
 
           let user_context = room_sessions[room].onConnect(user_details);
@@ -131,7 +131,7 @@ const init = (server) => {
         if (n === 0) delete room_sessions[room];
 
         // deactivate room in db
-        socketController.set_room_active(room, false);
+        sqliteController.set_room_active(room, false);
         console.log(`All users have disconnected from room (${room}), deactivating.`);
       });
 
