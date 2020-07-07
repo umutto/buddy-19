@@ -1,4 +1,3 @@
-//- if Room.Host === UserAliasCookie
 .h-100.py-3.px-sm-3.d-flex.flex-column
     .play-area-contents.flex-grow-1
         #youtube-player-loader.d-none
@@ -37,12 +36,13 @@
                             label.check-emphasize.p-1.mr-1(for="yt-control-sync" title="Sync with the host")
                                 span.material-icons.d-flex.align-items-center.ms-16.sync-checked-icon link
                                 span.material-icons.d-flex.align-items-center.ms-16.sync-unchecked-icon link_off
-                            input#yt-control-autoplay.d-none(type="checkbox")
-                            label.check-emphasize.p-1.mr-1(for="yt-control-autoplay" title="Autoplay next video")
-                                span.material-icons.d-flex.align-items-center.ms-16 repeat
-                            input#yt-control-shuffle.d-none(type="checkbox")
-                            label.check-emphasize.p-1.mr-1(for="yt-control-shuffle" title="Shuffle playlist")
-                                span.material-icons.d-flex.align-items-center.ms-16 shuffle
+                            if Room.Settings.interactiveControls != 3 || Room.Host === UserAliasCookie
+                                input#yt-control-autoplay.d-none(type="checkbox")
+                                label.check-emphasize.p-1.mr-1(for="yt-control-autoplay" title="Autoplay next video")
+                                    span.material-icons.d-flex.align-items-center.ms-16 repeat
+                                input#yt-control-shuffle.d-none(type="checkbox")
+                                label.check-emphasize.p-1.mr-1(for="yt-control-shuffle" title="Shuffle playlist")
+                                    span.material-icons.d-flex.align-items-center.ms-16 shuffle
                             .flex-fill.pl-3
                                 span#playlist-header-num 0
                                 span.ml-1 song(s) in playlist

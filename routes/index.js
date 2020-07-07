@@ -106,7 +106,6 @@ router.get("/room/:id", async function (req, res, next) {
   if (!current_room || current_room.length == 0) return res.redirect("/join/" + room_id);
 
   // Room is active and the user is a member
-
   res.locals.User.Name =
     current_room[0].UserName ||
     req.UserClient.UserName ||
@@ -116,6 +115,7 @@ router.get("/room/:id", async function (req, res, next) {
   res.locals.User.Avatar = avatars.includes(usr_avatar) ? usr_avatar : null;
 
   room_details.Settings = JSON.parse(room_details.Settings);
+  console.log(room_details);
   res.render("room.pug", {
     title: `Buddy-19: ${room_details.Name}`,
     RoomId: room_id,
