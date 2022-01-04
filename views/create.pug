@@ -36,13 +36,13 @@ block content
                     .form-group.col-md-5
                         .col.p-nowrap
                             label(for="roomName") Room Name
-                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Name" data-html="true" data-content="Name of the room for your friends. (Not required)<hr><b>Disclaimer!</b><br />Passwords are stored and send as plain text in server, so don't use any important passwords. This is a simple access restriction step, not exactly secure against attacks.")
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Name" data-html="true" data-content="Name of the room for your friends. ")
                                 span.material-icons.ms-16 help_outline
                         input#roomName.form-control(type="text" name="roomName" placeholder="My amazing room!" maxlength="20" autocomplete="off")
                     .form-group.col-md-5
                         .col.p-nowrap
                             label(for="roomPassword") Room Password
-                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Password" data-content="You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)")
+                            button.btn.btn-link.d-inline-block.ml-1.p-0(type="button" tabindex="-1" data-toggle="popover" data-trigger="hover focus" title="Room Password" data-content="(Not Required) You can set a password for joining the room (If you want anyone with the url to be able join, leave it empty)<hr><b>Disclaimer!</b><br />Passwords are stored and send as plain text in server, so don't use any important passwords. This is a simple access restriction step, not exactly secure against attacks.")
                                 span.material-icons.ms-16 help_outline
                         input#roomPassword.form-control(type="password" name="roomPassword" placeholder="my super secret password" autocomplete="new-password")
 
